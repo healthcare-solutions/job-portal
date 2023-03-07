@@ -12,9 +12,10 @@ const userRegistration = async (name, email, password) => {
       authProvider: "local",
       email,
     });
+    console.log(user, "Register successfully");
   } catch (err) {
-    // alert(err.message);
-    console.warn(err);
+    alert(err.message);
+    // console.warn(err);
   }
 };
 
@@ -65,7 +66,10 @@ const FormContent = () => {
         <button
           className="theme-btn btn-style-one"
           type="submit"
-          onClick={userRegistration(name, email, password)}
+          onClick={() => {
+            // e.preventDefault();
+            userRegistration(name, email, password);
+          }}
         >
           Register
         </button>
