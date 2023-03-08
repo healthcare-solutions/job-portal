@@ -11,17 +11,12 @@ import {
 } from "firebase/firestore";
 import "firebase/compat/auth";
 const firebaseConfig = {
-  apiKey: "AIzaSyBGrnv8V0dyFoYBRO1Mvp2rz4B40joy0do",
-
-  authDomain: "auth-jobportal.firebaseapp.com",
-
-  projectId: "auth-jobportal",
-
-  storageBucket: "auth-jobportal.appspot.com",
-
-  messagingSenderId: "10944169620",
-
-  appId: "1:10944169620:web:cfb2703e0694225f18d681",
+    apiKey: "AIzaSyCgZy5sg-fIgZ2gEjnBmhAPQrdjJRKsjWQ",
+    authDomain: "jobportal-292e8.firebaseapp.com",
+    projectId: "jobportal-292e8",
+    storageBucket: "jobportal-292e8.appspot.com",
+    messagingSenderId: "772938170897",
+    appId: "1:772938170897:web:772b176405ad733f2227b0"
 };
 
 firebase.initializeApp(firebaseConfig);
