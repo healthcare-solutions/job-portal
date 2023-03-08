@@ -1,17 +1,19 @@
-// import "firebase/compat/auth";
+import "firebase/compat/auth";
 import { auth } from "../firebase";
 import { useState } from "react";
-
+import { addDoc, collection, getFirestore } from "firebase/firestore";
 const userRegistration = async (name, email, password) => {
   try {
     const res = await auth.createUserWithEmailAndPassword(email, password);
     const user = res.user;
-    await db.collection("users").add({
+    const db = getFirestore();
+    await addDoc(collection(db, "users"), {
       uid: user.uid,
       name,
-      authProvider: "local",
       email,
+      authProvider: "local",
     });
+
     console.log(user, "Register successfully");
   } catch (err) {
     alert(err.message);
@@ -66,8 +68,8 @@ const FormContent = () => {
         <button
           className="theme-btn btn-style-one"
           type="submit"
-          onClick={() => {
-            // e.preventDefault();
+          onClick={(e) => {
+            e.preventDefault();
             userRegistration(name, email, password);
           }}
         >

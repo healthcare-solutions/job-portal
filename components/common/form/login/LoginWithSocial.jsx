@@ -1,6 +1,13 @@
 import { auth } from "../firebase";
 import firebase from "firebase/compat/app";
-import { getFirestore } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from "firebase/firestore";
 
 const db = getFirestore();
 const provider = new firebase.auth.GoogleAuthProvider();
@@ -15,9 +22,9 @@ const signInWithGoogle = async () => {
     if (result.empty) {
       await addDoc(collection(db, "users"), {
         uid: user.uid,
-        name: user.displayName,
-        authProvider: "google",
+        // name,
         email: user.email,
+        authProvider: "google",
       });
     }
   } catch (err) {

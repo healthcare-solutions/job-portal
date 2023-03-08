@@ -79,8 +79,8 @@ const FormContent = () => {
             className="theme-btn btn-style-one"
             type="submit"
             name="log-in"
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
+              // e.preventDefault();
               signInWithEmailAndPassword(loginEmail, loginPassword);
             }}
           >
