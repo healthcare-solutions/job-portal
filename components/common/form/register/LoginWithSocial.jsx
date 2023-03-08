@@ -21,8 +21,9 @@ const signInWithGoogle = async () => {
     const result = await getDocs(query(userRef, where("uid", "==", user.uid)));
     if (result.empty) {
       await addDoc(collection(db, "users"), {
-        uid: user.uid,
-        // name,
+        googleUid: user.uid,
+        name: user.displayName,
+        photo: user.photoURL,
         email: user.email,
         authProvider: "google",
       });
@@ -34,12 +35,12 @@ const signInWithGoogle = async () => {
 const LoginWithSocial = () => {
   return (
     <div className="btn-box row">
-      <div className="col-lg-6 col-md-12">
+      {/* <div className="col-lg-6 col-md-12">
         <a href="#" className="theme-btn social-btn-two facebook-btn">
           <i className="fab fa-facebook-f"></i> Log In via Facebook
         </a>
-      </div>
-      <div className="col-lg-6 col-md-12">
+      </div> */}
+      <div className="col-lg-12 col-md-24">
         <a
           href="#"
           className="theme-btn social-btn-two google-btn"
