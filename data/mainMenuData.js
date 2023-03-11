@@ -3,8 +3,8 @@ export const homeItems = [
     id: 1,
     items: [
       {
-        name: "Home Page 15",
-        routePath: "/home-15",
+        name: "Home Page",
+        routePath: "/",
       },
     ],
   },
