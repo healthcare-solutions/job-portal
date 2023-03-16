@@ -95,6 +95,7 @@ const PostBoxForm = () => {
     { value: "Accounting & Finance", label: "Accounting & Finance" },
     { value: "Digital", label: "Digital" },
     { value: "Creative Art", label: "Creative Art" },
+    { value: "Engineer", label: "Engineer" },
   ];
 
   return (
@@ -187,6 +188,7 @@ const PostBoxForm = () => {
             <option>Retail</option>
             <option>Human Resources</option>
             <option>Management</option>
+            <option>Engineer</option>
           </select>
         </div>
         {/* <!-- Input --> */}
