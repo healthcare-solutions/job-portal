@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: window-latest
+    # runs-on: window-latest #default
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -16,6 +17,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - name: GitHub Action for Firebase
+        if:always() || failure()
         uses: w9jds/firebase-action@v1.5.0
         with:
           args: deploy --only hosting
