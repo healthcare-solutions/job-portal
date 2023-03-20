@@ -189,6 +189,7 @@ const PostBoxForm = () => {
             <option>Human Resources</option>
             <option>Management</option>
             <option>Engineer</option>
+            <option>Web Developer</option>
           </select>
         </div>
         {/* <!-- Input --> */}
