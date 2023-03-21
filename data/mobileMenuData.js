@@ -15,7 +15,7 @@ export default [
     items: [
       {
         name: "Job List",
-        routePath: "/job-list",
+        routePath: "/job-list-v5",
       },
     ],
   },
@@ -25,7 +25,7 @@ export default [
     items: [
       {
         name: "Job Single",
-        routePath: "/job-single",
+        routePath: "/job-single-v1/1",
       },
     ],
   },
