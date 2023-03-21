@@ -15,13 +15,11 @@ import {
 } from "../../utils/linkActiveChecker";
 import { useRouter } from "next/router";
 
-// console.log(
 homeItems.map((item) => {
   item.items.map((menu, i) => {
     console.log(menu.name, menu.routePath);
   });
 });
-// );
 const HeaderNavContent = () => {
   const router = useRouter();
 
@@ -58,49 +56,6 @@ const HeaderNavContent = () => {
                 </div>
               ))}
             </div>
-            {/* <p
-            className={
-              isActiveLink(homeItems[0].items.routePath, router.asPath)
-                ? "current"
-                : ""
-            }
-            // key={i}
-          >
-            <Link href={homeItems[0].items.routePath}>Home</Link>
-          </p> */}
-            {/* <a href="/home-15"> */}
-            {/* {" "} */}
-            {/* <p> */}
-            {/* <span>Home</span> */}
-            {/* <link href="/home-15"> Home</link> */}
-            {/* </p> */}
-            {/* </a> */}
-
-            {/* <div className="mega-menu">
-              <div className="mega-menu-bar row pt-0">
-                {homeItems.map((item) => (
-                  <div
-                    className="column col-lg-3 col-md-3 col-sm-12"
-                    key={item.id}
-                  >
-                    <ul>
-                      {item.items.map((menu, i) => (
-                        <li
-                          className={
-                            isActiveLink(menu.routePath, router.asPath)
-                              ? "current"
-                              : ""
-                          }
-                          key={i}
-                        >
-                          <Link href={menu.routePath}>{menu.name}</Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div> */}
           </li>
           {/* End homepage menu items */}
 

@@ -114,7 +114,7 @@ const index = () => {
               </div>
             </div>
             {/* End sec-title */}
-            <Link href="/job-list-v13" className="link text-green">
+            <Link href="/job-list" className="link text-green">
               Browse All Locations <span className="fa fa-angle-right"></span>
             </Link>
           </div>
