@@ -192,7 +192,7 @@ const EmployersSingleV2 = () => {
       </section>
       {/* <!-- End Job Detail Section --> */}
 
-      <FooterDefault footerStyle="alternate5" />
+      {/* <FooterDefault footerStyle="alternate5" /> */}
       {/* <!-- End Main Footer --> */}
     </>
   );

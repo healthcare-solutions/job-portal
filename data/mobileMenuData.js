@@ -20,15 +20,33 @@ export default [
     ],
   },
   {
-    id: 3,
-    label: "Job Single",
+    id: 4,
+    // title: "Jobs Single",
     items: [
       {
         name: "Job Single",
+        // name: "Job Single V1",
         routePath: "/job-single-v1/1",
+      },
+      {
+        name: "Job Single V2",
+        routePath: "/job-single-v2/2",
+      },
+      {
+        name: "Job Single V3",
+        routePath: "/job-single-v3/3",
+      },
+      {
+        name: "Job Single V4",
+        routePath: "/job-single-v4/4",
+      },
+      {
+        name: "Job Single V5",
+        routePath: "/job-single-v5/5",
       },
     ],
   },
+
   {
     id: 4,
     label: "Employers List",

@@ -1,4 +1,4 @@
-const JobOverView = () => {
+const JobOverView = ({ company }) => {
   return (
     <div className="widget-content">
       <ul className="job-overview">
@@ -10,17 +10,19 @@ const JobOverView = () => {
         <li>
           <i className="icon icon-expiry"></i>
           <h5>Expiration date:</h5>
-          <span>April 06, 2021</span>
+          <span>{company.deadline}</span>
         </li>
         <li>
           <i className="icon icon-location"></i>
           <h5>Location:</h5>
-          <span>London, UK</span>
+          <span>
+            {company.city}, {company.country}
+          </span>
         </li>
         <li>
           <i className="icon icon-user-2"></i>
           <h5>Job Title:</h5>
-          <span>Designer</span>
+          <span>{company.jobTitle}</span>
         </li>
         <li>
           <i className="icon icon-clock"></i>
@@ -35,7 +37,7 @@ const JobOverView = () => {
         <li>
           <i className="icon icon-salary"></i>
           <h5>Salary:</h5>
-          <span>$35k - $45k</span>
+          <span>{company.salary}</span>
         </li>
       </ul>
     </div>

@@ -66,7 +66,7 @@ const BlogDetailsDynamic = () => {
       </section>
       {/* <!-- End Blog Single --> */}
 
-      <FooterDefault footerStyle="alternate5" />
+      {/* <FooterDefault footerStyle="alternate5" /> */}
       {/* <!-- End Main Footer --> */}
     </>
   );

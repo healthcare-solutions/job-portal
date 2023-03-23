@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import jobs from "../../data/job-featured";
 import LoginPopup from "../../components/common/form/login/LoginPopup";
 import FooterDefault from "../../components/footer/common-footer";
 import DefaulHeader from "../../components/header/DefaulHeader";
@@ -15,18 +14,39 @@ import MapJobFinder from "../../components/job-listing-pages/components/MapJobFi
 import SocialTwo from "../../components/job-single-pages/social/SocialTwo";
 import JobDetailsDescriptions from "../../components/job-single-pages/shared-components/JobDetailsDescriptions";
 import ApplyJobModalContent from "../../components/job-single-pages/shared-components/ApplyJobModalContent";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../components/common/form/firebase";
+import Social from "../../components/footer/common-footer/Social";
 
 const JobSingleDynamicV1 = () => {
   const router = useRouter();
   const [company, setCompany] = useState({});
   const id = router.query.id;
 
-  useEffect(() => {
-    if (!id) <h1>Loading...</h1>;
-    else setCompany(jobs.find((item) => item.id == id));
+  const fetchCompany = async () => {
+    await getDocs(collection(db, "jobs")).then((querySnapshot) => {
+      const newData = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      if (!id) <h1>Loading...</h1>;
+      else setCompany(newData.find((item) => item.id == id));
+      console.log(company, newData);
+      return () => {};
+    });
+  };
+  console.log(company);
 
-    return () => {};
+  useEffect(() => {
+    fetchCompany();
   }, [id]);
+
+  // useEffect(() => {
+  //   if (!id) <h1>Loading...</h1>;
+  //   else setCompany(jobs.find((item) => item.id == id));
+
+  //   return () => {};
+  // }, [id]);
 
   return (
     <>
@@ -59,12 +79,12 @@ const JobSingleDynamicV1 = () => {
                   <ul className="job-info">
                     <li>
                       <span className="icon flaticon-briefcase"></span>
-                      {company?.company}
+                      {company?.industy}
                     </li>
                     {/* compnay info */}
                     <li>
                       <span className="icon flaticon-map-locator"></span>
-                      {company?.location}
+                      {company?.city},{company?.country}
                     </li>
                     {/* location info */}
                     <li>
@@ -81,11 +101,12 @@ const JobSingleDynamicV1 = () => {
                   {/* End .job-info */}
 
                   <ul className="job-other-info">
-                    {company?.jobType?.map((val, i) => (
+                    {/* {company?.jobType?.map((val, i) => (
                       <li key={i} className={`${val.styleClass}`}>
                         {val.type}
                       </li>
-                    ))}
+                    ))} */}
+                    {company?.jobType}
                   </ul>
                   {/* End .job-other-info */}
                 </div>
@@ -144,7 +165,7 @@ const JobSingleDynamicV1 = () => {
           <div className="auto-container">
             <div className="row">
               <div className="content-column col-lg-8 col-md-12 col-sm-12">
-                <JobDetailsDescriptions />
+                <JobDetailsDescriptions company={company} />
                 {/* End jobdetails content */}
 
                 <div className="other-options">
@@ -175,17 +196,17 @@ const JobSingleDynamicV1 = () => {
                   <div className="sidebar-widget">
                     {/* <!-- Job Overview --> */}
                     <h4 className="widget-title">Job Overview</h4>
-                    <JobOverView />
+                    <JobOverView company={company} />
 
                     {/* <!-- Map Widget --> */}
-                    <h4 className="widget-title">Job Location</h4>
+                    {/* <h4 className="widget-title">Job Location</h4>
                     <div className="widget-content">
                       <div className="map-outer">
                         <div style={{ height: "300px", width: "100%" }}>
                           <MapJobFinder />
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/* <!--  Map Widget --> */}
 
                     <h4 className="widget-title">Job Skills</h4>
@@ -209,9 +230,9 @@ const JobSingleDynamicV1 = () => {
                       </div>
                       {/* End company title */}
 
-                      <CompnayInfo />
+                      <CompnayInfo company={company} />
 
-                      <div className="btn-box">
+                      {/* <div className="btn-box">
                         <a
                           href="#"
                           target="_blank"
@@ -220,7 +241,7 @@ const JobSingleDynamicV1 = () => {
                         >
                           {company?.link}
                         </a>
-                      </div>
+                      </div> */}
                       {/* End btn-box */}
                     </div>
                   </div>
@@ -236,7 +257,7 @@ const JobSingleDynamicV1 = () => {
       </section>
       {/* <!-- End Job Detail Section --> */}
 
-      <FooterDefault footerStyle="alternate5" />
+      {/* <FooterDefault footerStyle="alternate5" /> */}
       {/* <!-- End Main Footer --> */}
     </>
   );
