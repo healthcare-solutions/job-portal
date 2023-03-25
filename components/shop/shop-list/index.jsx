@@ -38,7 +38,7 @@ const index = () => {
       </div>
       {/* <!-- End Product Section --> */}
 
-      <FooterDefault footerStyle="alternate5" />
+      {/* <FooterDefault footerStyle="alternate5" /> */}
       {/* <!-- End Main Footer --> */}
     </>
   );

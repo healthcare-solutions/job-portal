@@ -1,7 +1,35 @@
 import Link from "next/link";
 import LoginWithSocial from "./LoginWithSocial";
+import { auth } from "../firebase";
+import { useState } from "react";
+
+const signInWithEmailAndPassword = async (email, password) => {
+  try {
+    const userCredential = await auth.signInWithEmailAndPassword(
+      email,
+      password
+    );
+    const userId = userCredential.user.uid;
+    localStorage.setItem("userId", userId);
+    console.log(`User ID ${userId} stored in local storage.`);
+
+    console.log(email, "login successfully");
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
+const resetPassword = async (email) => {
+  try {
+    await auth.sendPasswordResetEmail(email);
+  } catch (err) {
+    alert(err.message);
+  }
+};
 
 const FormContent = () => {
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
   return (
     <div className="form-inner">
       <h3>Login to Superio</h3>
@@ -9,14 +37,26 @@ const FormContent = () => {
       {/* <!--Login Form--> */}
       <form method="post">
         <div className="form-group">
-          <label>Username</label>
-          <input type="text" name="username" placeholder="Username" required />
+          <label>Email Address</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Your Email Address"
+            value={loginEmail}
+            onChange={(e) => setLoginEmail(e.target.value)}
+            required
+          />
         </div>
-        {/* name */}
 
         <div className="form-group">
           <label>Password</label>
-          <input type="password" name="password" placeholder="Password" />
+          <input
+            type="password"
+            name="password"
+            value={loginPassword}
+            onChange={(e) => setLoginPassword(e.target.value)}
+            placeholder="Password"
+          />
         </div>
         {/* password */}
 
@@ -28,7 +68,13 @@ const FormContent = () => {
                 <span className="custom-checkbox"></span> Remember me
               </label>
             </div>
-            <a href="#" className="pwd">
+            <a
+              // href="#"
+              className="pwd"
+              onClick={() => {
+                resetPassword(loginEmail);
+              }}
+            >
               Forgot password?
             </a>
           </div>
@@ -40,6 +86,10 @@ const FormContent = () => {
             className="theme-btn btn-style-one"
             type="submit"
             name="log-in"
+            onClick={(e) => {
+              e.preventDefault();
+              signInWithEmailAndPassword(loginEmail, loginPassword);
+            }}
           >
             Log In
           </button>

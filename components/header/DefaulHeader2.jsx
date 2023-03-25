@@ -1,9 +1,16 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import HeaderNavContent from "./HeaderNavContent";
+import { useSelector, useDispatch } from "react-redux";
+import { useMemo } from "react";
+import LoginPopup from "../common/form/login/LoginPopup";
+
 
 const DefaulHeader2 = () => {
   const [navbar, setNavbar] = useState(false);
+  const user = useSelector(state => state.candidate.user)
+  const showLoginButton = useMemo(() => !user?.id, [user])
+  const dispatch = useDispatch();
 
   const changeBackground = () => {
     if (window.scrollY >= 10) {
@@ -37,16 +44,16 @@ const DefaulHeader2 = () => {
           </div>
           {/* End .logo-box */}
 
-          <HeaderNavContent />
+          {/* <HeaderNavContent /> */}
           {/* <!-- Main Menu End--> */}
         </div>
         {/* End .nav-outer */}
 
         <div className="outer-box">
           {/* <!-- Add Listing --> */}
-          <Link href="/candidates-dashboard/cv-manager" className="upload-cv">
+          {/* <Link href="/candidates-dashboard/cv-manager" className="upload-cv">
             Upload your CV
-          </Link>
+          </Link> */}
           {/* <!-- Login/Register --> */}
           <div className="btn-box">
             <a
@@ -57,12 +64,14 @@ const DefaulHeader2 = () => {
             >
               Login / Register
             </a>
-            <Link
+            
+            
+            {/* <Link
               href="/employers-dashboard/post-jobs"
               className="theme-btn btn-style-one"
             >
               Job Post
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

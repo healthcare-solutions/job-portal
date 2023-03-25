@@ -1,16 +1,8 @@
-const JobDetailsDescriptions = () => {
+const JobDetailsDescriptions = ({ company }) => {
   return (
     <div className="job-detail">
       <h4>Job Description</h4>
-      <p>
-        As a Product Designer, you will work within a Product Delivery Team
-        fused with UX, engineering, product and data talent. You will help the
-        team design beautiful interfaces that solve business challenges for our
-        clients. We work with a number of Tier 1 banks on building web-based
-        applications for AML, KYC and Sanctions List management workflows. This
-        role is ideal if you are looking to segue your career into the FinTech
-        or Big Data arenas.
-      </p>
+      <p>{company.jobDesc}</p>
       <h4>Key Responsibilities</h4>
       <ul className="list-style-three">
         <li>
@@ -48,6 +40,7 @@ const JobDetailsDescriptions = () => {
       </ul>
       <h4>Skill & Experience</h4>
       <ul className="list-style-three">
+        <p>You have following abilities in {company.exp}</p>
         <li>
           You have at least 3 years’ experience working as a Product Designer.
         </li>

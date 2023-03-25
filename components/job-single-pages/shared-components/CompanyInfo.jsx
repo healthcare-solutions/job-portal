@@ -1,6 +1,6 @@
 import Social from "../social/Social";
 
-const CompanyInfo = () => {
+const CompanyInfo = ({ company }) => {
   return (
     <ul className="company-info">
       <li>
@@ -16,10 +16,13 @@ const CompanyInfo = () => {
         Phone: <span>123 456 7890</span>
       </li>
       <li>
-        Email: <span>info@joio.com</span>
+        Email: <span>{company.email}</span>
       </li>
       <li>
-        Location: <span>London, UK</span>
+        Location:{" "}
+        <span>
+          {company.city}, {company.country}
+        </span>
       </li>
       <li>
         Social media:
