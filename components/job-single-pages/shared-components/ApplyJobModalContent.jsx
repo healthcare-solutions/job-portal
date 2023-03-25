@@ -1,8 +1,63 @@
 import Link from "next/link";
-
+import { useState } from "react";
+import { db, storage } from "../../common/form/firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { addDoc, collection } from "firebase/firestore";
+// import { v4 } from "uuid";
 const ApplyJobModalContent = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const userId = localStorage.getItem("userId");
+  const postId = localStorage.getItem("postId");
+  function handleFileInputChange(event) {
+    setSelectedFile(event.target.files[0]);
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    if (selectedFile) {
+      const fileRef = ref(storage, selectedFile.name);
+      uploadBytes(fileRef, selectedFile)
+        .then(() => {
+          alert(`File ${selectedFile.name} uploaded successfully.`);
+          // TODO: add code to save file metadata to the database
+          getDownloadURL(fileRef)
+            .then((downloadURL) => {
+              const metadata = {
+                name: selectedFile.name,
+                size: selectedFile.size,
+                type: selectedFile.type,
+                userId: userId,
+                postId: postId,
+                downloadURL: downloadURL,
+                createdAt: new Date(),
+              };
+              addDoc(collection(db, "files"), metadata)
+                .then(() => {
+                  console.log("File metadata saved to the database.");
+                })
+                .catch((error) => {
+                  console.error(
+                    "Failed to save file metadata to the database:",
+                    error
+                  );
+                });
+            })
+            .catch((error) => {
+              console.error(
+                `Failed to get download URL for file ${selectedFile.name}: ${error}`
+              );
+            });
+        })
+        .catch((error) => {
+          console.error(`Failed to upload file ${selectedFile.name}: ${error}`);
+        });
+    } else {
+      console.warn("No file selected.");
+    }
+  }
+
   return (
-    <form className="default-form job-apply-form">
+    <form className="default-form job-apply-form" onSubmit={handleSubmit}>
       <div className="row">
         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
           <div className="uploading-outer apply-cv-outer">
@@ -13,14 +68,15 @@ const ApplyJobModalContent = () => {
                 name="attachments[]"
                 accept="image/*, application/pdf"
                 id="upload"
-                multiple=""
                 required
+                onChange={handleFileInputChange}
               />
               <label
                 className="uploadButton-button ripple-effect"
                 htmlFor="upload"
               >
                 Upload CV (doc, docx, pdf)
+                {selectedFile && <p>Selected file: {selectedFile.name}</p>}
               </label>
             </div>
           </div>

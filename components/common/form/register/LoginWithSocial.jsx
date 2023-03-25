@@ -21,10 +21,11 @@ const signInWithGoogle = async () => {
     const result = await getDocs(query(userRef, where("uid", "==", user.uid)));
     if (result.empty) {
       await addDoc(collection(db, "users"), {
-        googleUid: user.uid,
+        uid: user.uid,
         name: user.displayName,
         photo: user.photoURL,
         email: user.email,
+        date: Date.now,
         authProvider: "google",
       });
     }

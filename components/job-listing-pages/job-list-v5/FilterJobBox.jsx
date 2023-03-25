@@ -17,8 +17,10 @@ import {
 import { db } from "../../common/form/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const FilterJobBox = () => {
+  const router = useRouter();
   const [job, setjob] = useState("");
   const [jobs, setjobs] = useState([]);
 
@@ -131,7 +133,16 @@ const FilterJobBox = () => {
               <img src={item.logo} alt="item brand" />
             </span>
             <h4>
-              <Link href={`/job-single-v1/${item.id}`}>{item.jobTitle}</Link>
+              <Link
+                href="#"
+                onClick={(event) => {
+                  event.preventDefault();
+                  localStorage.setItem("postId", item.id);
+                  router.push(`/job-single-v1/${item.id}`);
+                }}
+              >
+                {item.jobTitle}
+              </Link>
             </h4>
 
             <ul className="job-info">

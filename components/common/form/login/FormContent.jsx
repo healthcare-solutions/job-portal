@@ -5,7 +5,14 @@ import { useState } from "react";
 
 const signInWithEmailAndPassword = async (email, password) => {
   try {
-    await auth.signInWithEmailAndPassword(email, password);
+    const userCredential = await auth.signInWithEmailAndPassword(
+      email,
+      password
+    );
+    const userId = userCredential.user.uid;
+    localStorage.setItem("userId", userId);
+    console.log(`User ID ${userId} stored in local storage.`);
+
     console.log(email, "login successfully");
   } catch (err) {
     alert(err.message);
@@ -79,8 +86,8 @@ const FormContent = () => {
             className="theme-btn btn-style-one"
             type="submit"
             name="log-in"
-            onClick={() => {
-              // e.preventDefault();
+            onClick={(e) => {
+              e.preventDefault();
               signInWithEmailAndPassword(loginEmail, loginPassword);
             }}
           >
