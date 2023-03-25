@@ -5,11 +5,14 @@ import employerMenuData from "../../data/employerMenuData";
 import HeaderNavContent from "./HeaderNavContent";
 import { isActiveLink } from "../../utils/linkActiveChecker";
 import { useRouter } from "next/router";
+import { useSelector, useDispatch } from "react-redux";
+import { setUserData } from "../../features/candidate/candidateSlice";
 
 const DashboardHeader = () => {
   const [navbar, setNavbar] = useState(false);
 
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const changeBackground = () => {
     if (window.scrollY >= 0) {
@@ -22,6 +25,8 @@ const DashboardHeader = () => {
   useEffect(() => {
     window.addEventListener("scroll", changeBackground);
   }, []);
+
+  const user = useSelector(state => state.candidate.user)
 
   return (
     // <!-- Main Header-->
@@ -54,15 +59,15 @@ const DashboardHeader = () => {
           {/* End .nav-outer */}
 
           <div className="outer-box">
-            <button className="menu-btn">
+            {/* <button className="menu-btn">
               <span className="count">1</span>
               <span className="icon la la-heart-o"></span>
-            </button>
+            </button> */}
             {/* wishlisted menu */}
 
-            <button className="menu-btn">
+            {/* <button className="menu-btn">
               <span className="icon la la-bell"></span>
-            </button>
+            </button> */}
             {/* End notification-icon */}
 
             {/* <!-- Dashboard Option --> */}
@@ -76,11 +81,11 @@ const DashboardHeader = () => {
                 <Image
                   alt="avatar"
                   className="thumb"
-                  src="/images/resource/company-6.png"
-                  width={50}
-                  height={50}
+                  src="/images/icons/user.svg"
+                  width={20}
+                  height={20}
                 />
-                <span className="name">My Account</span>
+                <span className="name">Hello, { user.name }</span>
               </a>
 
               <ul className="dropdown-menu">
@@ -93,7 +98,13 @@ const DashboardHeader = () => {
                     } mb-1`}
                     key={item.id}
                   >
-                    <Link href={item.routePath}>
+                    <Link href={item.routePath}
+                    onClick={(e) => {
+                      if(item.name == 'Logout'){
+                        dispatch(setUserData({name: '', id: ''}))
+                      }
+                    }}
+                    >
                       <i className={`la ${item.icon}`}></i> {item.name}
                     </Link>
                   </li>

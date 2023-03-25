@@ -45,7 +45,7 @@ const SearchForm3 = () => {
           <button
             type="submit"
             className="theme-btn btn-style-one"
-            onClick={() => Router.push("/job-list-v5")}
+            onClick={() => Router.push("/job-list")}
           >
             Find Jobs
           </button>

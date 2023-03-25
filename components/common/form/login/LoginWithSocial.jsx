@@ -8,12 +8,14 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { setUserData } from "../../../../features/candidate/candidateSlice";
+import { useDispatch } from "react-redux";
 
 const db = getFirestore();
 const provider = new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account" });
 
-const signInWithGoogle = async () => {
+const signInWithGoogle = async (dispatch) => {
   try {
     const res = await auth.signInWithPopup(provider);
     const user = res.user;
@@ -28,12 +30,15 @@ const signInWithGoogle = async () => {
         authProvider: "google",
       });
     }
+    dispatch(setUserData( {name: user.displayName, id: user.uid}))
+    document.getElementById("close-button").click()
   } catch (err) {
     alert(err.message);
   }
 };
 
 const LoginWithSocial = () => {
+  const dispatch = useDispatch();
   return (
     <div className="btn-box row">
       {/* <div className="col-lg-6 col-md-12">
@@ -47,7 +52,7 @@ const LoginWithSocial = () => {
           className="theme-btn social-btn-two google-btn"
           onClick={(e) => {
             e.preventDefault();
-            signInWithGoogle();
+            signInWithGoogle(dispatch);
           }}
         >
           <i className="fab fa-google"></i> Log In via Gmail

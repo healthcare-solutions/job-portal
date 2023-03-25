@@ -1,11 +1,16 @@
-import FooterDefault from "../../../components/footer/common-footer";
+import FooterDefault from "../../footer/common-footer";
 import LoginPopup from "../../common/form/login/LoginPopup";
 import DefaulHeader2 from "../../header/DefaulHeader2";
 import MobileMenu from "../../header/MobileMenu";
 import FilterJobBox from "./FilterJobBox";
 import JobSearchForm from "./JobSearchForm";
+import { useSelector } from "react-redux";
+import { useMemo } from "react";
+import DashboardHeader from "../../header/DashboardHeader"
 
 const index = () => {
+  const user = useSelector(state => state.candidate.user)
+  const showLoginButton = useMemo(() => !user?.id, [user])
   return (
     <>
       {/* <!-- Header Span --> */}
@@ -14,7 +19,8 @@ const index = () => {
       <LoginPopup />
       {/* End Login Popup Modal */}
 
-      <DefaulHeader2 />
+      
+      { showLoginButton ?  <DefaulHeader2 /> : <DashboardHeader/>}
       {/* End Header with upload cv btn */}
 
       <MobileMenu />
