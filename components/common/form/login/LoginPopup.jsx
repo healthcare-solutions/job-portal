@@ -9,7 +9,6 @@ const LoginPopup = () => {
           <div className="modal-content">
             <button
               type="button"
-              id="close-button"
               className="closed-modal"
               data-bs-dismiss="modal"
             ></button>

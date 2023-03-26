@@ -90,11 +90,6 @@ const initialState = {
             value: "doctorate-degree",
         },
     ],
-    user: {
-        name: '',
-        id: ''
-    },
-    loggedIn: false
 };
 
 export const candidateSlice = createSlice({
@@ -164,10 +159,6 @@ export const candidateSlice = createSlice({
                 };
             });
         },
-        setUserData: (state, { payload }) => {
-            state.user = payload
-            state.loggedIn = payload.id ? true : false             
-        },
     },
 });
 
@@ -178,6 +169,5 @@ export const {
     clearDatePost,
     clearExperience,
     clearQualification,
-    setUserData,
 } = candidateSlice.actions;
 export default candidateSlice.reducer;
