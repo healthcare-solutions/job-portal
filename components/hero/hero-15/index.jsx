@@ -5,7 +5,7 @@ const index = () => {
   return (
     <section
       className="banner-section -type-15"
-      style={{ backgroundImage: "url(images/icons/bg-4.png)" }}
+      style={{ backgroundImage: "url(images/index-15/header/bg.png)" }}
     >
       <div className="auto-container">
         <div className="cotnent-box">

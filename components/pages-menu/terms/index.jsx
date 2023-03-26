@@ -31,7 +31,7 @@ const index = () => {
       </section>
       {/* <!-- End TNC Section --> */}
 
-      {/* <FooterDefault footerStyle="alternate5" /> */}
+      <FooterDefault footerStyle="alternate5" />
       {/* <!-- End Main Footer --> */}
     </>
   );

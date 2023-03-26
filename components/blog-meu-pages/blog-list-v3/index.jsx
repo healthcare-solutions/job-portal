@@ -45,7 +45,7 @@ const index = () => {
       </div>
       {/* <!-- End Sidebar Container --> */}
 
-      {/* <FooterDefault footerStyle="alternate5" /> */}
+      <FooterDefault footerStyle="alternate5" />
       {/* <!-- End Main Footer --> */}
     </>
   );

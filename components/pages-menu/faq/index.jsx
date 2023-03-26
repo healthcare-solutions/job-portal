@@ -45,7 +45,7 @@ const index = () => {
       </section>
       {/* <!-- End Faqs Section --> */}
 
-      {/* <FooterDefault footerStyle="alternate5" /> */}
+      <FooterDefault footerStyle="alternate5" />
       {/* <!-- End Main Footer --> */}
     </>
   );
