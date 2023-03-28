@@ -12,14 +12,21 @@ import Footer from "./Footer";
 import LoginPopup from "../common/form/login/LoginPopup";
 import MobileMenu from "../header/MobileMenu";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { useMemo } from "react";
+import DashboardHeader from "../header/DashboardHeader";
 
 const index = () => {
+  const user = useSelector(state => state.candidate.user)
+  const showLoginButton = useMemo(() => !user?.id, [user])
   return (
     <>
       <LoginPopup />
       {/* End Login Popup Modal */}
 
-      <Header />
+      { showLoginButton ?  <Header /> : <DashboardHeader/>}
+
+      {/* <Header /> */}
       {/* <!--End Main Header --> */}
 
       <MobileMenu />

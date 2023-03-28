@@ -5,12 +5,12 @@ import "firebase/compat/auth";
 import { getFirestore } from "firebase/firestore";
 import "firebase/compat/auth";
 const firebaseConfig = {
-  apiKey: "AIzaSyCgZy5sg-fIgZ2gEjnBmhAPQrdjJRKsjWQ",
-  authDomain: "jobportal-292e8.firebaseapp.com",
-  projectId: "jobportal-292e8",
-  storageBucket: "jobportal-292e8.appspot.com",
-  messagingSenderId: "772938170897",
-  appId: "1:772938170897:web:772b176405ad733f2227b0",
+  apiKey: "AIzaSyAo9hmuIq-VJiU9Hc2QRBQC43236QS9rHI",
+  authDomain: "immense-career.firebaseapp.com",
+  projectId: "immense-career",
+  storageBucket: "immense-career.appspot.com",
+  messagingSenderId: "351436627626",
+  appId: "1:351436627626:web:3956bcb0abb8cbef613ad3"
 };
 const app = firebase.initializeApp(firebaseConfig);
 export const db = getFirestore();
