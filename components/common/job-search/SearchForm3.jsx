@@ -25,7 +25,7 @@ const SearchForm3 = () => {
         </div>
 
         {/* <!-- Form Group --> */}
-        <div className="form-group col-lg-3 col-md-12 col-sm-12 category">
+        {/* <div className="form-group col-lg-3 col-md-12 col-sm-12 category">
           <span className="icon flaticon-briefcase"></span>
           <select className="chosen-single form-select">
             <option defaultValue="">All Categories</option>
@@ -38,7 +38,7 @@ const SearchForm3 = () => {
             <option defaultValue="105">Marketing</option>
             <option value="107">Project Management</option>
           </select>
-        </div>
+        </div> */}
 
         {/* <!-- Form Group --> */}
         <div className="form-group col-lg-2 col-md-12 col-sm-12 text-right">

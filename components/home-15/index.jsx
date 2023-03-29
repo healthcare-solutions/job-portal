@@ -17,14 +17,14 @@ import { useMemo } from "react";
 import DashboardHeader from "../header/DashboardHeader";
 
 const index = () => {
-  const user = useSelector(state => state.candidate.user)
-  const showLoginButton = useMemo(() => !user?.id, [user])
+  const user = useSelector((state) => state.candidate.user);
+  const showLoginButton = useMemo(() => !user?.id, [user]);
   return (
     <>
       <LoginPopup />
       {/* End Login Popup Modal */}
 
-      { showLoginButton ?  <Header /> : <DashboardHeader/>}
+      {showLoginButton ? <Header /> : <DashboardHeader />}
 
       {/* <Header /> */}
       {/* <!--End Main Header --> */}
@@ -158,7 +158,7 @@ const index = () => {
       </section> */}
       {/* <!-- End Testimonials Section --> */}
 
-      <Subscribe2 />
+      {/* <Subscribe2 /> */}
       {/* <!-- End Subscribe Section --> */}
 
       {/* <AppSection4 /> */}

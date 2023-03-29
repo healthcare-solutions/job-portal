@@ -6,15 +6,15 @@ const JobFeatured10 = () => {
     <div className="default-tabs pt-50 tabs-box">
       <div className="tab-buttons-wrap">
         <ul className="tab-buttons -pills-condensed">
-          <li className="tab-btn" data-tab="#tab1">
+          {/* <li className="tab-btn" data-tab="#tab1">
             Popular
-          </li>
+          </li> */}
           <li className="tab-btn active-btn" data-tab="#tab2">
             Recent
           </li>
-          <li className="tab-btn" data-tab="#tab3">
+          {/* <li className="tab-btn" data-tab="#tab3">
             Featured
-          </li>
+          </li> */}
         </ul>
       </div>
       {/* <!--Tabs Box--> */}

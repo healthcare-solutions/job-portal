@@ -29,7 +29,7 @@ const index = () => {
           <div className="fun-fact-section">
             <div className="row">
               {/* <!--Column--> */}
-              <Funfact3 />
+              {/* <Funfact3 /> */}
             </div>
           </div>
           {/* <!-- Fun Fact Section --> */}
