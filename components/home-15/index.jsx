@@ -158,7 +158,7 @@ const index = () => {
       </section> */}
       {/* <!-- End Testimonials Section --> */}
 
-      {/* <Subscribe2 /> */}
+      <Subscribe2 />
       {/* <!-- End Subscribe Section --> */}
 
       {/* <AppSection4 /> */}

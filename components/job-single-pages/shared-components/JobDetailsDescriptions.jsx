@@ -1,15 +1,8 @@
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-
 const JobDetailsDescriptions = ({ company }) => {
   return (
     <div className="job-detail">
       <h4>Job Description</h4>
-      <ReactQuill
-        value={company.jobDesc}
-        readOnly={true}
-        modules={{ toolbar: false }}
-      />
+      <p>{company.jobDesc}</p>
       <h4>Key Responsibilities</h4>
       <ul className="list-style-three">
         <li>
