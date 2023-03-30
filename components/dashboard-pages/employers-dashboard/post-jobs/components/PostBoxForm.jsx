@@ -90,15 +90,6 @@ const submitJobPost = async (
 
         alert("Job Posted successfully...");
 
-        setJobTitle('');
-        jobDesc ='';
-        jobType ='';
-        salary ='';
-        salaryRate ='';
-        career ='';
-        exp ='';
-        address ='';
-
       } catch (err) {
         alert(err.message);
         // console.warn(err);
