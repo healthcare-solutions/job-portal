@@ -115,6 +115,16 @@ b:before {
     font-weight: 900;
 }
 
+.required {
+    color: red;
+    font-size: 0.75rem;
+}
+
+.optional {
+    color: grey;
+    font-size: 0.75rem;
+}
+
 .chosen-container-single .chosen-single div:after {
     top: 50%;
     margin-top: -10px;
