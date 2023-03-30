@@ -1,9 +1,64 @@
 import Router from "next/router";
+import { useState, useEffect, useRef } from "react";
+
+
+const apiKey = process.env.NEXT_PUBLIC_JOB_PORTAL_GMAP_API_KEY;
+const mapApiJs = 'https://maps.googleapis.com/maps/api/js';
+
+// load google map api js
+function loadAsyncScript(src) {
+    return new Promise(resolve => {
+        const script = document.createElement("Script");
+        Object.assign(script, {
+            type: "text/javascript",
+            async: true,
+            src
+        })
+        script.addEventListener("load", () => resolve(script));
+        document.head.appendChild(script);
+    })
+}
+
 
 const SearchForm3 = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
   };
+
+  const searchInput = useRef(null);
+
+  // init google map script
+  const initMapScript = () => {
+    // if script already loaded
+    if (window.google) {
+        return Promise.resolve();
+    }
+    const src = `${mapApiJs}?key=AIzaSyBVRo0ZHZ5c22EF-n81-nVczX5kkPNUgps&libraries=places&v=weekly`;
+    return loadAsyncScript(src);
+  }
+
+  // do something on address change
+  const onChangeAddress = (autocomplete) => {
+    const location = autocomplete.getPlace();
+    console.log(location);
+  }
+
+  // init autocomplete
+  const initAutocomplete = () => {
+    if (!searchInput.current) return;
+
+    const autocomplete = new window.google.maps.places.Autocomplete(searchInput.current, {
+        types: ['(regions)']
+    });
+    autocomplete.setFields(["address_component", "geometry"]);
+    autocomplete.addListener("place_changed", () => onChangeAddress(autocomplete))
+
+  }
+
+  // load map script after mounted
+  useEffect(() => {
+    initMapScript().then(() => initAutocomplete())
+  }, []);
 
   return (
     <form onClick={handleSubmit}>
@@ -13,15 +68,19 @@ const SearchForm3 = () => {
           <span className="icon flaticon-search-1"></span>
           <input
             type="text"
-            name="field_name"
+            name="immense-search_form_job_title"
             placeholder="Job title, keywords, or company"
           />
         </div>
 
         {/* <!-- Form Group --> */}
-        <div className="form-group col-lg-3 col-md-12 col-sm-12 location">
+        <div className="form-group col-lg-4 col-md-12 col-sm-12 location">
           <span className="icon flaticon-map-locator"></span>
-          <input type="text" name="field_name" placeholder="City or postcode" />
+          <input
+            type="text"
+            name="immense-search_form_location"
+            ref={searchInput}
+            placeholder="City, State, Country or Zip code" />
         </div>
 
         {/* <!-- Form Group --> */}
@@ -41,7 +100,7 @@ const SearchForm3 = () => {
         </div> */}
 
         {/* <!-- Form Group --> */}
-        <div className="form-group col-lg-2 col-md-12 col-sm-12 text-right">
+        <div className="form-group col-lg-4 col-md-12 col-sm-12 text-right">
           <button
             type="submit"
             className="theme-btn btn-style-one"
