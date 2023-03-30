@@ -9,6 +9,7 @@ const JobListingsTable = () => {
 
         <div className="chosen-outer">
           {/* <!--Tabs Box--> */}
+{/*
           <select className="chosen-single form-select">
             <option>Last 6 Months</option>
             <option>Last 12 Months</option>
@@ -16,6 +17,7 @@ const JobListingsTable = () => {
             <option>Last 24 Months</option>
             <option>Last 5 year</option>
           </select>
+ */}
         </div>
       </div>
       {/* End filter top bar */}
@@ -26,27 +28,27 @@ const JobListingsTable = () => {
           <table className="default-table manage-job-table">
             <thead>
               <tr>
-                <th>Title</th>
+                <th>Job Title</th>
                 <th>Applications</th>
                 <th>Created & Expired</th>
                 <th>Status</th>
-                <th>Action</th>
+                <th>Actions</th>
               </tr>
             </thead>
 
             <tbody>
-              {jobs.slice(0, 4).map((item) => (
+              {jobs.slice(0, 10).map((item) => (
                 <tr key={item.id}>
                   <td>
                     {/* <!-- Job Block --> */}
                     <div className="job-block">
                       <div className="inner-box">
-                        <div className="content">
-                          <span className="company-logo">
+                        <div>
+                          {/* <span className="company-logo">
                             <img src={item.logo} alt="logo" />
-                          </span>
+                          </span> */}
                           <h4>
-                            <Link href={`/job-single-v3/${item.id}`}>
+                            <Link href={`/job-single-v1/${item.id}`}>
                               {item.jobTitle}
                             </Link>
                           </h4>

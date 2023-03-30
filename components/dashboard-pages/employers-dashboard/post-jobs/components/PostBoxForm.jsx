@@ -1,7 +1,26 @@
 import Map from "../../../Map";
 import Select from "react-select";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+
+
+const apiKey = process.env.NEXT_PUBLIC_JOB_PORTAL_GMAP_API_KEY;
+const mapApiJs = 'https://maps.googleapis.com/maps/api/js';
+
+
+// load google map api js
+function loadAsyncScript(src) {
+    return new Promise(resolve => {
+        const script = document.createElement("Script");
+        Object.assign(script, {
+            type: "text/javascript",
+            async: true,
+            src
+        })
+        script.addEventListener("load", () => resolve(script));
+        document.head.appendChild(script);
+    })
+}
 
 const submitJobPost = async (
   jobTitle,
@@ -11,17 +30,18 @@ const submitJobPost = async (
   //specialism,
   jobType,
   salary,
+  salaryRate,
   career,
   exp,
   //gender,
   //industy,
   //qualification,
   //deadline,
-  country,
-  city,
+  //country,
+  //city,
   address
 ) => {
-    if (jobTitle && jobDesc && jobType && career && exp && country && city) {
+    if (jobTitle && jobDesc && jobType && career && exp) {
         try {
             // const res = await auth.createUserWithEmailAndPassword(email, password);
             // const user = res.user;
@@ -34,6 +54,7 @@ const submitJobPost = async (
               //specialism,
               jobType,
               salary,
+              salaryRate,
               career,
               exp,
               //gender,
@@ -55,14 +76,15 @@ const submitJobPost = async (
           //specialism,
           jobType,
           salary,
+          salaryRate,
           career,
           exp,
           //gender,
           //industy,
           //qualification,
           //deadline,
-          country,
-          city,
+          //country,
+          //city,
           address,
         });
 
@@ -77,9 +99,9 @@ const submitJobPost = async (
         const isJobType   = jobType  ? '' : '\nJob Type';
         const isEdu       = career   ? '' : '\nEducation';
         const isExp       = exp      ? '' : '\nExperience';
-        const isCountry   = country  ? '' : '\nCountry';
-        const isCity      = city     ? '' : '\nCity';
-        alert("please fill all the mentioned required fields." + isJobTitle + isJobDesc + isJobType + isEdu + isExp + isCountry + isCity);
+        //const isCountry   = country  ? '' : '\nCountry';
+        //const isCity      = city     ? '' : '\nCity';
+        alert("please fill all the below required fields.\n" + isJobTitle + isJobDesc + isJobType + isEdu + isExp);
     }
 };
 
@@ -91,16 +113,49 @@ const PostBoxForm = () => {
   //const [specialism, setSpecialism] = useState([]);
   const [jobType, setJobType] = useState("");
   const [salary, setSalary] = useState("");
+  const [salaryRate, setSalaryRate] = useState("");
   const [career, setCareer] = useState("");
   const [exp, setExp] = useState("");
   //const [gender, setGender] = useState("");
   //const [industy, setIndustry] = useState("");
   //const [qualification, setQualification] = useState("");
   //const [deadline, setDeadline] = useState("");
-  const [country, setCountry] = useState("");
-  const [city, setCity] = useState("");
+  //const [country, setCountry] = useState("");
+  //const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
 
+  const searchInput = useRef(null);
+
+  // init google map script
+  const initMapScript = () => {
+    // if script already loaded
+    if (window.google) {
+        return Promise.resolve();
+    }
+    const src = `${mapApiJs}?key=${apiKey}&libraries=places&v=weekly`;
+    return loadAsyncScript(src);
+  }
+
+  // do something on address change
+  const onChangeAddress = (autocomplete) => {
+    const location = autocomplete.getPlace();
+    console.log(location);
+  }
+
+  // init autocomplete
+  const initAutocomplete = () => {
+    if (!searchInput.current) return;
+
+    const autocomplete = new window.google.maps.places.Autocomplete(searchInput.current);
+    autocomplete.setFields(["address_component", "geometry"]);
+    autocomplete.addListener("place_changed", () => onChangeAddress(autocomplete))
+
+  }
+
+  // load map script after mounted
+  useEffect(() => {
+    initMapScript().then(() => initAutocomplete())
+  }, []);
 /*
   const specialisms = [
     { value: "Banking", label: "Banking" },
@@ -128,7 +183,6 @@ const PostBoxForm = () => {
             required
             onChange={(e) => {
               setJobTitle(e.target.value);
-              console.log(jobTitle);
             }}
             placeholder="Job Title"
           />
@@ -214,37 +268,6 @@ const PostBoxForm = () => {
             <option>Per Diem</option>
           </select>
         </div>
-        {/* <!-- Input --> */}
-        <div className="form-group col-lg-6 col-md-12">
-          <label>Offered Salary <span className="optional">(optional)</span></label>
-          <input
-            type="text"
-            name="immense-salary"
-            value={salary}
-            placeholder="$100,000.00"
-            onChange={(e) => {
-              setSalary(e.target.value);
-            }}
-          />
-        </div>
-        <div className="form-group col-lg-6 col-md-12">
-          <label>Education<span className="required"> (required)</span></label>
-          <select
-            className="chosen-single form-select"
-            value={career}
-            required
-            onChange={(e) => {
-              setCareer(e.target.value);
-            }}
-          >
-            <option></option>
-            <option>Certificate</option>
-            <option>High School</option>
-            <option>Associate Degree</option>
-            <option>Bachelor's Degree</option>
-            <option>Master's Degree</option>
-          </select>
-        </div>
         <div className="form-group col-lg-6 col-md-12">
           <label>Experience<span className="required"> (required)</span></label>
           <select
@@ -266,6 +289,53 @@ const PostBoxForm = () => {
             <option>8 years</option>
             <option>9 years</option>
             <option>10+ years</option>
+          </select>
+        </div>
+        {/* <!-- Input --> */}
+        <div className="form-group col-lg-6 col-md-12">
+          <label>Offered Salary <span className="optional">(optional)</span></label>
+          <input
+            type="text"
+            name="immense-salary"
+            value={salary}
+            placeholder="$100,000.00"
+            onChange={(e) => {
+              setSalary(e.target.value);
+            }}
+          />
+        </div>
+        <div className="form-group col-lg-6 col-md-12">
+          <label>Salary Rate <span className="optional">(optional)</span></label>
+          <select
+            className="chosen-single form-select"
+            value={salaryRate}
+            onChange={(e) => {
+              setSalaryRate(e.target.value);
+            }}
+          >
+            <option></option>
+            <option>Per hour</option>
+            <option>Per diem</option>
+            <option>Per month</option>
+            <option>Per year</option>
+          </select>
+        </div>
+        <div className="form-group col-lg-6 col-md-12">
+          <label>Education<span className="required"> (required)</span></label>
+          <select
+            className="chosen-single form-select"
+            value={career}
+            required
+            onChange={(e) => {
+              setCareer(e.target.value);
+            }}
+          >
+            <option></option>
+            <option>Certificate</option>
+            <option>High School</option>
+            <option>Associate Degree</option>
+            <option>Bachelor's Degree</option>
+            <option>Master's Degree</option>
           </select>
         </div>
 {/*
@@ -338,6 +408,7 @@ const PostBoxForm = () => {
           />
         </div>
  */}
+{/*
         <div className="form-group col-lg-6 col-md-12">
           <label>City <span className="required">(required)</span></label>
           <input
@@ -351,7 +422,9 @@ const PostBoxForm = () => {
             placeholder="City"
           />
         </div>
-        {/* <!-- Input --> */}
+         */}
+{/* <!-- Input --> */}{/*
+
         <div className="form-group col-lg-6 col-md-12">
           <label>Country <span className="required">(required)</span></label>
           <select
@@ -365,22 +438,24 @@ const PostBoxForm = () => {
             <option></option>
             <option>Australia</option>
             <option>Pakistan</option>
-            <option>Chaina</option>
+            <option>USA</option>
             <option>Japan</option>
             <option>India</option>
           </select>
         </div>
+ */}
         {/* <!-- Input --> */}
         <div className="form-group col-lg-12 col-md-12">
-          <label>Complete Address <span className="optional">(optional)</span></label>
+          <label>Complete Address / City, State <span className="required">(required)</span></label>
           <input
             type="text"
             name="immense-address"
+            ref={searchInput}
             value={address}
             onChange={(e) => {
               setAddress(e.target.value);
             }}
-            placeholder="Address"
+            placeholder="Address / City, State"
           />
         </div>
         {/* <!-- Input --> */}
@@ -427,14 +502,15 @@ const PostBoxForm = () => {
                 //specialism,
                 jobType,
                 salary,
+                salaryRate,
                 career,
                 exp,
                 //gender,
                 //industy,
                 //qualification,
                 //deadline,
-                country,
-                city,
+                //country,
+                //city,
                 address
               );
             }}
