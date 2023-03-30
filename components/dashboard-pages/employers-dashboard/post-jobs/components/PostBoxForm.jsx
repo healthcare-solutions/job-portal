@@ -89,6 +89,16 @@ const submitJobPost = async (
         });
 
         alert("Job Posted successfully...");
+
+        setJobTitle('');
+        jobDesc ='';
+        jobType ='';
+        salary ='';
+        salaryRate ='';
+        career ='';
+        exp ='';
+        address ='';
+
       } catch (err) {
         alert(err.message);
         // console.warn(err);
@@ -132,7 +142,7 @@ const PostBoxForm = () => {
     if (window.google) {
         return Promise.resolve();
     }
-    const src = `${mapApiJs}?key=${apiKey}&libraries=places&v=weekly`;
+    const src = `${mapApiJs}?key=AIzaSyBVRo0ZHZ5c22EF-n81-nVczX5kkPNUgps&libraries=places&v=weekly`;
     return loadAsyncScript(src);
   }
 
