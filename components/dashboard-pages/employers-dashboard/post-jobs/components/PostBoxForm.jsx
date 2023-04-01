@@ -107,6 +107,11 @@ const submitJobPost = async (
 };
 
 const PostBoxForm = () => {
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const onEditorStateChange = (editorState) => {
+    setEditorState(editorState);
+  };
+
   const [jobTitle, setJobTitle] = useState("");
   const [jobDesc, setJobDesc] = useState("");
   //const [email, setEmail] = useState("");
@@ -193,11 +198,40 @@ const PostBoxForm = () => {
           <label>Job Description <span className="required">(required)</span></label>
           <textarea
             value={jobDesc}
-            onChange={(e) => {
-              setJobDesc(e.target.value);
-            }}
+            onChange={(newDesc) => setJobDesc(newDesc)}
+            ref={editor}
+            onBlur={(newDesc) => setJobDesc(newDesc)} // preferred to use only this option to update the content for performance reasons
             placeholder="Spent several years working on sheep on Wall Street. Had moderate success investing in Yugo's on Wall Street. Managed a small team buying and selling Pogo sticks for farmers. Spent several years licensing licorice in West Palm Beach, FL. Developed several new methods for working it banjos in the aftermarket. Spent a weekend importing banjos in West Palm Beach, FL.In this position, the Software Engineer collaborates with Evention's Development team to continuously enhance our current software solutions as well as create new solutions to eliminate the back-office operations and management challenges present"
-          ></textarea>
+          /> */}
+          <Editor
+            editorState={editorState}
+            onEditorStateChange={onEditorStateChange}
+            toolbar={{
+              options: [
+                "inline",
+                "blockType",
+                "fontSize",
+                "fontFamily",
+                "list",
+                "textAlign",
+                "colorPicker",
+                "link",
+                "embedded",
+              ],
+              inline: {
+                options: ["bold", "italic", "underline"],
+              },
+              blockType: {
+                options: ["Normal", "H1", "H2", "H3", "H4", "H5", "H6"],
+              },
+              list: {
+                options: ["unordered", "ordered"],
+              },
+              textAlign: {
+                options: ["left", "center", "right", "justify"],
+              },
+            }}
+          />
         </div>
         {/* <!-- Input --> */}
 {/*
