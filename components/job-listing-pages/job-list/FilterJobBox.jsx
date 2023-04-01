@@ -129,9 +129,9 @@ const FilterJobBox = () => {
       <div className="job-block col-lg-6 col-md-12 col-sm-12" key={item.id}>
         <div className="inner-box">
           <div className="content">
-            {/* <span className="company-logo">
+            <span className="company-logo">
               <img src={item.logo} alt="item brand" />
-            </span> */}
+            </span>
             <h4>
               <Link
                 href="#"
@@ -153,7 +153,7 @@ const FilterJobBox = () => {
               {/* compnay info */}
               <li>
                 <span className="icon flaticon-map-locator"></span>
-                {item.city ? `${item.city} , ${item.country}` : `${item.address}` }
+                {item.city}, {item.country}
               </li>
               {/* location info */}
               <li>
@@ -173,13 +173,12 @@ const FilterJobBox = () => {
                   {val.type}
                 </li>
               ))} */}
-              {item?.jobType}
             </ul>
             {/* End .job-other-info */}
 
-            {/* <button className="bookmark-btn">
+            <button className="bookmark-btn">
               <span className="flaticon-bookmark"></span>
-            </button> */}
+            </button>
           </div>
         </div>
       </div>

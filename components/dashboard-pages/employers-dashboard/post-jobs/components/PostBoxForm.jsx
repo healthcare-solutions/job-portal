@@ -2,26 +2,24 @@ import Map from "../../../Map";
 import Select from "react-select";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { useState, useEffect, useRef } from "react";
-const apiKey = process.env.NEXT_PUBLIC_JOB_PORTAL_GMAP_API_KEY;
-const mapApiJs = "https://maps.googleapis.com/maps/api/js";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-if (typeof window !== "undefined") {
-  window.self = window;
-}
+
+const apiKey = process.env.NEXT_PUBLIC_JOB_PORTAL_GMAP_API_KEY;
+const mapApiJs = 'https://maps.googleapis.com/maps/api/js';
+
+
 // load google map api js
 function loadAsyncScript(src) {
-  return new Promise((resolve) => {
-    const script = document.createElement("Script");
-    Object.assign(script, {
-      type: "text/javascript",
-      async: true,
-      src,
-    });
-    script.addEventListener("load", () => resolve(script));
-    document.head.appendChild(script);
-  });
+    return new Promise(resolve => {
+        const script = document.createElement("Script");
+        Object.assign(script, {
+            type: "text/javascript",
+            async: true,
+            src
+        })
+        script.addEventListener("load", () => resolve(script));
+        document.head.appendChild(script);
+    })
 }
 
 const submitJobPost = async (
@@ -43,11 +41,11 @@ const submitJobPost = async (
   //city,
   address
 ) => {
-  if (jobTitle && jobDesc && jobType && career && exp) {
-    try {
-      // const res = await auth.createUserWithEmailAndPassword(email, password);
-      // const user = res.user;
-      /*
+    if (jobTitle && jobDesc && jobType && career && exp) {
+        try {
+            // const res = await auth.createUserWithEmailAndPassword(email, password);
+            // const user = res.user;
+/*
             console.log(
               jobTitle,
               jobDesc,
@@ -68,60 +66,52 @@ const submitJobPost = async (
               address
             );
  */
-      const db = getFirestore();
+        const db = getFirestore();
 
-      await addDoc(collection(db, "jobs"), {
-        jobTitle,
-        jobDesc,
-        //email,
-        //username,
-        //specialism,
-        jobType,
-        salary,
-        salaryRate,
-        career,
-        exp,
-        //gender,
-        //industy,
-        //qualification,
-        //deadline,
-        //country,
-        //city,
-        address,
-      });
+        await addDoc(collection(db, "jobs"), {
+          jobTitle,
+          jobDesc,
+          //email,
+          //username,
+          //specialism,
+          jobType,
+          salary,
+          salaryRate,
+          career,
+          exp,
+          //gender,
+          //industy,
+          //qualification,
+          //deadline,
+          //country,
+          //city,
+          address,
+        });
 
-      alert("Job Posted successfully...");
-    } catch (err) {
-      alert(err.message);
-      // console.warn(err);
+        alert("Job Posted successfully...");
+
+      } catch (err) {
+        alert(err.message);
+        // console.warn(err);
+      }
+    } else {
+        const isJobTitle  = jobTitle ? '' : '\nJob Title';
+        const isJobDesc   = jobDesc  ? '' : '\nJob Description';
+        const isJobType   = jobType  ? '' : '\nJob Type';
+        const isEdu       = career   ? '' : '\nEducation';
+        const isExp       = exp      ? '' : '\nExperience';
+        //const isCountry   = country  ? '' : '\nCountry';
+        //const isCity      = city     ? '' : '\nCity';
+        alert("please fill all the below required fields.\n" + isJobTitle + isJobDesc + isJobType + isEdu + isExp);
     }
-  } else {
-    const isJobTitle = jobTitle ? "" : "\nJob Title";
-    const isJobDesc = jobDesc ? "" : "\nJob Description";
-    const isJobType = jobType ? "" : "\nJob Type";
-    const isEdu = career ? "" : "\nEducation";
-    const isExp = exp ? "" : "\nExperience";
-    //const isCountry   = country  ? '' : '\nCountry';
-    //const isCity      = city     ? '' : '\nCity';
-    alert(
-      "please fill all the below required fields.\n" +
-        isJobTitle +
-        isJobDesc +
-        isJobType +
-        isEdu +
-        isExp
-    );
-  }
 };
 
 const PostBoxForm = () => {
-  const [editorLoaded, setEditorLoaded] = useState(false);
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const onEditorStateChange = (editorState) => {
+    setEditorState(editorState);
+  };
 
-  useEffect(() => {
-    import("@ckeditor/ckeditor5-react").then(() => {
-      setEditorLoaded(true);
-    });
-  }, []);
   const [jobTitle, setJobTitle] = useState("");
   const [jobDesc, setJobDesc] = useState("");
   //const [email, setEmail] = useState("");
@@ -146,36 +136,33 @@ const PostBoxForm = () => {
   const initMapScript = () => {
     // if script already loaded
     if (window.google) {
-      return Promise.resolve();
+        return Promise.resolve();
     }
     const src = `${mapApiJs}?key=AIzaSyBVRo0ZHZ5c22EF-n81-nVczX5kkPNUgps&libraries=places&v=weekly`;
     return loadAsyncScript(src);
-  };
+  }
 
   // do something on address change
   const onChangeAddress = (autocomplete) => {
     const location = autocomplete.getPlace();
     console.log(location);
-  };
+  }
 
   // init autocomplete
   const initAutocomplete = () => {
     if (!searchInput.current) return;
 
-    const autocomplete = new window.google.maps.places.Autocomplete(
-      searchInput.current
-    );
+    const autocomplete = new window.google.maps.places.Autocomplete(searchInput.current);
     autocomplete.setFields(["address_component", "geometry"]);
-    autocomplete.addListener("place_changed", () =>
-      onChangeAddress(autocomplete)
-    );
-  };
+    autocomplete.addListener("place_changed", () => onChangeAddress(autocomplete))
+
+  }
 
   // load map script after mounted
   useEffect(() => {
-    initMapScript().then(() => initAutocomplete());
+    initMapScript().then(() => initAutocomplete())
   }, []);
-  /*
+/*
   const specialisms = [
     { value: "Banking", label: "Banking" },
     { value: "Digital & Creative", label: "Digital & Creative" },
@@ -194,9 +181,7 @@ const PostBoxForm = () => {
       <div className="row">
         {/* <!-- Input --> */}
         <div className="form-group col-lg-12 col-md-12">
-          <label>
-            Job Title <span className="required">(required)</span>
-          </label>
+          <label>Job Title <span className="required">(required)</span></label>
           <input
             type="text"
             name="immense-jobTitle"
@@ -210,39 +195,46 @@ const PostBoxForm = () => {
         </div>
         {/* <!-- About Company --> */}
         <div className="form-group col-lg-12 col-md-12">
-          <label>
-            Job Description <span className="required">(required)</span>
-          </label>
-          {/* <textarea
+          <label>Job Description <span className="required">(required)</span></label>
+          <textarea
             value={jobDesc}
             onChange={(newDesc) => setJobDesc(newDesc)}
-            // ref={editor}
+            ref={editor}
             onBlur={(newDesc) => setJobDesc(newDesc)} // preferred to use only this option to update the content for performance reasons
             placeholder="Spent several years working on sheep on Wall Street. Had moderate success investing in Yugo's on Wall Street. Managed a small team buying and selling Pogo sticks for farmers. Spent several years licensing licorice in West Palm Beach, FL. Developed several new methods for working it banjos in the aftermarket. Spent a weekend importing banjos in West Palm Beach, FL.In this position, the Software Engineer collaborates with Evention's Development team to continuously enhance our current software solutions as well as create new solutions to eliminate the back-office operations and management challenges present"
           /> */}
-          {editorLoaded && (
-            <CKEditor
-              editor={ClassicEditor}
-              data={jobDesc}
-              onChange={(event, editor) => {
-                const data = editor.getData();
-                setJobDesc(data);
-              }}
-              onReady={(editor) => {
-                // You can store the "editor" object for later use
-                console.log("Editor is ready to use!", editor);
-              }}
-              onBlur={(event, editor) => {
-                console.log("Blur.", editor);
-              }}
-              onFocus={(event, editor) => {
-                console.log("Focus.", editor);
-              }}
-            />
-          )}
+          <Editor
+            editorState={editorState}
+            onEditorStateChange={onEditorStateChange}
+            toolbar={{
+              options: [
+                "inline",
+                "blockType",
+                "fontSize",
+                "fontFamily",
+                "list",
+                "textAlign",
+                "colorPicker",
+                "link",
+                "embedded",
+              ],
+              inline: {
+                options: ["bold", "italic", "underline"],
+              },
+              blockType: {
+                options: ["Normal", "H1", "H2", "H3", "H4", "H5", "H6"],
+              },
+              list: {
+                options: ["unordered", "ordered"],
+              },
+              textAlign: {
+                options: ["left", "center", "right", "justify"],
+              },
+            }}
+          />
         </div>
         {/* <!-- Input --> */}
-        {/*
+{/*
         <div className="form-group col-lg-6 col-md-12">
           <label>Email Address <span className="optional">(optional)</span></label>
           <input
@@ -257,7 +249,7 @@ const PostBoxForm = () => {
         </div>
  */}
         {/* <!-- Input --> */}
-        {/*
+{/*
         <div className="form-group col-lg-6 col-md-12">
           <label>Username</label>
           <input
@@ -272,7 +264,7 @@ const PostBoxForm = () => {
         </div>
  */}
         {/* <!-- Search Select --> */}
-        {/*
+{/*
         <div className="form-group col-lg-6 col-md-12">
           <label>Specialisms </label>
           <Select
@@ -295,9 +287,7 @@ const PostBoxForm = () => {
         </div>
  */}
         <div className="form-group col-lg-6 col-md-12">
-          <label>
-            Job Type <span className="required"> (required)</span>
-          </label>
+          <label>Job Type <span className="required"> (required)</span></label>
           <select
             className="chosen-single form-select"
             value={jobType}
@@ -314,9 +304,7 @@ const PostBoxForm = () => {
           </select>
         </div>
         <div className="form-group col-lg-6 col-md-12">
-          <label>
-            Experience<span className="required"> (required)</span>
-          </label>
+          <label>Experience<span className="required"> (required)</span></label>
           <select
             className="chosen-single form-select"
             value={exp}
@@ -340,9 +328,7 @@ const PostBoxForm = () => {
         </div>
         {/* <!-- Input --> */}
         <div className="form-group col-lg-6 col-md-12">
-          <label>
-            Offered Salary <span className="optional">(optional)</span>
-          </label>
+          <label>Offered Salary <span className="optional">(optional)</span></label>
           <input
             type="text"
             name="immense-salary"
@@ -354,9 +340,7 @@ const PostBoxForm = () => {
           />
         </div>
         <div className="form-group col-lg-6 col-md-12">
-          <label>
-            Salary Rate <span className="optional">(optional)</span>
-          </label>
+          <label>Salary Rate <span className="optional">(optional)</span></label>
           <select
             className="chosen-single form-select"
             value={salaryRate}
@@ -372,9 +356,7 @@ const PostBoxForm = () => {
           </select>
         </div>
         <div className="form-group col-lg-6 col-md-12">
-          <label>
-            Education<span className="required"> (required)</span>
-          </label>
+          <label>Education<span className="required"> (required)</span></label>
           <select
             className="chosen-single form-select"
             value={career}
@@ -391,7 +373,7 @@ const PostBoxForm = () => {
             <option>Master's Degree</option>
           </select>
         </div>
-        {/*
+{/*
         <div className="form-group col-lg-6 col-md-12">
           <label>Gender</label>
           <select
@@ -408,7 +390,7 @@ const PostBoxForm = () => {
           </select>
         </div>
  */}
-        {/*
+{/*
         <div className="form-group col-lg-6 col-md-12">
           <label>Industry</label>
           <select
@@ -427,7 +409,7 @@ const PostBoxForm = () => {
           </select>
         </div>
  */}
-        {/*
+{/*
         <div className="form-group col-lg-6 col-md-12">
           <label>Qualification</label>
           <select
@@ -447,7 +429,7 @@ const PostBoxForm = () => {
         </div>
  */}
         {/* <!-- Input --> */}
-        {/*
+{/*
         <div className="form-group col-lg-12 col-md-12">
           <label>Application Deadline Date</label>
           <input
@@ -461,7 +443,7 @@ const PostBoxForm = () => {
           />
         </div>
  */}
-        {/*
+{/*
         <div className="form-group col-lg-6 col-md-12">
           <label>City <span className="required">(required)</span></label>
           <input
@@ -476,8 +458,7 @@ const PostBoxForm = () => {
           />
         </div>
          */}
-        {/* <!-- Input --> */}
-        {/*
+{/* <!-- Input --> */}{/*
 
         <div className="form-group col-lg-6 col-md-12">
           <label>Country <span className="required">(required)</span></label>
@@ -500,10 +481,7 @@ const PostBoxForm = () => {
  */}
         {/* <!-- Input --> */}
         <div className="form-group col-lg-12 col-md-12">
-          <label>
-            Complete Address / City, State{" "}
-            <span className="required">(required)</span>
-          </label>
+          <label>Complete Address / City, State <span className="required">(required)</span></label>
           <input
             type="text"
             name="immense-address"
