@@ -1,24 +1,8 @@
-import JoditEditor from "jodit-react";
-import { useEffect } from "react";
-import { useState } from "react";
-
 const JobDetailsDescriptions = ({ company }) => {
-  const [content, setContent] = useState("");
-  useEffect(() => {
-    setContent(company.jobDesc);
-    console.log(content);
-  }, []);
   return (
     <div className="job-detail">
       <h4>Job Description</h4>
-      <JoditEditor
-        value={content}
-        config={{
-          readonly: true,
-          buttons: false,
-          showCharsCounter: false,
-        }}
-      />
+      <p>{company.jobDesc}</p>
       <h4>Key Responsibilities</h4>
       <ul className="list-style-three">
         <li>
