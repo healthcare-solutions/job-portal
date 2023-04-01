@@ -7,6 +7,7 @@ import { isActiveLink } from "../../utils/linkActiveChecker";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserData } from "../../features/candidate/candidateSlice";
+import { logout } from "../../utils/logout";
 
 const DashboardHeader = () => {
   const [navbar, setNavbar] = useState(false);
@@ -101,7 +102,7 @@ const DashboardHeader = () => {
                     <Link href={item.routePath}
                     onClick={(e) => {
                       if(item.name == 'Logout'){
-                        dispatch(setUserData({name: '', id: ''}))
+                        logout(dispatch)
                       }
                     }}
                     >

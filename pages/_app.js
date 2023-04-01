@@ -3,10 +3,12 @@ import "aos/dist/aos.css";
 import "../styles/index.scss";
 import { useEffect } from "react";
 import ScrollToTop from "../components/common/ScrollTop";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { store } from "../app/store";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { getDecryptedItem } from "../utils/encryptedStorage";
+import { setUserData } from "../features/candidate/candidateSlice";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");
@@ -15,11 +17,19 @@ if (typeof window !== "undefined") {
 function MyApp({ Component, pageProps }) {
   // aos animation activation
 
-  useEffect(() => {
+  useEffect(() => {    
     Aos.init({
       duration: 1400,
       once: true,
     });
+    try {
+      const user = JSON.parse(getDecryptedItem('user'))
+      if(user.id){
+        store.dispatch(setUserData(user))
+      }
+    } catch(e) {
+      console.warn(e)
+    }
   }, []);
 
   return (

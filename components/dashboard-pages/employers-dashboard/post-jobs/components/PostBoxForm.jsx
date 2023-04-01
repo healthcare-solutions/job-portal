@@ -1,7 +1,8 @@
 import Map from "../../../Map";
 import Select from "react-select";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { useSelector } from "react-redux";
 
 
 const apiKey = process.env.NEXT_PUBLIC_JOB_PORTAL_GMAP_API_KEY;
@@ -22,24 +23,21 @@ function loadAsyncScript(src) {
     })
 }
 
+const addJobFields = {
+  jobTitle: "",
+  jobDesc: "",
+  jobType: "",
+  salary: "",
+  salaryRate: "",
+  career: "",
+  exp: "",
+  address: ""
+}
+
 const submitJobPost = async (
-  jobTitle,
-  jobDesc,
-  //email,
-  //username,
-  //specialism,
-  jobType,
-  salary,
-  salaryRate,
-  career,
-  exp,
-  //gender,
-  //industy,
-  //qualification,
-  //deadline,
-  //country,
-  //city,
-  address
+  { jobTitle, jobDesc, jobType, salary, salaryRate, career, exp, address },
+  setJobData,
+  user
 ) => {
     if (jobTitle && jobDesc && jobType && career && exp) {
         try {
@@ -86,10 +84,13 @@ const submitJobPost = async (
           //country,
           //city,
           address,
+          user: user.id,
+          createdOn: new Date()
         });
 
         alert("Job Posted successfully...");
-
+        setJobData(JSON.parse(JSON.stringify(addJobFields)))
+        
       } catch (err) {
         alert(err.message);
         // console.warn(err);
@@ -107,23 +108,26 @@ const submitJobPost = async (
 };
 
 const PostBoxForm = () => {
-  const [jobTitle, setJobTitle] = useState("");
-  const [jobDesc, setJobDesc] = useState("");
+  // const [jobTitle, setJobTitle] = useState("");
+  // const [jobDesc, setJobDesc] = useState("");
   //const [email, setEmail] = useState("");
   //const [username, setUsername] = useState("");
   //const [specialism, setSpecialism] = useState([]);
-  const [jobType, setJobType] = useState("");
-  const [salary, setSalary] = useState("");
-  const [salaryRate, setSalaryRate] = useState("");
-  const [career, setCareer] = useState("");
-  const [exp, setExp] = useState("");
+  // const [jobType, setJobType] = useState("");
+  // const [salary, setSalary] = useState("");
+  // const [salaryRate, setSalaryRate] = useState("");
+  // const [career, setCareer] = useState("");
+  // const [exp, setExp] = useState("");
   //const [gender, setGender] = useState("");
   //const [industy, setIndustry] = useState("");
   //const [qualification, setQualification] = useState("");
   //const [deadline, setDeadline] = useState("");
   //const [country, setCountry] = useState("");
   //const [city, setCity] = useState("");
-  const [address, setAddress] = useState("");
+  // const [address, setAddress] = useState("");
+  const user = useSelector(state => state.candidate.user)
+  const [jobData, setJobData] = useState(JSON.parse(JSON.stringify(addJobFields)));
+  const { jobTitle, jobDesc, jobType, salary, salaryRate, career, exp, address } = useMemo(() => jobData, [jobData])
 
   const searchInput = useRef(null);
 
@@ -183,7 +187,10 @@ const PostBoxForm = () => {
             value={jobTitle}
             required
             onChange={(e) => {
-              setJobTitle(e.target.value);
+              setJobData((previousState) => ({ 
+                ...previousState,
+                jobTitle: e.target.value
+              }))
             }}
             placeholder="Job Title"
           />
@@ -194,7 +201,10 @@ const PostBoxForm = () => {
           <textarea
             value={jobDesc}
             onChange={(e) => {
-              setJobDesc(e.target.value);
+              setJobData((previousState) => ({ 
+                ...previousState,
+                jobDesc: e.target.value
+              }))
             }}
             placeholder="Spent several years working on sheep on Wall Street. Had moderate success investing in Yugo's on Wall Street. Managed a small team buying and selling Pogo sticks for farmers. Spent several years licensing licorice in West Palm Beach, FL. Developed several new methods for working it banjos in the aftermarket. Spent a weekend importing banjos in West Palm Beach, FL.In this position, the Software Engineer collaborates with Evention's Development team to continuously enhance our current software solutions as well as create new solutions to eliminate the back-office operations and management challenges present"
           ></textarea>
@@ -259,7 +269,10 @@ const PostBoxForm = () => {
             value={jobType}
             required
             onChange={(e) => {
-              setJobType(e.target.value);
+              setJobData((previousState) => ({ 
+                ...previousState,
+                jobType: e.target.value
+              }))
             }}
           >
             <option></option>
@@ -276,7 +289,10 @@ const PostBoxForm = () => {
             value={exp}
             required
             onChange={(e) => {
-              setExp(e.target.value);
+              setJobData((previousState) => ({ 
+                ...previousState,
+                exp: e.target.value
+              }))
             }}
           >
             <option></option>
@@ -301,7 +317,10 @@ const PostBoxForm = () => {
             value={salary}
             placeholder="$100,000.00"
             onChange={(e) => {
-              setSalary(e.target.value);
+              setJobData((previousState) => ({ 
+                ...previousState,
+                salary: e.target.value
+              }))
             }}
           />
         </div>
@@ -311,7 +330,10 @@ const PostBoxForm = () => {
             className="chosen-single form-select"
             value={salaryRate}
             onChange={(e) => {
-              setSalaryRate(e.target.value);
+              setJobData((previousState) => ({ 
+                ...previousState,
+                salaryRate: e.target.value
+              }))
             }}
           >
             <option></option>
@@ -328,7 +350,10 @@ const PostBoxForm = () => {
             value={career}
             required
             onChange={(e) => {
-              setCareer(e.target.value);
+              setJobData((previousState) => ({ 
+                ...previousState,
+                career: e.target.value
+              }))
             }}
           >
             <option></option>
@@ -454,7 +479,10 @@ const PostBoxForm = () => {
             ref={searchInput}
             value={address}
             onChange={(e) => {
-              setAddress(e.target.value);
+              setJobData((previousState) => ({ 
+                ...previousState,
+                address: e.target.value
+              }))
             }}
             placeholder="Address / City, State"
           />
@@ -495,25 +523,7 @@ const PostBoxForm = () => {
             className="theme-btn btn-style-one"
             onClick={(e) => {
               e.preventDefault();
-              submitJobPost(
-                jobTitle,
-                jobDesc,
-                //email,
-                //username,
-                //specialism,
-                jobType,
-                salary,
-                salaryRate,
-                career,
-                exp,
-                //gender,
-                //industy,
-                //qualification,
-                //deadline,
-                //country,
-                //city,
-                address
-              );
+              submitJobPost(jobData, setJobData, user);
             }}
           >
             Post

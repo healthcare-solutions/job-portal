@@ -20,7 +20,7 @@ const signInWithGoogle = async (dispatch) => {
     const res = await auth.signInWithPopup(provider);
     const user = res.user;
     const userRef = collection(db, "users");
-    const result = await getDocs(query(userRef, where("uid", "==", user.uid)));
+    const result = await getDocs(query(userRef, where("googleUid", "==", user.uid)));
     if (result.empty) {
       await addDoc(collection(db, "users"), {
         googleUid: user.uid,

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { setEncryptedItem } from './../../utils/encryptedStorage';
 
 const initialState = {
     category: [
@@ -166,7 +167,8 @@ export const candidateSlice = createSlice({
         },
         setUserData: (state, { payload }) => {
             state.user = payload
-            state.loggedIn = payload.id ? true : false             
+            state.loggedIn = payload.id ? true : false    
+            setEncryptedItem('user', JSON.stringify(state.user))
         },
     },
 });

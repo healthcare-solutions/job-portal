@@ -17,6 +17,7 @@ import ApplyJobModalContent from "../../components/job-single-pages/shared-compo
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../components/common/form/firebase";
 import Social from "../../components/footer/common-footer/Social";
+import DefaulHeader2 from "../../components/header/DefaulHeader2";
 
 const JobSingleDynamicV1 = () => {
   const router = useRouter();
@@ -58,7 +59,7 @@ const JobSingleDynamicV1 = () => {
       <LoginPopup />
       {/* End Login Popup Modal */}
 
-      <DefaulHeader />
+      <DefaulHeader2 />
       {/* <!--End Main Header --> */}
 
       <MobileMenu />
