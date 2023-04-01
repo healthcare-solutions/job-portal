@@ -81,8 +81,8 @@ const FormContent = () => {
         <label>Your Name</label>
         <input
           type="text"
-          name="name"
-          placeholder="Your Name"
+          name="immense-career-name"
+          placeholder="Enter first and last name"
           value={name}
           onChange={(e) => {
             setName(e.target.value);
@@ -96,7 +96,7 @@ const FormContent = () => {
         <label>Email Address</label>
         <input
           type="email"
-          name="email"
+          name="immense-career-email"
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -114,7 +114,6 @@ const FormContent = () => {
         <input
           id="password-field"
           type="password"
-          name="password"
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);

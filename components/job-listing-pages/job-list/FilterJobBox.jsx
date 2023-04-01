@@ -176,9 +176,11 @@ const FilterJobBox = () => {
             </ul>
             {/* End .job-other-info */}
 
+{/*
             <button className="bookmark-btn">
               <span className="flaticon-bookmark"></span>
             </button>
+ */}
           </div>
         </div>
       </div>

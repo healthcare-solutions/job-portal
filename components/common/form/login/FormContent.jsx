@@ -20,11 +20,16 @@ const signInWithEmailAndPassword = async (email, password) => {
 };
 
 const resetPassword = async (email) => {
-  try {
-    await auth.sendPasswordResetEmail(email);
-  } catch (err) {
-    alert(err.message);
-  }
+    if(email){
+      try {
+        await auth.sendPasswordResetEmail(email);
+        alert('Password reset link has been sent to your email id. Please check your inbox.')
+      } catch (err) {
+        alert(err.message);
+      }
+    } else {
+        alert('Please fill your email address in above form before click Forgot Password button')
+    }
 };
 
 const FormContent = () => {
@@ -32,7 +37,7 @@ const FormContent = () => {
   const [loginPassword, setLoginPassword] = useState("");
   return (
     <div className="form-inner">
-      <h3>Login to Superio</h3>
+      <h3>Login to Immense Career</h3>
 
       {/* <!--Login Form--> */}
       <form method="post">
@@ -40,7 +45,7 @@ const FormContent = () => {
           <label>Email Address</label>
           <input
             type="email"
-            name="email"
+            name="immense-career-email"
             placeholder="Your Email Address"
             value={loginEmail}
             onChange={(e) => setLoginEmail(e.target.value)}
@@ -52,10 +57,11 @@ const FormContent = () => {
           <label>Password</label>
           <input
             type="password"
-            name="password"
+            name="immense-career-password"
             value={loginPassword}
             onChange={(e) => setLoginPassword(e.target.value)}
             placeholder="Password"
+            required
           />
         </div>
         {/* password */}

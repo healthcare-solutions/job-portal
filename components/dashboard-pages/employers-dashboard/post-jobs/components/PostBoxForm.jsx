@@ -179,7 +179,7 @@ const PostBoxForm = () => {
           <label>Job Title <span className="required">(required)</span></label>
           <input
             type="text"
-            name="immense-jobTitle"
+            name="immense-career-jobTitle"
             value={jobTitle}
             required
             onChange={(e) => {
@@ -297,7 +297,7 @@ const PostBoxForm = () => {
           <label>Offered Salary <span className="optional">(optional)</span></label>
           <input
             type="text"
-            name="immense-salary"
+            name="immense-career-salary"
             value={salary}
             placeholder="$100,000.00"
             onChange={(e) => {
@@ -450,7 +450,7 @@ const PostBoxForm = () => {
           <label>Complete Address / City, State <span className="required">(required)</span></label>
           <input
             type="text"
-            name="immense-address"
+            name="immense-career-address"
             ref={searchInput}
             value={address}
             onChange={(e) => {
