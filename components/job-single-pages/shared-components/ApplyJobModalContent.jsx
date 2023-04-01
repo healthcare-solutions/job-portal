@@ -3,11 +3,15 @@ import { useState } from "react";
 import { db, storage } from "../../common/form/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { addDoc, collection } from "firebase/firestore";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 // import { v4 } from "uuid";
 const ApplyJobModalContent = () => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const userId = localStorage.getItem("userId");
-  const postId = localStorage.getItem("postId");
+  const user = useSelector(state => state.candidate.user)
+  const userId = user.id
+  const router = useRouter()
+  const postId = router.query.id;
   function handleFileInputChange(event) {
     setSelectedFile(event.target.files[0]);
   }

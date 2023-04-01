@@ -4,7 +4,7 @@ import FooterDefault from "../../components/footer/common-footer";
 import DefaulHeader from "../../components/header/DefaulHeader";
 import MobileMenu from "../../components/header/MobileMenu";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Seo from "../../components/common/Seo";
 import RelatedJobs from "../../components/job-single-pages/related-jobs/RelatedJobs";
 import JobOverView from "../../components/job-single-pages/job-overview/JobOverView";
@@ -18,8 +18,12 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../components/common/form/firebase";
 import Social from "../../components/footer/common-footer/Social";
 import DefaulHeader2 from "../../components/header/DefaulHeader2";
+import { useSelector } from "react-redux";
+import DashboardHeader from "../../components/header/DashboardHeader";
 
 const JobSingleDynamicV1 = () => {
+  const user = useSelector(state => state.candidate.user)
+  const showLoginButton = useMemo(() => !user?.id, [user])
   const router = useRouter();
   const [company, setCompany] = useState({});
   const id = router.query.id;
@@ -59,7 +63,7 @@ const JobSingleDynamicV1 = () => {
       <LoginPopup />
       {/* End Login Popup Modal */}
 
-      <DefaulHeader2 />
+      { showLoginButton ?  <DefaulHeader2 /> : <DashboardHeader/>}
       {/* <!--End Main Header --> */}
 
       <MobileMenu />
