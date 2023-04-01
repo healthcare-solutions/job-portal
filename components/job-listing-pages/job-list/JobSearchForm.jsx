@@ -16,9 +16,9 @@ const JobSearchForm = () => {
         </div>
         {/* <!-- Form Group --> */}
 
-        <div className="form-group col-lg-3 col-md-12 col-sm-12 location">
+        {/* <div className="form-group col-lg-3 col-md-12 col-sm-12 location">
           <Categories />
-        </div>
+        </div> */}
         {/* <!-- Form Group --> */}
 
         <div className="form-group col-lg-2 col-md-12 col-sm-12 text-right">
