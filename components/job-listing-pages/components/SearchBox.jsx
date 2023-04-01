@@ -20,7 +20,7 @@ const SearchBox = () => {
         <>
             <input
                 type="text"
-                name="listing-search"
+                name="immense-search_form_job_title"
                 placeholder="Job title, keywords, or company"
                 value={getKeyWord}
                 onChange={keywordHandler}
