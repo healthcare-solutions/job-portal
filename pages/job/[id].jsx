@@ -168,14 +168,17 @@ const JobSingleDynamicV1 = () => {
                 <JobDetailsDescriptions company={company} />
                 {/* End jobdetails content */}
 
+{/*
                 <div className="other-options">
                   <div className="social-share">
                     <h5>Share this job</h5>
                     <SocialTwo />
                   </div>
                 </div>
+ */}
                 {/* <!-- Other Options --> */}
 
+{/*
                 <div className="related-jobs">
                   <div className="title-box">
                     <h3>Related Jobs</h3>
@@ -183,10 +186,13 @@ const JobSingleDynamicV1 = () => {
                       2020 jobs live - 293 added today.
                     </div>
                   </div>
-                  {/* End title box */}
+                   */}
+{/* End title box */}{/*
+
 
                   <RelatedJobs />
                 </div>
+ */}
                 {/* <!-- Related Jobs --> */}
               </div>
               {/* End .content-column */}
@@ -217,24 +223,25 @@ const JobSingleDynamicV1 = () => {
                   </div>
                   {/* End .sidebar-widget */}
 
+{/*
                   <div className="sidebar-widget company-widget">
                     <div className="widget-content">
                       <div className="company-title">
-{/*
                         <div className="company-logo">
                           <img src={company.logo} alt="resource" />
                         </div>
- */}
                         <h5 className="company-name">{company.company}</h5>
                         <a href="#" className="profile-link">
                           View company profile
                         </a>
                       </div>
-                      {/* End company title */}
+                       */}
+{/* End company title */}{/*
+
 
                       <CompnayInfo company={company} />
 
-                      {/* <div className="btn-box">
+                      <div className="btn-box">
                         <a
                           href="#"
                           target="_blank"
@@ -243,10 +250,13 @@ const JobSingleDynamicV1 = () => {
                         >
                           {company?.link}
                         </a>
-                      </div> */}
-                      {/* End btn-box */}
+                      </div>
+                       */}
+{/* End btn-box */}{/*
+
                     </div>
                   </div>
+ */}
                   {/* End .company-widget */}
                 </aside>
                 {/* End .sidebar */}
