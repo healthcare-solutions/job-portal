@@ -14,7 +14,7 @@ import MapJobFinder from "../../components/job-listing-pages/components/MapJobFi
 import SocialTwo from "../../components/job-single-pages/social/SocialTwo";
 import JobDetailsDescriptions from "../../components/job-single-pages/shared-components/JobDetailsDescriptions";
 import ApplyJobModalContent from "../../components/job-single-pages/shared-components/ApplyJobModalContent";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, query } from "firebase/firestore";
 import { db } from "../../components/common/form/firebase";
 import Social from "../../components/footer/common-footer/Social";
 import DefaulHeader2 from "../../components/header/DefaulHeader2";
@@ -29,18 +29,13 @@ const JobSingleDynamicV1 = () => {
   const id = router.query.id;
 
   const fetchCompany = async () => {
-    await getDocs(collection(db, "jobs")).then((querySnapshot) => {
-      const newData = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      if (!id) <h1>Loading...</h1>;
-      else setCompany(newData.find((item) => item.id == id));
-      console.log(company, newData);
-      return () => {};
-    });
+    try{
+      const singleJobSnap = await getDoc(doc(db, "jobs", id))
+      setCompany(singleJobSnap.data())
+    } catch(e) {
+      console.warn(e)
+    }
   };
-  console.log(company);
 
   useEffect(() => {
     fetchCompany();

@@ -1,7 +1,31 @@
+import { collection, getDocs, query, where } from "firebase/firestore";
 import Link from "next/link";
-import jobs from "../../../../../data/job-featured.js";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { db } from "../../../../common/form/firebase";
+// import jobs from "../../../../../data/job-featured.js";
 
 const JobListingsTable = () => {
+  const [jobs, setjobs] = useState([]);
+  const user = useSelector(state => state.candidate.user)
+  const router = useRouter();
+
+  const fetchPost = async () => {
+    const userJoblistQuery  = query(collection(db, "jobs"), where("user", "==", user.id))
+    await getDocs(userJoblistQuery).then((querySnapshot) => {
+      const newData = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setjobs(newData);
+    });
+  };
+
+  useEffect(() => {
+    fetchPost();
+  }, []);
+
   return (
     <div className="tabs-box">
       <div className="widget-title">
@@ -23,7 +47,8 @@ const JobListingsTable = () => {
       {/* End filter top bar */}
 
       {/* Start table widget content */}
-      <div className="widget-content">
+      {jobs.length == 0 ? <p><center>No jobs posted yet</center></p>: 
+        <div className="widget-content">
         <div className="table-outer">
           <table className="default-table manage-job-table">
             <thead>
@@ -48,7 +73,7 @@ const JobListingsTable = () => {
                             <img src={item.logo} alt="logo" />
                           </span> */}
                           <h4>
-                            <Link href={`/job-single-v1/${item.id}`}>
+                            <Link href={`/job/${item.id}`}>
                               {item.jobTitle}
                             </Link>
                           </h4>
@@ -67,7 +92,7 @@ const JobListingsTable = () => {
                     </div>
                   </td>
                   <td className="applied">
-                    <a href="#">3+ Applied</a>
+                    <Link href="/employers-dashboard/all-applicants">3+ Applied</Link>
                   </td>
                   <td>
                     October 27, 2017 <br />
@@ -77,7 +102,9 @@ const JobListingsTable = () => {
                   <td>
                     <div className="option-box">
                       <ul className="option-list">
-                        <li>
+                        <li onClick={()=>{
+                          router.push(`/job/${item.id}`)
+                        }}>
                           <button data-text="View Aplication">
                             <span className="la la-eye"></span>
                           </button>
@@ -100,7 +127,8 @@ const JobListingsTable = () => {
             </tbody>
           </table>
         </div>
-      </div>
+        </div>
+      }
       {/* End table widget content */}
     </div>
   );

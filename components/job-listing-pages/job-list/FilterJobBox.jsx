@@ -31,10 +31,8 @@ const FilterJobBox = () => {
         id: doc.id,
       }));
       setjobs(newData);
-      console.log(jobs, newData);
     });
   };
-  console.log(jobs);
 
   useEffect(() => {
     fetchPost();
@@ -142,7 +140,7 @@ const FilterJobBox = () => {
                 onClick={(event) => {
                   event.preventDefault();
                   localStorage.setItem("postId", item.id);
-                  router.push(`/job-single-v1/${item.id}`);
+                  router.push(`/job/${item.id}`);
                 }}
               >
                 {item.jobTitle}
