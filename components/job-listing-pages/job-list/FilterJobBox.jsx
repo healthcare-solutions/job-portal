@@ -147,36 +147,37 @@ const FilterJobBox = () => {
               </Link>
             </h4>
 
-            <ul className="job-info">
-              <li>
-                <span className="icon flaticon-briefcase"></span>
-                {item.jobType}
-              </li>
-              {/* compnay info */}
-              <li>
-                <span className="icon flaticon-map-locator"></span>
-                {item.city}, {item.country}
-              </li>
-              {/* location info */}
-              <li>
-                <span className="icon flaticon-clock-3"></span> {item.time}
-              </li>
-              {/* time info */}
-              <li>
-                <span className="icon flaticon-money"></span> {item.salary}
-              </li>
-              {/* salary info */}
-            </ul>
-            {/* End .job-info */}
-
-            <ul className="job-other-info">
-              {/* {item?.jobType?.map((val, i) => (
-                <li key={i} className={`${val.styleClass}`}>
-                  {val.type}
-                </li>
-              ))} */}
-            </ul>
-            {/* End .job-other-info */}
+                  <ul className="job-info">
+                    { item?.jobType ?
+                        <li>
+                          <span className="icon flaticon-clock-3"></span>
+                          {item?.jobType}
+                        </li>
+                        : '' }
+                    {/* compnay info */}
+                    { item?.address ?
+                        <li>
+                          <span className="icon flaticon-map-locator"></span>
+                          {item?.address}
+                        </li>
+                        : '' }
+                    {/* location info */}
+{/*
+                    <li>
+                      <span className="icon flaticon-briefcase"></span>{" "}
+                      {item?.industry}
+                    </li>
+ */}
+                    {/* time info */}
+                    { item?.salary ?
+                        <li>
+                          <span className="icon flaticon-money"></span>{" "}
+                         ${item?.salary} {item?.salaryRate}
+                        </li>
+                        : '' }
+                    {/* salary info */}
+                  </ul>
+                  {/* End .job-info */}
 
 {/*
             <button className="bookmark-btn">
