@@ -50,7 +50,7 @@ const JobSingleDynamicV1 = () => {
 
   return (
     <>
-      <Seo pageTitle="Job Single Dyanmic V1" />
+      <Seo pageTitle="Apply Job" />
 
       {/* <!-- Header Span --> */}
       <span className="header-span"></span>
@@ -77,37 +77,49 @@ const JobSingleDynamicV1 = () => {
                   <h4>{company?.jobTitle}</h4>
 
                   <ul className="job-info">
-                    <li>
-                      <span className="icon flaticon-briefcase"></span>
-                      {company?.industy}
-                    </li>
+                    { company?.jobType ?
+                        <li>
+                          <span className="icon flaticon-clock-3"></span>
+                          {company?.jobType}
+                        </li>
+                        : '' }
                     {/* compnay info */}
-                    <li>
-                      <span className="icon flaticon-map-locator"></span>
-                      {company?.city},{company?.country}
-                    </li>
+                    { company?.address ?
+                        <li>
+                          <span className="icon flaticon-map-locator"></span>
+                          {company?.address}
+                        </li>
+                        : '' }
                     {/* location info */}
+{/*
                     <li>
-                      <span className="icon flaticon-clock-3"></span>{" "}
-                      {company?.time}
+                      <span className="icon flaticon-briefcase"></span>{" "}
+                      {company?.industry}
                     </li>
+ */}
                     {/* time info */}
-                    <li>
-                      <span className="icon flaticon-money"></span>{" "}
-                      {company?.salary}
-                    </li>
+                    { company?.salary ?
+                        <li>
+                          <span className="icon flaticon-money"></span>{" "}
+                         ${company?.salary} {company?.salaryRate}
+                        </li>
+                        : '' }
                     {/* salary info */}
                   </ul>
                   {/* End .job-info */}
 
+{/*
                   <ul className="job-other-info">
-                    {/* {company?.jobType?.map((val, i) => (
+                     */}
+{/* {company?.jobType?.map((val, i) => (
                       <li key={i} className={`${val.styleClass}`}>
                         {val.type}
                       </li>
-                    ))} */}
+                    ))} */}{/*
+
                     {company?.jobType}
                   </ul>
+ */}
                   {/* End .job-other-info */}
                 </div>
                 {/* End .content */}
@@ -203,7 +215,6 @@ const JobSingleDynamicV1 = () => {
                     {/* <!-- Job Overview --> */}
                     <h4 className="widget-title">Job Overview</h4>
                     <JobOverView company={company} />
-
                     {/* <!-- Map Widget --> */}
                     {/* <h4 className="widget-title">Job Location</h4>
                     <div className="widget-content">
@@ -215,10 +226,13 @@ const JobSingleDynamicV1 = () => {
                     </div> */}
                     {/* <!--  Map Widget --> */}
 
+{/*
+                    <br/>
                     <h4 className="widget-title">Job Skills</h4>
                     <div className="widget-content">
                       <JobSkills />
                     </div>
+ */}
                     {/* <!-- Job Skills --> */}
                   </div>
                   {/* End .sidebar-widget */}
