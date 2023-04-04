@@ -7,6 +7,7 @@ import JobSearchForm from "./JobSearchForm";
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
 import DashboardHeader from "../../header/DashboardHeader"
+import Footer from "../../home-15/Footer"
 
 const index = () => {
   const user = useSelector(state => state.candidate.user)
@@ -50,6 +51,7 @@ const index = () => {
       </section>
       {/* <!--End Listing Page Section --> */}
 
+      <Footer />
       {/* <FooterDefault footerStyle="alternate5" /> */}
       {/* <!-- End Main Footer --> */}
     </>

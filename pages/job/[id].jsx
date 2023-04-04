@@ -20,6 +20,7 @@ import Social from "../../components/footer/common-footer/Social";
 import DefaulHeader2 from "../../components/header/DefaulHeader2";
 import { useSelector } from "react-redux";
 import DashboardHeader from "../../components/header/DashboardHeader";
+import Footer from "../../components/home-15/Footer"
 
 const JobSingleDynamicV1 = () => {
   const user = useSelector(state => state.candidate.user)
@@ -282,7 +283,7 @@ const JobSingleDynamicV1 = () => {
         {/* <!-- job-detail-outer--> */}
       </section>
       {/* <!-- End Job Detail Section --> */}
-
+      <Footer />
       {/* <FooterDefault footerStyle="alternate5" /> */}
       {/* <!-- End Main Footer --> */}
     </>
