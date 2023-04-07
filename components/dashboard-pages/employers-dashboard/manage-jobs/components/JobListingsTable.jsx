@@ -55,7 +55,7 @@ const JobListingsTable = () => {
               <tr>
                 <th>Job Title</th>
                 <th>Applications</th>
-                <th>Created & Expired</th>
+                <th>Created On</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -77,16 +77,30 @@ const JobListingsTable = () => {
                               {item.jobTitle}
                             </Link>
                           </h4>
-                          <ul className="job-info">
-                            <li>
-                              <span className="icon flaticon-briefcase"></span>
-                              Segment
-                            </li>
-                            <li>
-                              <span className="icon flaticon-map-locator"></span>
-                              London, UK
-                            </li>
-                          </ul>
+                            <ul className="job-info">
+                              { item?.jobType ?
+                                  <li>
+                                    <span className="icon flaticon-clock-3"></span>
+                                    {item?.jobType}
+                                  </li>
+                                  : '' }
+                              { item?.address ?
+                                  <li>
+                                    <span className="icon flaticon-map-locator"></span>
+                                    {item?.address}
+                                  </li>
+                                  : '' }
+                              {/* location info */}
+                              { item?.salary ?
+                                  <li>
+                                    <span className="icon flaticon-money"></span>{" "}
+                                   ${item?.salary} {item?.salaryRate}
+                                  </li>
+                                  : '' }
+                              {/* salary info */}
+                            </ul>
+                            {/* End .job-info */}
+
                         </div>
                       </div>
                     </div>
@@ -95,8 +109,7 @@ const JobListingsTable = () => {
                     <Link href="/employers-dashboard/all-applicants">3+ Applied</Link>
                   </td>
                   <td>
-                    October 27, 2017 <br />
-                    April 25, 2011
+                    October 27, 2017
                   </td>
                   <td className="status">Active</td>
                   <td>
@@ -105,17 +118,17 @@ const JobListingsTable = () => {
                         <li onClick={()=>{
                           router.push(`/job/${item.id}`)
                         }}>
-                          <button data-text="View Aplication">
+                          <button data-text="View Job">
                             <span className="la la-eye"></span>
                           </button>
                         </li>
                         <li>
-                          <button data-text="Reject Aplication">
+                          <button data-text="Reject Job">
                             <span className="la la-pencil"></span>
                           </button>
                         </li>
                         <li>
-                          <button data-text="Delete Aplication">
+                          <button data-text="Delete Job">
                             <span className="la la-trash"></span>
                           </button>
                         </li>
