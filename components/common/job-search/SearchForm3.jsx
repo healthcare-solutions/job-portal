@@ -1,5 +1,8 @@
 import Router from "next/router";
 import { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { setSearchFields } from "../../../features/search/searchSlice";
+import { addKeyword, addLocation } from "../../../features/filter/filterSlice";
 
 
 const apiKey = process.env.NEXT_PUBLIC_JOB_PORTAL_GMAP_API_KEY;
@@ -21,11 +24,14 @@ function loadAsyncScript(src) {
 
 
 const SearchForm3 = () => {
+  const dispatch = useDispatch();
+
   const handleSubmit = (event) => {
     event.preventDefault();
   };
 
   const searchInput = useRef(null);
+  const searchTerm = useRef(null)
 
   // init google map script
   const initMapScript = () => {
@@ -55,6 +61,15 @@ const SearchForm3 = () => {
 
   }
 
+  const searchFunction = () => {
+    dispatch(setSearchFields({ searchTerm: searchTerm.current.value, searchAddress: searchInput.current.value }))
+    dispatch(addKeyword(searchTerm.current.value))
+    dispatch(addLocation(searchInput.current.value))
+    // TODO: fetch data from firebase and then route to next page
+    Router.push("/job-list") 
+  }
+  
+
   // load map script after mounted
   useEffect(() => {
     initMapScript().then(() => initAutocomplete())
@@ -70,6 +85,7 @@ const SearchForm3 = () => {
             type="text"
             name="immense-search_form_job_title"
             placeholder="Job title, keywords, or company"
+            ref={searchTerm}
           />
         </div>
 
@@ -104,7 +120,7 @@ const SearchForm3 = () => {
           <button
             type="submit"
             className="theme-btn btn-style-one"
-            onClick={() => Router.push("/job-list")}
+            onClick={searchFunction}
           >
             Find Jobs
           </button>

@@ -10,7 +10,7 @@ import {
   addJobTypeSelect,
   addKeyword,
   addLocation,
-  //   addPerPage,
+  addPerPage,
   addSalary,
   addSort,
 } from "../../../features/filter/filterSlice";
