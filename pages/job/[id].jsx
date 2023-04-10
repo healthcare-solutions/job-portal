@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import Seo from "../../components/common/Seo";
 import RelatedJobs from "../../components/job-single-pages/related-jobs/RelatedJobs";
 import JobOverView from "../../components/job-single-pages/job-overview/JobOverView";
+import ApplyInstantView from "../../components/job-single-pages/job-overview/ApplyInstantView";
 import JobSkills from "../../components/job-single-pages/shared-components/JobSkills";
 import CompnayInfo from "../../components/job-single-pages/shared-components/CompanyInfo";
 import MapJobFinder from "../../components/job-listing-pages/components/MapJobFinder";
@@ -71,10 +72,12 @@ const JobSingleDynamicV1 = () => {
           <div className="auto-container">
             <div className="job-block-seven">
               <div className="inner-box">
-                <div className="content">
+                <div>
+{/*
                   <span className="company-logo">
                     <img src={company?.logo} alt="logo" />
                   </span>
+ */}
                   <h4>{company?.jobTitle}</h4>
 
                   <ul className="job-info">
@@ -125,20 +128,22 @@ const JobSingleDynamicV1 = () => {
                 </div>
                 {/* End .content */}
 
-                <div className="btn-box">
-                  <a
-                    href="#"
-                    className="theme-btn btn-style-one"
-                    data-bs-toggle="modal"
-                    data-bs-target="#applyJobModal"
-                  >
-                    Apply For Job
-                  </a>
-                  {/* <button className="bookmark-btn">
-                    <i className="flaticon-bookmark"></i>
-                  </button> */}
-                </div>
-                {/* End apply for job btn */}
+                { !showLoginButton ?
+                    <div className="btn-box">
+                      <a
+                        href="#"
+                        className="theme-btn btn-style-one"
+                        data-bs-toggle="modal"
+                        data-bs-target="#applyJobModal"
+                      >
+                        Apply For Job
+                      </a>
+                      {/* <button className="bookmark-btn">
+                        <i className="flaticon-bookmark"></i>
+                      </button> */}
+                    </div>
+
+                    : ''}
 
                 {/* <!-- Modal --> */}
                 <div
@@ -212,29 +217,18 @@ const JobSingleDynamicV1 = () => {
 
               <div className="sidebar-column col-lg-4 col-md-12 col-sm-12">
                 <aside className="sidebar">
+                  { showLoginButton ?
+                      <div className="sidebar-widget">
+                        {/* <!-- Job Overview --> */}
+                        <h4 className="widget-title">APPLY INSTANTLY</h4>
+                        <ApplyInstantView company={company} />
+                      </div>
+                    : '' }
+
                   <div className="sidebar-widget">
                     {/* <!-- Job Overview --> */}
                     <h4 className="widget-title">Job Overview</h4>
                     <JobOverView company={company} />
-                    {/* <!-- Map Widget --> */}
-                    {/* <h4 className="widget-title">Job Location</h4>
-                    <div className="widget-content">
-                      <div className="map-outer">
-                        <div style={{ height: "300px", width: "100%" }}>
-                          <MapJobFinder />
-                        </div>
-                      </div>
-                    </div> */}
-                    {/* <!--  Map Widget --> */}
-
-{/*
-                    <br/>
-                    <h4 className="widget-title">Job Skills</h4>
-                    <div className="widget-content">
-                      <JobSkills />
-                    </div>
- */}
-                    {/* <!-- Job Skills --> */}
                   </div>
                   {/* End .sidebar-widget */}
 

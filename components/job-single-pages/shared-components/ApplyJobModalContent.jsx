@@ -7,7 +7,10 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 // import { v4 } from "uuid";
 const ApplyJobModalContent = () => {
+  const [licenseNumber, setLicenseNumber] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [licenseNumberError, setLicenseNumberError] = useState("");
+
   const user = useSelector(state => state.candidate.user)
   const userId = user.id
   const router = useRouter()
@@ -16,47 +19,60 @@ const ApplyJobModalContent = () => {
     setSelectedFile(event.target.files[0]);
   }
 
+  const validateForm = () => {
+    let isValid = true;
+    if (!licenseNumber) {
+      setLicenseNumberError("Please enter your License Number");
+      isValid = false;
+    }
+    return isValid;
+  };
+
+
   function handleSubmit(event) {
     event.preventDefault();
-    if (selectedFile) {
-      const fileRef = ref(storage, selectedFile.name);
-      uploadBytes(fileRef, selectedFile)
-        .then(() => {
-          alert(`File ${selectedFile.name} uploaded successfully.`);
-          // TODO: add code to save file metadata to the database
-          getDownloadURL(fileRef)
-            .then((downloadURL) => {
-              const metadata = {
-                name: selectedFile.name,
-                size: selectedFile.size,
-                type: selectedFile.type,
-                userId: userId,
-                postId: postId,
-                downloadURL: downloadURL,
-                createdAt: new Date(),
-              };
-              addDoc(collection(db, "files"), metadata)
-                .then(() => {
-                  console.log("File metadata saved to the database.");
+    if (validateForm()) {
+        if (selectedFile) {
+          const fileRef = ref(storage, selectedFile.name);
+          uploadBytes(fileRef, selectedFile)
+            .then(() => {
+              alert(`File ${selectedFile.name} uploaded successfully.`);
+              // TODO: add code to save file metadata to the database
+              getDownloadURL(fileRef)
+                .then((downloadURL) => {
+                  const metadata = {
+                    documentName: selectedFile.name,
+                    documentSize: selectedFile.size,
+                    documentType: selectedFile.type,
+                    userId: userId,
+                    licenseNumber: licenseNumber,
+                    postId: postId,
+                    downloadURL: downloadURL,
+                    createdAt: new Date(),
+                  };
+                  addDoc(collection(db, "applications"), metadata)
+                    .then(() => {
+                      console.log("File metadata saved to the database.");
+                    })
+                    .catch((error) => {
+                      console.error(
+                        "Failed to save file metadata to the database:",
+                        error
+                      );
+                    });
                 })
                 .catch((error) => {
                   console.error(
-                    "Failed to save file metadata to the database:",
-                    error
+                    `Failed to get download URL for file ${selectedFile.name}: ${error}`
                   );
                 });
             })
             .catch((error) => {
-              console.error(
-                `Failed to get download URL for file ${selectedFile.name}: ${error}`
-              );
+              console.error(`Failed to upload file ${selectedFile.name}: ${error}`);
             });
-        })
-        .catch((error) => {
-          console.error(`Failed to upload file ${selectedFile.name}: ${error}`);
-        });
-    } else {
-      console.warn("No file selected.");
+        } else {
+          console.warn("No file selected.");
+        }
     }
   }
 
@@ -81,9 +97,26 @@ const ApplyJobModalContent = () => {
               >
                 Upload CV (doc, docx, pdf)
                 {selectedFile && <p>Selected file: {selectedFile.name}</p>}
+                {!selectedFile && <label className="required">Please select a file before Apply</label>}
               </label>
             </div>
           </div>
+        </div>
+        {/* End .col */}
+
+        <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+          <label>License Number<span className="required"> (required)</span></label>
+          <input
+            type="text"
+            name="immense-career-license_number"
+            value={licenseNumber}
+            onChange={(e) => {
+              setLicenseNumber(e.target.value);
+              setLicenseNumberError("");
+            }}
+            placeholder="enter your license number to verify your eligibilty"
+          />
+          {licenseNumberError && <div className="required">{licenseNumberError}</div>}
         </div>
         {/* End .col */}
 
@@ -92,7 +125,6 @@ const ApplyJobModalContent = () => {
             className="darma"
             name="message"
             placeholder="Message"
-            required
           ></textarea>
         </div>
         {/* End .col */}
