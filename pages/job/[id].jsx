@@ -15,7 +15,7 @@ import MapJobFinder from "../../components/job-listing-pages/components/MapJobFi
 import SocialTwo from "../../components/job-single-pages/social/SocialTwo";
 import JobDetailsDescriptions from "../../components/job-single-pages/shared-components/JobDetailsDescriptions";
 import ApplyJobModalContent from "../../components/job-single-pages/shared-components/ApplyJobModalContent";
-import { collection, doc, getDoc, query } from "firebase/firestore";
+import { collection, doc, getDoc, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../components/common/form/firebase";
 import Social from "../../components/footer/common-footer/Social";
 import DefaulHeader2 from "../../components/header/DefaulHeader2";
@@ -24,6 +24,7 @@ import DashboardHeader from "../../components/header/DashboardHeader";
 import Footer from "../../components/home-15/Footer"
 
 const JobSingleDynamicV1 = () => {
+  const [isUserApplied, setIsUserApplied] = useState([]);
   const user = useSelector(state => state.candidate.user)
   const showLoginButton = useMemo(() => !user?.id, [user])
   const router = useRouter();
@@ -39,8 +40,25 @@ const JobSingleDynamicV1 = () => {
     }
   };
 
+  const fetchPostForLoggedInUser = async () => {
+   if (id && !showLoginButton) {
+    const queryCriteria  = query(collection(db, "applications"), where("email", "==", user.email), where("postId", "==", router.query.id))
+    await getDocs(queryCriteria).then((querySnapshot) => {
+      if (querySnapshot.docs.length > 0) {
+          setIsUserApplied(true);
+      } else {
+          setIsUserApplied(false);
+      }
+    });
+   } else {
+      setIsUserApplied(false);
+   }
+  };
+
   useEffect(() => {
+    setIsUserApplied(false);
     fetchCompany();
+    fetchPostForLoggedInUser();
   }, [id]);
 
   // useEffect(() => {
@@ -128,7 +146,17 @@ const JobSingleDynamicV1 = () => {
                 </div>
                 {/* End .content */}
 
-                { !showLoginButton ?
+                { !showLoginButton && isUserApplied ?
+                    <button className="btn-box theme-btn btn-style-nine">
+                        ✓ Applied
+                      {/* <button className="bookmark-btn">
+                        <i className="flaticon-bookmark"></i>
+                      </button> */}
+                    </button>
+
+                    : ''}
+
+                { !showLoginButton && !isUserApplied ?
                     <div className="btn-box">
                       <a
                         href="#"
@@ -139,10 +167,9 @@ const JobSingleDynamicV1 = () => {
                         Apply For Job
                       </a>
                       {/* <button className="bookmark-btn">
-                        <i className="flaticon-bookmark"></i>
-                      </button> */}
+                          <i className="flaticon-bookmark"></i>
+                        </button> */}
                     </div>
-
                     : ''}
 
                 {/* <!-- Modal --> */}

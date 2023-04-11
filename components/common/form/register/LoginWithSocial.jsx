@@ -32,7 +32,7 @@ const signInWithGoogle = async (dispatch) => {
       });
     }
 
-    dispatch(setUserData( {name: user.displayName, id: user.uid}))
+    dispatch(setUserData( {name: user.displayName, id: user.uid, email: user.email}))
     document.getElementById("close-button").click()
   } catch (err) {
     alert(err.message);

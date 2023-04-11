@@ -45,6 +45,8 @@ const ApplyJobModalContent = () => {
                     documentSize: selectedFile.size,
                     documentType: selectedFile.type,
                     userId: userId,
+                    email: user.email,
+                    name: user.name,
                     licenseNumber: licenseNumber,
                     postId: postId,
                     downloadURL: downloadURL,

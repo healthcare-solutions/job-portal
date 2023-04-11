@@ -66,8 +66,7 @@ const FormContent = () => {
           email,
           authProvider: "local",
         });
-        console.log(user, "Register successfully");
-        router.push("/login");
+        // TODO: close register popup
       } catch (err) {
         alert(err.message);
         // console.warn(err);
@@ -76,7 +75,7 @@ const FormContent = () => {
   };
 
   return (
-    <form method="post" action="add-parcel.html">
+    <>
       <div className="form-group">
         <label>Your Name</label>
         <input
@@ -135,7 +134,7 @@ const FormContent = () => {
         </button>
       </div>
       {/* login */}
-    </form>
+    </>
   );
 };
 
