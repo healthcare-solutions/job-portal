@@ -3,6 +3,8 @@ import Select from "react-select";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const apiKey = process.env.NEXT_PUBLIC_JOB_PORTAL_GMAP_API_KEY;
@@ -88,22 +90,46 @@ const submitJobPost = async (
           createdOn: new Date()
         });
 
-        alert("Job Posted successfully...");
+
+        // open toast
+        toast.success('Job Posted successfully', {
+            position: "bottom-right",
+            autoClose: 8000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
         setJobData(JSON.parse(JSON.stringify(addJobFields)))
         
       } catch (err) {
-        alert(err.message);
+        // open toast
+        toast.error('Error while saving your job application, Please try again later or contact tech support', {
+            position: "bottom-right",
+            autoClose: false,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
         // console.warn(err);
       }
     } else {
-        const isJobTitle  = jobTitle ? '' : '\nJob Title';
-        const isJobDesc   = jobDesc  ? '' : '\nJob Description';
-        const isJobType   = jobType  ? '' : '\nJob Type';
-        const isEdu       = career   ? '' : '\nEducation';
-        const isExp       = exp      ? '' : '\nExperience';
-        //const isCountry   = country  ? '' : '\nCountry';
-        //const isCity      = city     ? '' : '\nCity';
-        alert("please fill all the below required fields.\n" + isJobTitle + isJobDesc + isJobType + isEdu + isExp);
+        // open toast
+        toast.error('Please fill all the required fields.', {
+            position: "top-center",
+            autoClose: false,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
     }
 };
 

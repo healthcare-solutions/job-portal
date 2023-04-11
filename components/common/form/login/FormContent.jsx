@@ -2,6 +2,8 @@ import Link from "next/link";
 import LoginWithSocial from "./LoginWithSocial";
 import { auth } from "../firebase";
 import { useState } from "react";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const signInWithEmailAndPassword = async (email, password) => {
   try {
@@ -11,11 +13,30 @@ const signInWithEmailAndPassword = async (email, password) => {
     );
     const userId = userCredential.user.uid;
     localStorage.setItem("userId", userId);
-    console.log(`User ID ${userId} stored in local storage.`);
+    document.getElementById("close-button").click();
 
-    console.log(email, "login successfully");
+    // open toast
+    toast.success('Successfully logged in!', {
+        position: "bottom-right",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+    });
   } catch (err) {
-    alert(err.message);
+    toast.error('Please check your email address and password then try again!', {
+        position: "bottom-right",
+        autoClose: false,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+    });
   }
 };
 
@@ -23,12 +44,40 @@ const resetPassword = async (email) => {
     if(email){
       try {
         await auth.sendPasswordResetEmail(email);
-        alert('Password reset link has been sent to your email id. Please check your inbox.')
+        // open toast
+        toast.success('Password reset link has been sent to your email address. Please check your inbox!', {
+            position: "bottom-right",
+            autoClose: false,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
       } catch (err) {
-        alert(err.message);
+        toast.error('Error on reset password request, Please try after some time or contact tech support!', {
+            position: "bottom-right",
+            autoClose: false,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
       }
     } else {
-        alert('Please fill your email address in above form before click Forgot Password button')
+        toast.error('Please fill your email address mention in form before click Forgot Password button', {
+            position: "top-center",
+            autoClose: false,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
     }
 };
 

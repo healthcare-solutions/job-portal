@@ -5,7 +5,10 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { addDoc, collection } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // import { v4 } from "uuid";
+
 const ApplyJobModalContent = () => {
   const [licenseNumber, setLicenseNumber] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -36,7 +39,6 @@ const ApplyJobModalContent = () => {
           const fileRef = ref(storage, selectedFile.name);
           uploadBytes(fileRef, selectedFile)
             .then(() => {
-              alert(`File ${selectedFile.name} uploaded successfully.`);
               // TODO: add code to save file metadata to the database
               getDownloadURL(fileRef)
                 .then((downloadURL) => {
@@ -54,26 +56,67 @@ const ApplyJobModalContent = () => {
                   };
                   addDoc(collection(db, "applications"), metadata)
                     .then(() => {
-                      console.log("File metadata saved to the database.");
+                        // open toast
+                        toast.success('Successfully Applied in this job!', {
+                            position: "bottom-right",
+                            autoClose: 8000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                        });
                     })
                     .catch((error) => {
-                      console.error(
-                        "Failed to save file metadata to the database:",
-                        error
-                      );
+                      toast.error('Error while Applying in this job, Please try again later!', {
+                          position: "bottom-right",
+                          autoClose: false,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: "colored",
+                      });
                     });
                 })
                 .catch((error) => {
-                  console.error(
-                    `Failed to get download URL for file ${selectedFile.name}: ${error}`
-                  );
+                    toast.error('Failed to get download URL for file', {
+                        position: "bottom-right",
+                        autoClose: false,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
                 });
             })
             .catch((error) => {
-              console.error(`Failed to upload file ${selectedFile.name}: ${error}`);
+              toast.error('Failed to upload attachment', {
+                  position: "bottom-right",
+                  autoClose: false,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "colored",
+              });
             });
         } else {
-          console.warn("No file selected.");
+            toast.error('Please upload your CV before Apply.', {
+                position: "bottom-right",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
         }
     }
   }

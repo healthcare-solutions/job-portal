@@ -10,6 +10,8 @@ import {
 } from "firebase/firestore";
 import { setUserData } from "../../../../features/candidate/candidateSlice";
 import { useDispatch } from "react-redux";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const db = getFirestore();
 const provider = new firebase.auth.GoogleAuthProvider();
@@ -32,8 +34,29 @@ const signInWithGoogle = async (dispatch) => {
     }
     dispatch(setUserData( {name: user.displayName, id: user.uid, email: user.email}))
     document.getElementById("close-button").click()
+
+    // open toast
+    toast.success('Successfully log in. \nWelcome ' + user.displayName, {
+        position: "bottom-right",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+    });
   } catch (err) {
-    alert(err.message);
+    toast.error('Error while logging with Google, Please try again after some time or contact tech support!', {
+        position: "bottom-right",
+        hideProgressBar: false,
+        autoClose: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+    });
   }
 };
 

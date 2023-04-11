@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
 import DashboardHeader from "../header/DashboardHeader";
+import { ToastContainer } from 'react-toastify';
 
 const index = () => {
   const user = useSelector((state) => state.candidate.user);
@@ -166,6 +167,8 @@ const index = () => {
 
       <Footer />
       {/* <!-- End Main Footer --> */}
+
+      <ToastContainer />
     </>
   );
 };
