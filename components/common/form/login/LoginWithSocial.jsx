@@ -12,26 +12,44 @@ import { setUserData } from "../../../../features/candidate/candidateSlice";
 import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { supabase } from "../../../../config/supabaseClient";
+import { Auth } from "@supabase/ui";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const db = getFirestore();
 const provider = new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account" });
 
 const signInWithGoogle = async (dispatch) => {
+  
   try {
     const res = await auth.signInWithPopup(provider);
     const user = res.user;
-    const userRef = collection(db, "users");
-    const result = await getDocs(query(userRef, where("googleUid", "==", user.uid)));
-    if (result.empty) {
-      await addDoc(collection(db, "users"), {
-        googleUid: user.uid,
+    // const userRef = collection(db, "users");
+    // const result = await getDocs(query(userRef, where("googleUid", "==", user.uid)));
+    // if (result.empty) {
+    //   await addDoc(collection(db, "users"), {
+    //     googleUid: user.uid,
+    //     name: user.displayName,
+    //     photo: user.photoURL,
+    //     email: user.email,
+    //     authProvider: "google",
+    //   });
+    // }
+
+    const { data, error } = await supabase.from('users').insert([
+      { 
+        user_id: user.uid,
         name: user.displayName,
-        photo: user.photoURL,
+        photo_url: user.photoURL,
         email: user.email,
-        authProvider: "google",
-      });
-    }
+        auth_provider: "google",
+        phone_number: user.phoneNumber
+      },
+    ])
+
+    
     dispatch(setUserData( {name: user.displayName, id: user.uid, email: user.email}))
     document.getElementById("close-button").click()
 
@@ -62,6 +80,7 @@ const signInWithGoogle = async (dispatch) => {
 
 const LoginWithSocial = () => {
   const dispatch = useDispatch();
+  
   return (
     <div className="btn-box row">
       {/* <div className="col-lg-6 col-md-12">
