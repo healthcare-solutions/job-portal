@@ -5,7 +5,7 @@ import Form from "./FormContent";
 const Register = () => {
   return (
     <div className="form-inner">
-      <h3>Join Immense Career - Job Portal</h3>
+      <h3>Join us for Free</h3>
 
       <Tabs>
 {/*
