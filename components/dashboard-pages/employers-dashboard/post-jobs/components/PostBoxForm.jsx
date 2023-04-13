@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { supabase } from "../../../../../config/supabaseClient";
 
 
 const apiKey = process.env.NEXT_PUBLIC_JOB_PORTAL_GMAP_API_KEY;
@@ -68,28 +69,49 @@ const submitJobPost = async (
  */
         const db = getFirestore();
 
-        await addDoc(collection(db, "jobs"), {
-          jobTitle,
-          jobDesc,
-          //email,
-          //username,
-          //specialism,
-          jobType,
-          salary,
-          salaryRate,
-          career,
-          exp,
-          //gender,
-          //industy,
-          //qualification,
-          //deadline,
-          //country,
-          //city,
-          address,
-          user: user.id,
-          createdOn: new Date()
-        });
+        // await addDoc(collection(db, "jobs"), {
+        //   jobTitle,
+        //   jobDesc,
+        //   //email,
+        //   //username,
+        //   //specialism,
+        //   jobType,
+        //   salary,
+        //   salaryRate,
+        //   career,
+        //   exp,
+        //   //gender,
+        //   //industy,
+        //   //qualification,
+        //   //deadline,
+        //   //country,
+        //   //city,
+        //   address,
+        //   user: user.id,
+        //   createdOn: new Date()
+        // });
 
+
+        const { data: jobs, error1 } = await supabase.rpc('get_max_job_id')
+        const jobId = jobs + 1;
+
+        const { data, error } = await supabase
+            .from('jobs')
+            .insert([
+              { 
+                job_id: jobId,
+                user_id: user.id,
+                job_title: jobTitle,
+                job_desc: jobDesc,
+                job_type: jobType,
+                experience: exp,
+                education: career,
+                salary: salary,
+                salary_rate: salaryRate,
+                job_address: address
+              }
+        ])
+    
 
         // open toast
         toast.success('Job Posted successfully', {

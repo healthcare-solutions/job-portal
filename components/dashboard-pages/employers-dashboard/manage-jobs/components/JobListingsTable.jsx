@@ -5,22 +5,34 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { db } from "../../../../common/form/firebase";
 // import jobs from "../../../../../data/job-featured.js";
+import { supabase } from "../../../../../config/supabaseClient";
 
 const JobListingsTable = () => {
   const [jobs, setjobs] = useState([]);
   const user = useSelector(state => state.candidate.user)
   const router = useRouter();
 
+  // const fetchPost = async () => {
+  //   const userJoblistQuery  = query(collection(db, "jobs"), where("user", "==", user.id))
+  //   await getDocs(userJoblistQuery).then((querySnapshot) => {
+  //     const newData = querySnapshot.docs.map((doc) => ({
+  //       ...doc.data(),
+  //       id: doc.id,
+  //     }));
+  //     setjobs(newData);
+  //   });
+  // };
+
+
   const fetchPost = async () => {
-    const userJoblistQuery  = query(collection(db, "jobs"), where("user", "==", user.id))
-    await getDocs(userJoblistQuery).then((querySnapshot) => {
-      const newData = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setjobs(newData);
-    });
-  };
+    let { data: jobs, error } = await supabase
+      .from('jobs')
+      .select('*')
+      .eq('user_id', user.id)
+
+      setjobs(jobs)
+  }
+  
 
   useEffect(() => {
     fetchPost();
@@ -63,7 +75,7 @@ const JobListingsTable = () => {
 
             <tbody>
               {jobs.slice(0, 10).map((item) => (
-                <tr key={item.id}>
+                <tr key={item.job_id}>
                   <td>
                     {/* <!-- Job Block --> */}
                     <div className="job-block">
@@ -73,28 +85,28 @@ const JobListingsTable = () => {
                             <img src={item.logo} alt="logo" />
                           </span> */}
                           <h4>
-                            <Link href={`/job/${item.id}`}>
-                              {item.jobTitle}
+                            <Link href={`/job/${item.job_id}`}>
+                              {item.job_title}
                             </Link>
                           </h4>
                             <ul className="job-info">
-                              { item?.jobType ?
+                              { item?.job_type ?
                                   <li>
                                     <span className="icon flaticon-clock-3"></span>
-                                    {item?.jobType}
+                                    {item?.job_type}
                                   </li>
                                   : '' }
-                              { item?.address ?
+                              { item?.job_address ?
                                   <li>
                                     <span className="icon flaticon-map-locator"></span>
-                                    {item?.address}
+                                    {item?.job_address}
                                   </li>
                                   : '' }
                               {/* location info */}
                               { item?.salary ?
                                   <li>
                                     <span className="icon flaticon-money"></span>{" "}
-                                   ${item?.salary} {item?.salaryRate}
+                                   ${item?.salary} {item?.salary_rate}
                                   </li>
                                   : '' }
                               {/* salary info */}
@@ -116,7 +128,7 @@ const JobListingsTable = () => {
                     <div className="option-box">
                       <ul className="option-list">
                         <li onClick={()=>{
-                          router.push(`/job/${item.id}`)
+                          router.push(`/job/${item.job_id}`)
                         }}>
                           <button data-text="View Job">
                             <span className="la la-eye"></span>
