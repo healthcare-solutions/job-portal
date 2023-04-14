@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { setUserData } from "../../../../features/candidate/candidateSlice";
 import { useDispatch } from "react-redux";
+import { ToastContainer, toast } from 'react-toastify';
 
 const db = getFirestore();
 const provider = new firebase.auth.GoogleAuthProvider();
@@ -33,9 +34,46 @@ const signInWithGoogle = async (dispatch) => {
     }
 
     dispatch(setUserData( {name: user.displayName, id: user.uid, email: user.email}))
+
+    // open toast
+    toast.success('Account Created Successfully', {
+      position: "bottom-right",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
     document.getElementById("close-button").click()
   } catch (err) {
-    alert(err.message);
+    if (err.message.includes("found in field date in document users/")) {
+      // open toast
+      toast.error('Account already registered! Please try to log in', {
+        position: "bottom-right",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    } else {
+      // open toast
+      toast.error('System is unavailable. Please try again later or contact tech support!', {
+        position: "bottom-right",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
   }
 };
 const LoginWithSocial = () => {

@@ -3,6 +3,8 @@ import { auth } from "../firebase";
 import { useState } from "react";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { useRouter } from "next/router";
+import { ToastContainer, toast } from 'react-toastify';
+
 // const userRegistration = async (name, email, password) => {
 //   try {
 //     const res = await auth.createUserWithEmailAndPassword(email, password);
@@ -66,10 +68,47 @@ const FormContent = () => {
           email,
           authProvider: "local",
         });
+
+        // open toast
+        toast.success('Account Created Successfully', {
+          position: "bottom-right",
+          autoClose: 8000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+      });
+      
         // TODO: close register popup
       } catch (err) {
-        alert(err.message);
-        // console.warn(err);
+        if(err.toString().includes("email-already-in-use")) {
+          // open toast
+          toast.error('Account already registered! Please try to log in', {
+            position: "bottom-right",
+            autoClose: 8000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        } else {
+          // open toast
+          toast.error('System is unavailable. Please try again later or contact tech support!', {
+            position: "bottom-right",
+            autoClose: 8000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+        
       }
     }
   };
