@@ -91,15 +91,10 @@ const submitJobPost = async (
         //   createdOn: new Date()
         // });
 
-
-        const { data: jobs, error1 } = await supabase.rpc('get_max_job_id')
-        const jobId = jobs + 1;
-
         const { data, error } = await supabase
             .from('jobs')
             .insert([
               { 
-                job_id: jobId,
                 user_id: user.id,
                 job_title: jobTitle,
                 job_desc: jobDesc,
@@ -108,7 +103,8 @@ const submitJobPost = async (
                 education: career,
                 salary: salary,
                 salary_rate: salaryRate,
-                job_address: address
+                job_address: address,
+                status: true
               }
         ])
     

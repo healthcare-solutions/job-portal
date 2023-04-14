@@ -121,9 +121,11 @@ const JobListingsTable = () => {
                     <Link href="/employers-dashboard/all-applicants">3+ Applied</Link>
                   </td>
                   <td>
-                    October 27, 2017
+                  {item?.created_at}
                   </td>
-                  <td className="status">Active</td>
+                  { item?.status ?
+                    <td className="status">Active</td>
+                    : <td className="status" style={{ color: 'red' }}>Inactive</td> }
                   <td>
                     <div className="option-box">
                       <ul className="option-list">
