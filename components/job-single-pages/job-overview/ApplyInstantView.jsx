@@ -4,6 +4,8 @@ import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../../common/form/firebase";
+import { supabase } from "../../../config/supabaseClient";
+import { toast } from "react-toastify";
 
 const ApplyInstantView = ({ company }) => {
 
@@ -18,7 +20,7 @@ const ApplyInstantView = ({ company }) => {
   const [guestSelectedFile, setGuestSelectedFile] = useState(null);
 
   const router = useRouter();
-  const postId = router.query.id;
+  const JobId = router.query.id;
   function handleFileInputChange(event) {
     setGuestSelectedFile(event.target.files[0]);
   }
@@ -47,49 +49,92 @@ const ApplyInstantView = ({ company }) => {
     return isValid;
   };
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     if (validateForm()) {
         if (guestSelectedFile) {
-          const fileRef = ref(storage, guestSelectedFile.name);
-          uploadBytes(fileRef, guestSelectedFile)
-            .then(() => {
-              alert(`File ${guestSelectedFile.name} uploaded successfully.`);
-              // TODO: add code to save file metadata to the database
-              getDownloadURL(fileRef)
-                .then((downloadURL) => {
-                  const metadata = {
-                    documentName: guestSelectedFile.name,
-                    documentSize: guestSelectedFile.size,
-                    documentType: guestSelectedFile.type,
+          let file;
+
+          // upload document to applications/cv folder
+          const { data: guestFileUploadSuccess, error: guestFileUploadError } = await supabase
+              .storage 
+              .from('applications')
+              .upload('cv/' + guestSelectedFile.name, guestSelectedFile, file);
+          if (guestFileUploadError) {
+            if (guestFileUploadError.error == "Payload too large") {
+              toast.error('Failed to upload attachment.  Attachment size exceeded maximum allowed size!', {
+                position: "bottom-right",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+            } else {
+              toast.error('System is unavailable.  Please try again later or contact tech support!', {
+                position: "bottom-right",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+            }
+          } else {
+            // get document downloadable url
+            const { data: docURL, error: docURLError } = supabase
+                .storage
+                .from('applications')
+                .getPublicUrl('cv/' + guestSelectedFile.name)
+            if (docURLError) {
+              console.warn('Failed to get download URL for file')
+            }
+
+            // save applied application
+            const { data: applications, error: applicationsError } = await supabase
+                .from('applications')
+                .insert([
+                  { 
                     email: email,
-                    firstName: firstName,
-                    lastName: lastName,
-                    licenseNumber: licenseNumber,
-                    postId: postId,
-                    downloadURL: downloadURL,
-                    createdAt: new Date(),
-                  };
-                  addDoc(collection(db, "applications"), metadata)
-                    .then(() => {
-                      console.log("File metadata saved to the database.");
-                    })
-                    .catch((error) => {
-                      console.error(
-                        "Failed to save file metadata to the database:",
-                        error
-                      );
-                    });
-                })
-                .catch((error) => {
-                  console.error(
-                    `Failed to get download URL for file ${guestSelectedFile.name}: ${error}`
-                  );
-                });
-            })
-            .catch((error) => {
-              console.error(`Failed to upload file ${guestSelectedFile.name}: ${error}`);
-            });
+                    name: firstName + " " + lastName,
+                    license_nbr: licenseNumber,
+                    doc_name: guestSelectedFile.name,
+                    doc_size: guestSelectedFile.size,
+                    doc_typ: guestSelectedFile.type,
+                    job_id: jobId,
+                    doc_dwnld_url: docURL
+                  }
+                ])
+
+            if (applicationsError) {
+              toast.error('Error while Applying in this job, Please try again later!', {
+                position: "bottom-right",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+            } else {
+              // open toast
+              toast.success('Successfully Applied in this job!', {
+                position: "bottom-right",
+                autoClose: 8000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+            }
+          }
         } else {
           console.warn("No file selected.");
         }
@@ -182,6 +227,7 @@ const ApplyInstantView = ({ company }) => {
                 {guestSelectedFile && <p>Selected file: {guestSelectedFile.name}</p>}
                 {!guestSelectedFile && <label className="required">Please select a file before Apply</label>}
               </label>
+              <label htmlFor="max_upload_size"> Max size 5MB allowed </label>
             </div>
           </div>
         </div>

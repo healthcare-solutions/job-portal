@@ -18,7 +18,7 @@ const ApplyJobModalContent = () => {
   const user = useSelector(state => state.candidate.user)
   const userId = user.id
   const router = useRouter()
-  const postId = router.query.id;
+  const jobId = router.query.id;
   function handleFileInputChange(event) {
     setSelectedFile(event.target.files[0]);
   }
@@ -45,7 +45,8 @@ const ApplyJobModalContent = () => {
               .from('applications')
               .upload('cv/' + selectedFile.name, selectedFile, file);
           if (fileUploadError) {
-            toast.error('Failed to upload attachment', {
+            if (fileUploadError.error == "Payload too large") {
+              toast.error('Failed to upload attachment.  Attachment size exceeded maximum allowed size!', {
                 position: "bottom-right",
                 autoClose: false,
                 hideProgressBar: false,
@@ -54,7 +55,19 @@ const ApplyJobModalContent = () => {
                 draggable: true,
                 progress: undefined,
                 theme: "colored",
-            });
+              });
+            } else {
+              toast.error('System is unavailable.  Please try again later or contact tech support!', {
+                position: "bottom-right",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+            }
           } else {
             // get document downloadable url
             const { data: docURL, error: docURLError } = supabase
@@ -77,7 +90,7 @@ const ApplyJobModalContent = () => {
                     doc_name: selectedFile.name,
                     doc_size: selectedFile.size,
                     doc_typ: selectedFile.type,
-                    post_id: postId,
+                    job_id: jobId,
                     doc_dwnld_url: docURL
                   }
                 ])
@@ -142,7 +155,7 @@ const ApplyJobModalContent = () => {
                 className="uploadButton-button ripple-effect"
                 htmlFor="upload"
               >
-                Upload CV (doc, docx, pdf)
+                Upload CV (doc, docx, pdf) Max size 5MB allowed
                 {selectedFile && <p>Selected file: {selectedFile.name}</p>}
                 {!selectedFile && <label className="required">Please select a file before Apply</label>}
               </label>

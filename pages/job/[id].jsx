@@ -22,7 +22,8 @@ import DefaulHeader2 from "../../components/header/DefaulHeader2";
 import { useSelector } from "react-redux";
 import DashboardHeader from "../../components/header/DashboardHeader";
 import Footer from "../../components/home-15/Footer"
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import { supabase } from "../../config/supabaseClient";
 
 const JobSingleDynamicV1 = () => {
   const [isUserApplied, setIsUserApplied] = useState([]);
@@ -34,26 +35,52 @@ const JobSingleDynamicV1 = () => {
 
   const fetchCompany = async () => {
     try{
-      const singleJobSnap = await getDoc(doc(db, "jobs", id))
-      setCompany(singleJobSnap.data())
+      if (id) {
+        let { data: jobs, error } = await supabase
+            .from('jobs')
+            .select("*")
+
+            // Filters
+            .eq('job_id', id)
+
+        if (jobs) {
+          setCompany(jobs[0])
+        }
+      }
     } catch(e) {
+      toast.error('System is unavailable.  Please try again later or contact tech support!', {
+        position: "bottom-right",
+        autoClose: false,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       console.warn(e)
     }
   };
 
   const fetchPostForLoggedInUser = async () => {
-   if (id && !showLoginButton) {
-    const queryCriteria  = query(collection(db, "applications"), where("email", "==", user.email), where("postId", "==", router.query.id))
-    await getDocs(queryCriteria).then((querySnapshot) => {
-      if (querySnapshot.docs.length > 0) {
-          setIsUserApplied(true);
-      } else {
-          setIsUserApplied(false);
-      }
-    });
-   } else {
-      setIsUserApplied(false);
-   }
+    // TODO: skip this check for employer login
+    if (id && !showLoginButton) {
+        let { data: jobs, error } = await supabase
+            .from('applications')
+            .select("*")
+
+            // Filters
+            .eq('email', user.email)
+            .eq('job_id', id)
+
+        if (jobs?.length > 0) {
+            setIsUserApplied(true);
+        } else {
+            setIsUserApplied(false);
+        }
+    } else {
+        setIsUserApplied(false);
+    }
   };
 
   useEffect(() => {
@@ -97,20 +124,20 @@ const JobSingleDynamicV1 = () => {
                     <img src={company?.logo} alt="logo" />
                   </span>
  */}
-                  <h4>{company?.jobTitle}</h4>
+                  <h4>{company?.job_title}</h4>
 
                   <ul className="job-info">
-                    { company?.jobType ?
+                    { company?.job_type ?
                         <li>
                           <span className="icon flaticon-clock-3"></span>
-                          {company?.jobType}
+                          {company?.job_type}
                         </li>
                         : '' }
                     {/* compnay info */}
-                    { company?.address ?
+                    { company?.job_address ?
                         <li>
                           <span className="icon flaticon-map-locator"></span>
-                          {company?.address}
+                          {company?.job_address}
                         </li>
                         : '' }
                     {/* location info */}
@@ -124,7 +151,7 @@ const JobSingleDynamicV1 = () => {
                     { company?.salary ?
                         <li>
                           <span className="icon flaticon-money"></span>{" "}
-                         ${company?.salary} {company?.salaryRate}
+                         ${company?.salary} {company?.salary_rate}
                         </li>
                         : '' }
                     {/* salary info */}
