@@ -57,7 +57,7 @@ const LocationBox = () => {
         if (!searchInput.current) return;
 
         const autocomplete = new window.google.maps.places.Autocomplete(searchInput.current, {
-            types: ['(regions)']
+            types: ['(cities)']
         });
         autocomplete.setFields(["address_component", "geometry"]);
         autocomplete.addListener("place_changed", () => onChangeAddress(autocomplete))

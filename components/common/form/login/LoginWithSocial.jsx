@@ -13,7 +13,6 @@ import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { supabase } from "../../../../config/supabaseClient";
-import { Auth } from "@supabase/ui";
 import { useState } from "react";
 import { useEffect } from "react";
 

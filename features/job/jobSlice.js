@@ -117,6 +117,7 @@ const initialState = {
             value: "react",
         },
     ],
+    recentJobs: []
 };
 
 export const jobSlice = createSlice({
@@ -196,6 +197,9 @@ export const jobSlice = createSlice({
                 };
             });
         },
+        setRecentJobs: (state, { payload }) => {
+            state.recentJobs = payload.jobs
+        }
     },
 });
 
@@ -207,5 +211,6 @@ export const {
     clearDatePostToggle,
     experienceLavelCheck,
     clearExperienceToggle,
+    setRecentJobs
 } = jobSlice.actions;
 export default jobSlice.reducer;

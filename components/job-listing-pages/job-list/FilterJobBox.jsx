@@ -139,7 +139,6 @@ const FilterJobBox = () => {
                 href="#"
                 onClick={(event) => {
                   event.preventDefault();
-                  localStorage.setItem("postId", item.id);
                   router.push(`/job/${item.id}`);
                 }}
               >

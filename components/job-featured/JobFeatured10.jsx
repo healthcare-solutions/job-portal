@@ -1,7 +1,25 @@
 import Link from "next/link";
 import jobFeatured from "../../data/job-featured";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setRecentJobs } from "../../features/job/jobSlice";
+import { useRouter } from "next/router";
+import { supabase } from "../../config/supabaseClient";
+
 
 const JobFeatured10 = () => {
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const recentJobs = useSelector((state) => state.job.recentJobs)
+
+  useEffect(() => {
+    if(recentJobs.length == 0){
+      supabase.from('jobs').select().limit(10).order('created_at', {ascending: false}).then((res) => {
+        if(res.status == 200) dispatch(setRecentJobs({jobs: res.data}))
+      })     
+    }
+  }, [])
+
   return (
     <div className="default-tabs pt-50 tabs-box">
       <div className="tab-buttons-wrap">
@@ -20,56 +38,72 @@ const JobFeatured10 = () => {
       {/* <!--Tabs Box--> */}
 
       <div className="row pt-50" data-aos="fade-up">
-        {jobFeatured.slice(0, 6).map((item) => (
+        {recentJobs.map((item) => (
           <div className="job-block col-lg-6 col-md-12 col-sm-12" key={item.id}>
-            <div className="inner-box">
-              <div className="content">
-                <span className="company-logo">
-                  <img src={item.logo} alt="item brand" />
-                </span>
-                <h4>
-                  <Link href={`/job-single-v1/${item.id}`}>
-                    {item.jobTitle}
-                  </Link>
-                </h4>
-
-                <ul className="job-info">
-                  <li>
-                    <span className="icon flaticon-briefcase"></span>
-                    {item.company}
-                  </li>
-                  {/* compnay info */}
-                  <li>
-                    <span className="icon flaticon-map-locator"></span>
-                    {item.location}
-                  </li>
-                  {/* location info */}
-                  <li>
-                    <span className="icon flaticon-clock-3"></span> {item.time}
-                  </li>
-                  {/* time info */}
-                  <li>
-                    <span className="icon flaticon-money"></span> {item.salary}
-                  </li>
-                  {/* salary info */}
-                </ul>
-                {/* End .job-info */}
-
-                <ul className="job-other-info">
-                  {item.jobType.map((val, i) => (
-                    <li key={i} className={`${val.styleClass}`}>
-                      {val.type}
-                    </li>
-                  ))}
-                </ul>
-                {/* End .job-other-info */}
-
-                <button className="bookmark-btn">
-                  <span className="flaticon-bookmark"></span>
-                </button>
-              </div>
+          <div className="inner-box">
+  {/*
+            <div className="content">
+   */}
+  {/*
+              <span className="company-logo">
+                <img src={item.logo} alt="item brand" />
+              </span>
+   */}
+              <h4>
+                <Link
+                  href="#"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    router.push(`/job/${item.id}`);
+                  }}
+                >
+                  {item.job_title}
+                </Link>
+              </h4>
+  
+                    <ul className="job-info job-other-info">
+                      { item?.job_type ?
+                          <li className="time">
+                            {/* <i className="flaticon-clock-3"/>{" "} */}
+                            {item?.job_type}
+                            
+                          </li>
+                          : '' }
+                      {/* compnay info */}
+                      { item?.address ?
+                          <li className="privacy">
+                            <i className="flaticon-map-locator"></i>{" "}
+                            {item?.address}
+                          </li>
+                          : '' }
+                      {/* location info */}
+  {/*
+                      <li>
+                        <span className="icon flaticon-briefcase"></span>{" "}
+                        {item?.industry}
+                      </li>
+   */}
+                      {/* time info */}
+                      { item?.salary ?
+                          <li className="required">
+                            <i className="flaticon-money"></i>{" "}
+                           ${item?.salary} {item?.salary_rate}
+                          </li>
+                          : '' }
+                      {/* salary info */}
+                    </ul>
+                    {/* End .job-info */}
+  
+  {/*
+              <button className="bookmark-btn">
+                <span className="flaticon-bookmark"></span>
+              </button>
+   */}
+  {/*
             </div>
+   */}
           </div>
+        </div>
           // End job-block
         ))}
       </div>

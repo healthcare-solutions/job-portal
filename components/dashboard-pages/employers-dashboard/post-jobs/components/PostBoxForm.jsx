@@ -171,7 +171,7 @@ const PostBoxForm = () => {
   // const [address, setAddress] = useState("");
   const user = useSelector(state => state.candidate.user)
   const [jobData, setJobData] = useState(JSON.parse(JSON.stringify(addJobFields)));
-  const { jobTitle, jobDesc, jobType, salary, salaryRate, career, exp, address } = useMemo(() => jobData, [jobData])
+  const { jobTitle, jobDesc, jobType, salary, salaryRate, career, exp, address, completeAddress } = useMemo(() => jobData, [jobData])
 
   const searchInput = useRef(null);
 
@@ -188,14 +188,16 @@ const PostBoxForm = () => {
   // do something on address change
   const onChangeAddress = (autocomplete) => {
     const location = autocomplete.getPlace();
-    console.log(location);
   }
 
   // init autocomplete
   const initAutocomplete = () => {
     if (!searchInput.current) return;
 
-    const autocomplete = new window.google.maps.places.Autocomplete(searchInput.current);
+    const autocomplete = new window.google.maps.places.Autocomplete(searchInput.current, {
+        types: ['(cities)']
+      }
+    );
     autocomplete.setFields(["address_component", "geometry"]);
     autocomplete.addListener("place_changed", () => onChangeAddress(autocomplete))
 
@@ -514,9 +516,25 @@ const PostBoxForm = () => {
           </select>
         </div>
  */}
+
+        <div className="form-group col-lg-12 col-md-12">
+          <label>Complete Address <span className="optional">(optional)</span></label>
+          <input
+            type="text"
+            name="immense-career-address"
+            value={completeAddress}
+            onChange={(e) => {
+              setJobData((previousState) => ({ 
+                ...previousState,
+                completeAddress: e.target.value
+              }))
+            }}
+            placeholder="Address"
+          />
+        </div>
         {/* <!-- Input --> */}
         <div className="form-group col-lg-12 col-md-12">
-          <label>Complete Address / City, State <span className="required">(required)</span></label>
+          <label>City, State <span className="required">(required)</span></label>
           <input
             type="text"
             name="immense-career-address"
@@ -528,9 +546,10 @@ const PostBoxForm = () => {
                 address: e.target.value
               }))
             }}
-            placeholder="Address / City, State"
+            placeholder="City, State"
           />
         </div>
+        
         {/* <!-- Input --> */}
         {/* <div className="form-group col-lg-6 col-md-12">
           <label>Find On Map</label>

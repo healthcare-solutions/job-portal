@@ -52,9 +52,9 @@ const SearchForm3 = () => {
   // init autocomplete
   const initAutocomplete = () => {
     if (!searchInput.current) return;
-
+  
     const autocomplete = new window.google.maps.places.Autocomplete(searchInput.current, {
-        types: ['(regions)']
+        types: ['(cities)']
     });
     autocomplete.setFields(["address_component", "geometry"]);
     autocomplete.addListener("place_changed", () => onChangeAddress(autocomplete))
@@ -62,10 +62,13 @@ const SearchForm3 = () => {
   }
 
   const searchFunction = () => {
-    dispatch(setSearchFields({ searchTerm: searchTerm.current.value, searchAddress: searchInput.current.value }))
-    dispatch(addKeyword(searchTerm.current.value))
-    dispatch(addLocation(searchInput.current.value))
+    const sKeyword = searchTerm.current.value
+    const sAddress = searchInput.current.value
+    dispatch(setSearchFields({ searchTerm: sKeyword, searchAddress: sAddress }))
+    dispatch(addKeyword(sKeyword))
+    dispatch(addLocation(sAddress))
     // TODO: fetch data from firebase and then route to next page
+    
     Router.push("/job-list") 
   }
   
