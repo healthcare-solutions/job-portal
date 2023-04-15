@@ -18,25 +18,56 @@ import { db } from "../../common/form/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { supabase } from "../../../config/supabaseClient";
 
 const FilterJobBox = () => {
   const router = useRouter();
-  const [job, setjob] = useState("");
-  const [jobs, setjobs] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const searchTerm = useSelector((state) => state.search.searchTerm)
+  const searchAddress = useSelector((state) => state.search.searchAddress)
 
-  const fetchPost = async () => {
-    await getDocs(collection(db, "jobs")).then((querySnapshot) => {
-      const newData = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setjobs(newData);
-    });
+  const searchJobsWithTermAndAddress = async () => {
+    await supabase.from('jobs').select()
+    .ilike('job_title', '%'+searchTerm+'%')
+    .ilike('job_address', '%'+searchAddress+'%')
+    .then((res) => {
+      setJobs(res.data)
+    })
+  };
+
+  const searchJobsWithTerm = async () => {
+    await supabase.from('jobs').select()
+    .ilike('job_title', '%'+searchTerm+'%')
+    .then((res) => {
+      setJobs(res.data)
+    })
+  };
+
+  const searchJobsWithAddress = async () => {
+    await supabase.from('jobs').select()
+    .ilike('job_address', '%'+searchAddress+'%')
+    .then((res) => {
+      setJobs(res.data)
+    })
+  };
+
+  const searchJobs = async () => {
+    await supabase.from('jobs').select()
+    .then((res) => {
+      setJobs(res.data)
+    })
   };
 
   useEffect(() => {
-    fetchPost();
-  }, []);
+    if(searchAddress == "" && searchTerm == '') 
+      searchJobs()
+    else if(searchAddress == "") 
+      searchJobsWithTerm()
+    else if(searchTerm == "") 
+      searchJobsWithAddress()
+    else 
+      searchJobsWithTermAndAddress()
+  }, [searchAddress, searchTerm]);
 
   const { jobList, jobSort } = useSelector((state) => state.filter);
   const {
@@ -142,36 +173,38 @@ const FilterJobBox = () => {
                   router.push(`/job/${item.id}`);
                 }}
               >
-                {item.jobTitle}
+                {item.job_title}
               </Link>
             </h4>
-
-                  <ul className="job-info">
-                    { item?.jobType ?
-                        <li>
-                          <span className="icon flaticon-clock-3"></span>
-                          {item?.jobType}
+            { item?.job_address ?                        
+                  <p className="mb-2"><i className="flaticon-map-locator"></i>{" "}{item?.job_address}</p>
+                  : '' } 
+                  <ul className="job-info job-other-info">
+                    { item?.job_type ?
+                        <li className="time">
+                          {/* <span className="flaticon-clock-3"></span> */}
+                          {item?.job_type}
                         </li>
                         : '' }
                     {/* compnay info */}
-                    { item?.address ?
-                        <li>
-                          <span className="icon flaticon-map-locator"></span>
-                          {item?.address}
+                    {/* { item?.job_address ?
+                        <li className="required">
+                          <span className="flaticon-map-locator"></span>
+                          {item?.job_address}
                         </li>
-                        : '' }
+                        : '' } */}
                     {/* location info */}
 {/*
                     <li>
-                      <span className="icon flaticon-briefcase"></span>{" "}
+                      <span className="flaticon-briefcase"></span>{" "}
                       {item?.industry}
                     </li>
  */}
                     {/* time info */}
                     { item?.salary ?
-                        <li>
-                          <span className="icon flaticon-money"></span>{" "}
-                         ${item?.salary} {item?.salaryRate}
+                        <li className="privacy">
+                           <i className="flaticon-money"></i>{" "}
+                         ${item?.salary} {item?.salary_rate}
                         </li>
                         : '' }
                     {/* salary info */}

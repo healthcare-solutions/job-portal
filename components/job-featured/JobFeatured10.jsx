@@ -60,7 +60,9 @@ const JobFeatured10 = () => {
                   {item.job_title}
                 </Link>
               </h4>
-  
+                { item?.job_address ?                        
+                  <p className="mb-2"><i className="flaticon-map-locator"></i>{" "}{item?.job_address}</p>
+                  : '' }  
                     <ul className="job-info job-other-info">
                       { item?.job_type ?
                           <li className="time">
@@ -70,12 +72,12 @@ const JobFeatured10 = () => {
                           </li>
                           : '' }
                       {/* compnay info */}
-                      { item?.address ?
-                          <li className="privacy">
+                      {/* { item?.job_address ?
+                          <li className="required">
                             <i className="flaticon-map-locator"></i>{" "}
                             {item?.address}
                           </li>
-                          : '' }
+                          : '' } */}
                       {/* location info */}
   {/*
                       <li>
