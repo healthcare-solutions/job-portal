@@ -70,10 +70,10 @@ const JobFeatured10 = () => {
                           </li>
                           : '' }
                       {/* compnay info */}
-                      { item?.address ?
-                          <li className="privacy">
+                      { item?.job_address ?
+                          <li className="required">
                             <i className="flaticon-map-locator"></i>{" "}
-                            {item?.address}
+                            {item?.job_address}
                           </li>
                           : '' }
                       {/* location info */}
@@ -85,7 +85,7 @@ const JobFeatured10 = () => {
    */}
                       {/* time info */}
                       { item?.salary ?
-                          <li className="required">
+                          <li className="privacy">
                             <i className="flaticon-money"></i>{" "}
                            ${item?.salary} {item?.salary_rate}
                           </li>

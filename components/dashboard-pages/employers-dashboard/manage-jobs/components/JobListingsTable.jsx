@@ -8,7 +8,7 @@ import { db } from "../../../../common/form/firebase";
 import { supabase } from "../../../../../config/supabaseClient";
 
 const JobListingsTable = () => {
-  const [jobs, setjobs] = useState([]);
+  const [jobs, setJobs] = useState([]);
   const user = useSelector(state => state.candidate.user)
   const router = useRouter();
 
@@ -23,6 +23,11 @@ const JobListingsTable = () => {
   //   });
   // };
 
+  const dateFormat = (val) => {
+    const date = new Date(val)
+    return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric'})
+  }
+
 
   const fetchPost = async () => {
     let { data: jobs, error } = await supabase
@@ -30,7 +35,8 @@ const JobListingsTable = () => {
       .select('*')
       .eq('user_id', user.id)
 
-      setjobs(jobs)
+      jobs.forEach(job => job.created_at = dateFormat(job.created_at))
+      setJobs(jobs)
   }
   
 
