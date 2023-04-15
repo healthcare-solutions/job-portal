@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { supabase } from "../../../config/supabaseClient";
 // import { v4 } from "uuid";
 
 const ApplyJobModalContent = () => {
@@ -32,81 +33,82 @@ const ApplyJobModalContent = () => {
   };
 
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     if (validateForm()) {
         if (selectedFile) {
-          const fileRef = ref(storage, selectedFile.name);
-          uploadBytes(fileRef, selectedFile)
-            .then(() => {
-              // TODO: add code to save file metadata to the database
-              getDownloadURL(fileRef)
-                .then((downloadURL) => {
-                  const metadata = {
-                    documentName: selectedFile.name,
-                    documentSize: selectedFile.size,
-                    documentType: selectedFile.type,
-                    userId: userId,
+          let file;
+
+          // upload document to applications/cv folder
+          const { data: fileUploadSuccess, error: fileUploadError } = await supabase
+              .storage    
+              .from('applications')
+              .upload('cv/' + selectedFile.name, selectedFile, file);
+          if (fileUploadError) {
+            toast.error('Failed to upload attachment', {
+                position: "bottom-right",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+          } else {
+            // get document downloadable url
+            const { data: docURL, error: docURLError } = supabase
+                .storage
+                .from('applications')
+                .getPublicUrl('cv/' + selectedFile.name)
+            if (docURLError) {
+              console.warn('Failed to get download URL for file')
+            }
+
+            // save applied application
+            const { data: applications, error: applicationsError } = await supabase
+                .from('applications')
+                .insert([
+                  { 
+                    user_id: userId,
                     email: user.email,
                     name: user.name,
-                    licenseNumber: licenseNumber,
-                    postId: postId,
-                    downloadURL: downloadURL,
-                    createdAt: new Date(),
-                  };
-                  addDoc(collection(db, "applications"), metadata)
-                    .then(() => {
-                        // open toast
-                        toast.success('Successfully Applied in this job!', {
-                            position: "bottom-right",
-                            autoClose: 8000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "colored",
-                        });
-                    })
-                    .catch((error) => {
-                      toast.error('Error while Applying in this job, Please try again later!', {
-                          position: "bottom-right",
-                          autoClose: false,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          theme: "colored",
-                      });
-                    });
-                })
-                .catch((error) => {
-                    toast.error('Failed to get download URL for file', {
-                        position: "bottom-right",
-                        autoClose: false,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                    });
-                });
-            })
-            .catch((error) => {
-              toast.error('Failed to upload attachment', {
-                  position: "bottom-right",
-                  autoClose: false,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
+                    license_nbr: licenseNumber,
+                    doc_name: selectedFile.name,
+                    doc_size: selectedFile.size,
+                    doc_typ: selectedFile.type,
+                    post_id: postId,
+                    doc_dwnld_url: docURL
+                  }
+                ])
+
+            if (applicationsError) {
+              toast.error('Error while Applying in this job, Please try again later!', {
+                position: "bottom-right",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
               });
-            });
-        } else {
+            } else {
+              // open toast
+              toast.success('Successfully Applied in this job!', {
+                position: "bottom-right",
+                autoClose: 8000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+            }
+          }
+        }
+        else {
             toast.error('Please upload your CV before Apply.', {
                 position: "bottom-right",
                 autoClose: false,
