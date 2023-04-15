@@ -122,16 +122,16 @@ const ApplyJobModalContent = () => {
           }
         }
         else {
-            toast.error('Please upload your CV before Apply.', {
-                position: "bottom-right",
-                autoClose: false,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
+          toast.error('Please upload your CV before Apply.', {
+              position: "bottom-right",
+              autoClose: false,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+          });
         }
     }
   }

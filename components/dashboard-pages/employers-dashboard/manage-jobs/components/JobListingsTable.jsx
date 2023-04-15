@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { db } from "../../../../common/form/firebase";
 // import jobs from "../../../../../data/job-featured.js";
 import { supabase } from "../../../../../config/supabaseClient";
+import { toast, ToastContainer } from "react-toastify";
 
 const JobListingsTable = () => {
   const [jobs, setjobs] = useState([]);
@@ -28,6 +29,77 @@ const JobListingsTable = () => {
     return date.toLocaleDateString('en-IN', { month: 'long', day: 'numeric'}) + ', ' + date.getFullYear()
   }
 
+  const publishJob = async (jobId, status) => {
+    if (!status) {
+      const { data, error } = await supabase
+          .from('jobs')
+          .update({ status: true })
+          .eq('job_id', jobId)
+
+      // open toast
+      toast.success('Job successfully published!', {
+        position: "bottom-right",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+      // fetching all posts to refresh the data in Job Listing Table
+      fetchPost();
+    } else {
+      // open toast
+      toast.error('Job is already published!', {
+        position: "bottom-right",
+        autoClose: false,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  }
+
+  const unpublishJob = async (jobId, status) => {
+    if (status) {
+      const { data, error } = await supabase
+          .from('jobs')
+          .update({ status: false })
+          .eq('job_id', jobId)
+
+      // open toast
+      toast.success('Job successfully unpublished!', {
+        position: "bottom-right",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+      // fetching all posts to refresh the data in Job Listing Table
+      fetchPost();
+    } else {
+      // open toast
+      toast.error('Job is already unpublished!', {
+        position: "bottom-right",
+        autoClose: false,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  }
 
   const fetchPost = async () => {
     let { data: jobs, error } = await supabase
@@ -134,20 +206,20 @@ const JobListingsTable = () => {
                   <td>
                     <div className="option-box">
                       <ul className="option-list">
-                        <li onClick={()=>{
-                          router.push(`/job/${item.job_id}`)
-                        }}>
-                          <button data-text="View Job">
+                        <li onClick={()=>{ publishJob(item.job_id, item.status) }} >
+                          <button data-text="Publish Job">
                             <span className="la la-eye"></span>
                           </button>
                         </li>
-                        <li>
-                          <button data-text="Reject Job">
+                        <li onClick = {()=>{
+                          router.push(`/edit-job/${item.job_id}`)
+                        }}>
+                          <button data-text="Edit Job">
                             <span className="la la-pencil"></span>
                           </button>
                         </li>
-                        <li>
-                          <button data-text="Delete Job">
+                        <li onClick={()=>{ unpublishJob(item.job_id, item.status) }}>
+                          <button data-text="Unpublish Job" disabled>
                             <span className="la la-trash"></span>
                           </button>
                         </li>

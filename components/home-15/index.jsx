@@ -168,7 +168,6 @@ const index = () => {
       <Footer />
       {/* <!-- End Main Footer --> */}
 
-      <ToastContainer />
     </>
   );
 };

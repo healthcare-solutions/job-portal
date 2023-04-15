@@ -65,7 +65,7 @@ const JobSingleDynamicV1 = () => {
   const fetchPostForLoggedInUser = async () => {
     // TODO: skip this check for employer login
     if (id && !showLoginButton) {
-        let { data: jobs, error } = await supabase
+        let { data: application, error } = await supabase
             .from('applications')
             .select("*")
 
@@ -73,7 +73,7 @@ const JobSingleDynamicV1 = () => {
             .eq('email', user.email)
             .eq('job_id', id)
 
-        if (jobs?.length > 0) {
+        if (application?.length > 0) {
             setIsUserApplied(true);
         } else {
             setIsUserApplied(false);
@@ -335,8 +335,6 @@ const JobSingleDynamicV1 = () => {
       <Footer />
       {/* <FooterDefault footerStyle="alternate5" /> */}
       {/* <!-- End Main Footer --> */}
-
-      <ToastContainer />
     </>
   );
 };
