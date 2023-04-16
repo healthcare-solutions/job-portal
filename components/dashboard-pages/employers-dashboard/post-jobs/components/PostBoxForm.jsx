@@ -34,15 +34,16 @@ const addJobFields = {
   salaryRate: "",
   career: "",
   exp: "",
-  address: ""
+  address: "",
+  completeAddress: ""
 }
 
 const submitJobPost = async (
-  { jobTitle, jobDesc, jobType, salary, salaryRate, career, exp, address },
+  { jobTitle, jobDesc, jobType, salary, salaryRate, career, exp, completeAddress, address },
   setJobData,
   user
 ) => {
-    if (jobTitle && jobDesc && jobType && career && exp) {
+    if (jobTitle && jobDesc && jobType && career && exp && address) {
         try {
             // const res = await auth.createUserWithEmailAndPassword(email, password);
             // const user = res.user;
@@ -104,6 +105,7 @@ const submitJobPost = async (
                 salary: salary,
                 salary_rate: salaryRate,
                 job_address: address,
+                job_comp_add: completeAddress,
                 status: true
               }
         ])
