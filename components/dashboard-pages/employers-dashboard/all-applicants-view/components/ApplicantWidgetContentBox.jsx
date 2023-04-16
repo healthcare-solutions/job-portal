@@ -26,6 +26,7 @@ const ApplicantWidgetContentBox = () => {
   
               // Filters
               .eq('job_id', id)
+              .order('created_at',  { ascending: false });
   
           if (allApplicantsView) {
               allApplicantsView.forEach( i => i.created_at = dateFormat(i.created_at))

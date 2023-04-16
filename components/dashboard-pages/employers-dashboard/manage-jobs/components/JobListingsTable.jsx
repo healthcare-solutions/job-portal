@@ -106,6 +106,8 @@ const JobListingsTable = () => {
       .from('jobs')
       .select('*')
       .eq('user_id', user.id)
+      .order('created_at',  { ascending: false });
+
       jobs.forEach( job => job.created_at = dateFormat(job.created_at))
       setjobs(jobs)
   }
