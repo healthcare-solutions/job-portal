@@ -5,17 +5,17 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import LoginPopup from "../../components/common/form/login/LoginPopup";
-import DashboardHeader from "../../components/header/DashboardHeader";
-import MobileMenu from "../../components/header/MobileMenu";
-import DashboardEmployerSidebar from "../../components/header/DashboardEmployerSidebar";
-import BreadCrumb from "../../components/dashboard-pages/BreadCrumb";
-import MenuToggler from "../../components/dashboard-pages/MenuToggler";
-import CopyrightFooter from "../../components/dashboard-pages/CopyrightFooter";
+import LoginPopup from "../../../components/common/form/login/LoginPopup";
+import DashboardHeader from "../../../components/header/DashboardHeader";
+import MobileMenu from "../../../components/header/MobileMenu";
+import DashboardEmployerSidebar from "../../../components/header/DashboardEmployerSidebar";
+import BreadCrumb from "../../../components/dashboard-pages/BreadCrumb";
+import MenuToggler from "../../../components/dashboard-pages/MenuToggler";
+import CopyrightFooter from "../../../components/dashboard-pages/CopyrightFooter";
 import { useRouter } from "next/router";
-import DefaulHeader2 from "../../components/header/DefaulHeader2";
-import EditJobView from "../../components/dashboard-pages/employers-dashboard/edit-job/components/EditJobView";
-import { supabase } from "../../config/supabaseClient";
+import DefaulHeader2 from "../../../components/header/DefaulHeader2";
+import EditJobView from "../../../components/dashboard-pages/employers-dashboard/edit-job/components/EditJobView";
+import { supabase } from "../../../config/supabaseClient";
 
 
 const EditJob = () => {

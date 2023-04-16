@@ -162,7 +162,7 @@ const JobListingsTable = () => {
                             <img src={item.logo} alt="logo" />
                           </span> */}
                           <h4>
-                            <Link href={`/edit-job/${item.job_id}`}>
+                            <Link href={`/employers-dashboard/edit-job/${item.job_id}`}>
                               {item.job_title}
                             </Link>
                           </h4>
@@ -195,7 +195,12 @@ const JobListingsTable = () => {
                     </div>
                   </td>
                   <td className="applied">
-                    <Link href="/employers-dashboard/all-applicants">3+ Applied</Link>
+                    {/* <Link href="/employers-dashboard/all-applicants/${item.job_id}">3+ Applied</Link> */}
+                    <a onClick={()=>{
+                      router.push(`/employers-dashboard/all-applicants-view/${item.job_id}`)
+                    }}>
+                      3+ Applied
+                    </a>
                   </td>
                   <td>
                   {item?.created_at}
