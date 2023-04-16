@@ -130,7 +130,7 @@ export const jobSlice = createSlice({
     initialState,
     reducers: {
         addLatestJob: (state, { payload }) => {
-            const isExist = state.latestJob ? .includes(payload);
+            const isExist = state.latestJob?.includes(payload);
             if (isExist) {
                 state.latestJob = state.latestJob.filter(
                     (item) => item !== payload
@@ -140,7 +140,7 @@ export const jobSlice = createSlice({
             }
         },
         clearJobTypeToggle: (state) => {
-            state ? .jobTypeList ? .map((item) => {
+            state?.jobTypeList?.map((item) => {
                 item.isChecked = false;
                 return {
                     ...item,
@@ -148,7 +148,7 @@ export const jobSlice = createSlice({
             });
         },
         jobTypeCheck: (state, { payload }) => {
-            state ? .jobTypeList ? .map((item) => {
+            state?.jobTypeList?.map((item) => {
                 if (item.id === payload) {
                     if (item.isChecked) {
                         item.isChecked = false;
@@ -162,7 +162,7 @@ export const jobSlice = createSlice({
             });
         },
         datePostCheck: (state, { payload }) => {
-            state ? .datePost ? .map((item) => {
+            state?.datePost?.map((item) => {
                 item.isChecked = false;
                 if (item.id === payload) {
                     item.isChecked = true;
@@ -173,7 +173,7 @@ export const jobSlice = createSlice({
             });
         },
         clearDatePostToggle: (state) => {
-            state ? .datePost ? .map((item) => {
+            state?.datePost?.map((item) => {
                 item.isChecked = false;
                 return {
                     ...item,
@@ -181,7 +181,7 @@ export const jobSlice = createSlice({
             });
         },
         experienceLavelCheck: (state, { payload }) => {
-            state ? .experienceLavel ? .map((item) => {
+            state?.experienceLavel?.map((item) => {
                 if (item.id === payload) {
                     if (item.isChecked) {
                         item.isChecked = false;
@@ -195,7 +195,7 @@ export const jobSlice = createSlice({
             });
         },
         clearExperienceToggle: (state) => {
-            state ? .experienceLavel ? .map((item) => {
+            state?.experienceLavel?.map((item) => {
                 item.isChecked = false;
                 return {
                     ...item,
