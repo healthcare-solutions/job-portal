@@ -10,8 +10,8 @@ const JobSearchForm = () => {
   const filterLocation = useSelector((state) => state.filter.jobList.location)
   const findJobs = () => {
     dispatch(setSearchFields({ searchTerm: filterTerm, searchAddress: filterLocation }))
-    
   }
+
   return (
     <div className="job-search-form">
       <div className="row">
