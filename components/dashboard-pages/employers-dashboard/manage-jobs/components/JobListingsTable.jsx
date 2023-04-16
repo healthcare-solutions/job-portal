@@ -162,7 +162,7 @@ const JobListingsTable = () => {
                             <img src={item.logo} alt="logo" />
                           </span> */}
                           <h4>
-                            <Link href={`/job/${item.job_id}`}>
+                            <Link href={`/edit-job/${item.job_id}`}>
                               {item.job_title}
                             </Link>
                           </h4>
@@ -206,16 +206,16 @@ const JobListingsTable = () => {
                   <td>
                     <div className="option-box">
                       <ul className="option-list">
+                        <li onClick={()=>{
+                          router.push(`/job/${item.job_id}`)
+                        }}>
+                          <button data-text="Preview Job">
+                            <span className="la la-file-alt"></span>
+                          </button>
+                        </li>
                         <li onClick={()=>{ publishJob(item.job_id, item.status) }} >
                           <button data-text="Publish Job">
                             <span className="la la-eye"></span>
-                          </button>
-                        </li>
-                        <li onClick = {()=>{
-                          router.push(`/edit-job/${item.job_id}`)
-                        }}>
-                          <button data-text="Edit Job">
-                            <span className="la la-pencil"></span>
                           </button>
                         </li>
                         <li onClick={()=>{ unpublishJob(item.job_id, item.status) }}>
