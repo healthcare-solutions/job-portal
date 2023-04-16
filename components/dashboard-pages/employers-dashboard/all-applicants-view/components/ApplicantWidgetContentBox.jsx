@@ -52,6 +52,29 @@ const ApplicantWidgetContentBox = () => {
     }, [id]);
   
 
+    const ViewCV = async (applicationId) => {
+        const { data, error } = await supabase
+              .from('applicants_view')
+              .select('*')
+              .eq('application_id', applicationId)
+
+        if (data) {
+            window.open(data[0].doc_dwnld_url.slice(14, -2), '_blank', 'noreferrer');
+        }
+        if (error) {
+            toast.error('Error while retrieving CV.  Please try again later or contact tech support!', {
+                position: "bottom-right",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }
+    }
+
     const Qualified = async (applicationId, status) => {
         if (status != 'Qualified') {
           const { data, error } = await supabase
@@ -163,7 +186,15 @@ const ApplicantWidgetContentBox = () => {
     return (
         <div className="tabs-box">
             <div className="widget-title">
-            <h4>{Array.from(fetchedAllApplicants)?.length != 0 ? Array.from(fetchedAllApplicants)[0].job_title : ''}</h4>
+            <h4>
+                {Array.from(fetchedAllApplicants)?.length != 0 ?
+                    <div>
+                        <span>Applicants who applied in  </span>
+                        <span style={{ color: 'blue' }}><u><b>{Array.from(fetchedAllApplicants)[0].job_title}</b></u></span> 
+                    </div>
+                    : ''
+                }
+            </h4>
 
             <div className="chosen-outer">
                 {/* <!--Tabs Box--> */}
@@ -230,7 +261,7 @@ const ApplicantWidgetContentBox = () => {
                         <td>
                             <div className="option-box">
                                 <ul className="option-list">
-                                <li>
+                                <li onClick = { () => { ViewCV(applicant.application_id) }}>
                                     <button data-text="View/Download CV">
                                     <span className="la la-file-download"></span>
                                     </button>

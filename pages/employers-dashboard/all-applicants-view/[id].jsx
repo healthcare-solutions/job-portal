@@ -57,7 +57,7 @@ const AllApplicantsViewPerJob = () => {
               <div className="ls-widget">
                 <div className="tabs-box">
                   <div className="widget-title">
-                    <h4>Applicants who applied in</h4>
+                    {/* <h4>Applicants who applied in</h4> */}
                     {/* <WidgetTopFilterBox /> */}
                   </div>
                   {/* End top widget filter bar */}
