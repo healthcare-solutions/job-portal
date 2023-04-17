@@ -138,7 +138,7 @@ const JobListingsTable = () => {
       {/* End filter top bar */}
 
       {/* Start table widget content */}
-      {jobs.length == 0 ? <p><center>No jobs posted yet</center></p>: 
+      {jobs.length == 0 ? <p><center>No jobs posted yet!</center></p>: 
         <div className="widget-content">
         <div className="table-outer">
           <table className="default-table manage-job-table">

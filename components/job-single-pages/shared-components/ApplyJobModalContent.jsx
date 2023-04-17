@@ -32,18 +32,18 @@ const ApplyJobModalContent = () => {
     return isValid;
   };
 
-
   async function handleSubmit(event) {
     event.preventDefault();
     if (validateForm()) {
         if (selectedFile) {
           let file;
+          let fileTimestamp = Date.now()
 
           // upload document to applications/cv folder
           const { data: fileUploadSuccess, error: fileUploadError } = await supabase
               .storage    
               .from('applications')
-              .upload('cv/' + selectedFile.name, selectedFile, file);
+              .upload('cv/' + selectedFile.name + fileTimestamp, selectedFile, file);
           if (fileUploadError) {
             if (fileUploadError.error == "Payload too large") {
               toast.error('Failed to upload attachment.  Attachment size exceeded maximum allowed size!', {
@@ -73,7 +73,7 @@ const ApplyJobModalContent = () => {
             const { data: docURL, error: docURLError } = supabase
                 .storage
                 .from('applications')
-                .getPublicUrl('cv/' + selectedFile.name)
+                .getPublicUrl('cv/' + selectedFile.name + fileTimestamp)
             if (docURLError) {
               console.warn('Failed to get download URL for file')
             }
