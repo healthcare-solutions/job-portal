@@ -54,7 +54,7 @@ const JobFeatured10 = () => {
                   href="#"
                   onClick={(event) => {
                     event.preventDefault();
-                    router.push(`/job/${item.id}`);
+                    router.push(`/job/${item.job_id}`);
                   }}
                 >
                   {item.job_title}
