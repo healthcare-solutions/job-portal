@@ -4,6 +4,9 @@ import { useState } from "react";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from 'react-toastify';
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../../../features/candidate/candidateSlice";
+import { supabase } from "../../../../config/supabaseClient";
 
 // const userRegistration = async (name, email, password) => {
 //   try {
@@ -32,6 +35,8 @@ const FormContent = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const router = useRouter();
+  const dispatch = useDispatch()
+
   const validateForm = () => {
     let isValid = true;
     if (!name) {
@@ -59,16 +64,28 @@ const FormContent = () => {
     // e.preventDefault();
     if (validateForm()) {
       try {
-        // TODO: move to supabase
         const res = await auth.createUserWithEmailAndPassword(email, password);
         const user = res.user;
-        const db = getFirestore();
-        await addDoc(collection(db, "users"), {
-          uid: user.uid,
-          name,
-          email,
-          authProvider: "local",
-        });
+        const fetchUser = await supabase.from('users').select().ilike('user_id', user.uid)
+        let userData = {}
+        if(fetchUser.data.length == 0) {
+          userData = { 
+            user_id: user.uid,
+            name: name,
+            photo_url: user.photoURL,
+            email: email,
+            auth_provider: "local",
+            phone_number: user.phoneNumber,
+            role: 'CANDIDATE'
+          }
+          const { data, error } = await supabase.from('users').insert([userData])
+        } else {
+          userData = fetchUser.data[0]
+        }
+        
+        dispatch(setUserData( {name: userData.name, id: userData.user_id, email: userData.email, role: userData.role}))
+        document.getElementById("close-button-2").click()
+
 
         // open toast
         toast.success('Account Created Successfully', {

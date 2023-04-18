@@ -11,6 +11,7 @@ import {
 import { setUserData } from "../../../../features/candidate/candidateSlice";
 import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
+import { supabase } from "../../../../config/supabaseClient";
 
 const db = getFirestore();
 const provider = new firebase.auth.GoogleAuthProvider();
@@ -34,7 +35,7 @@ const signInWithGoogle = async (dispatch) => {
 
     const fetchUser = await supabase.from('users').select().ilike('user_id', user.uid)
     let userData = {}
-    if(fetchUser.length == 0) {
+    if(fetchUser.data.length == 0) {
       userData = { 
         user_id: user.uid,
         name: user.displayName,
@@ -51,7 +52,7 @@ const signInWithGoogle = async (dispatch) => {
     
     
     dispatch(setUserData( {name: userData.name, id: userData.user_id, email: userData.email, role: userData.role}))
-    document.getElementById("close-button").click()
+    document.getElementById("close-button-2").click()
 
     // open toast
     toast.success('Account Created Successfully', {
@@ -79,6 +80,7 @@ const signInWithGoogle = async (dispatch) => {
       });
     } else {
       // open toast
+      console.error(err)
       toast.error('System is unavailable. Please try again later or contact tech support!', {
         position: "bottom-right",
         autoClose: 8000,

@@ -7,8 +7,8 @@ const Register = () => {
     <div className="form-inner">
       <h3>Join us for Free</h3>
 
-      <Tabs>
-{/*
+      {/* <Tabs>
+
         <div className="form-group register-dual">
           <TabList className="btn-box row">
             <Tab className="col-lg-6 col-md-12">
@@ -23,20 +23,20 @@ const Register = () => {
               </button>
             </Tab>
           </TabList>
-        </div>
- */}
+        </div> */}
+
         {/* End .form-group */}
 
-        <TabPanel>
+        {/* <TabPanel>
           <Form />
-        </TabPanel>
+        </TabPanel> */}
         {/* End cadidates Form */}
 
-        <TabPanel>
+        {/* <TabPanel> */}
           <Form />
-        </TabPanel>
+        {/* </TabPanel> */}
         {/* End Employer Form */}
-      </Tabs>
+      {/* </Tabs> */}
       {/* End form-group */}
 
       <div className="bottom-box">

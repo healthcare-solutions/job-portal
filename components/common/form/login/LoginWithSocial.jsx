@@ -39,7 +39,7 @@ const signInWithGoogle = async (dispatch) => {
 
     const fetchUser = await supabase.from('users').select().ilike('user_id', user.uid)
     let userData = {}
-    if(fetchUser.length == 0) {
+    if(fetchUser.data.length == 0) {
       userData = { 
         user_id: user.uid,
         name: user.displayName,

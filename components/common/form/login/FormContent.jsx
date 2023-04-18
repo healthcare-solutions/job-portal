@@ -4,17 +4,26 @@ import { auth } from "../firebase";
 import { useState } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from "react-redux";
+import { supabase } from "../../../../config/supabaseClient";
+import { setUserData } from "../../../../features/candidate/candidateSlice";
 
 const signInWithEmailAndPassword = async (email, password) => {
+  const dispatch = useDispatch()
   try {
     const userCredential = await auth.signInWithEmailAndPassword(
       email,
       password
     );
-    const userId = userCredential.user.uid;
-    localStorage.setItem("userId", userId);
-    document.getElementById("close-button").click();
+    const user = userCredential.user;
+    // localStorage.setItem("userId", userId);
+    const fetchUser = await supabase.from('users').select().ilike('user_id', user.uid)
+    let userData = {}    
+    userData = fetchUser.data[0]
 
+    
+    dispatch(setUserData( {name: userData.name, id: userData.user_id, email: userData.email, role: userData.role}))
+    document.getElementById("close-button").click()
     // open toast
     toast.success('Successfully logged in!', {
         position: "bottom-right",
