@@ -43,7 +43,7 @@ const ApplyJobModalContent = () => {
           const { data: fileUploadSuccess, error: fileUploadError } = await supabase
               .storage    
               .from('applications')
-              .upload('cv/' + selectedFile.name + fileTimestamp, selectedFile, file);
+              .upload('cv/' + fileTimestamp + '-' + selectedFile.name, selectedFile, file);
           if (fileUploadError) {
             if (fileUploadError.error == "Payload too large") {
               toast.error('Failed to upload attachment.  Attachment size exceeded maximum allowed size!', {
@@ -73,7 +73,7 @@ const ApplyJobModalContent = () => {
             const { data: docURL, error: docURLError } = supabase
                 .storage
                 .from('applications')
-                .getPublicUrl('cv/' + selectedFile.name + fileTimestamp)
+                .getPublicUrl('cv/' + fileTimestamp + '-' + selectedFile.name)
             if (docURLError) {
               console.warn('Failed to get download URL for file')
             }
@@ -146,7 +146,7 @@ const ApplyJobModalContent = () => {
                 className="uploadButton-input"
                 type="file"
                 name="attachments[]"
-                accept="image/*, application/pdf"
+                accept="application/pdf, application/msword"
                 id="upload"
                 required
                 onChange={handleFileInputChange}
@@ -155,8 +155,8 @@ const ApplyJobModalContent = () => {
                 className="uploadButton-button ripple-effect"
                 htmlFor="upload"
               >
-                Upload CV (doc, docx, pdf) Max size 5MB allowed
-                {selectedFile && <p>Selected file: {selectedFile.name}</p>}
+                Upload CV (.doc, .docx, .pdf) Max size 5MB allowed
+                {selectedFile && <p style={{ color: '#14A24A', fontWeight: '500' }}>Selected file: {selectedFile.name}</p>}
                 {!selectedFile && <label className="required">Please select a file before Apply</label>}
               </label>
             </div>
