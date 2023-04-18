@@ -213,7 +213,7 @@ const ApplicantWidgetContentBox = () => {
             {/* End filter top bar */}
 
             {/* Start table widget content */}
-            {fetchedAllApplicants.length == 0 ? <p><center>No applicant applied to this job!</center></p>: 
+            {fetchedAllApplicants.length == 0 ? <p style={{ fontSize: '1rem', fontWeight: '500' }}><center>No applicant applied to this job!</center></p>: 
             <div className="widget-content">
             <div className="table-outer">
                 <table className="default-table manage-job-table">
