@@ -63,10 +63,11 @@ const MobileMenu = () => {
                                 />
                                 <span
                                     style={{ marginLeft: '8px' }}
-                                    className="name"
+                                    className="name dropdown-toggle"
                                     data-bs-toggle="offcanvas"
-                                    data-bs-target="#offcanvasMenu">Hello, { user.name }</span>
-                          </div>
+                                    data-bs-target="#offcanvasMenu">Hello, { user.name }
+                                </span>
+                            </div>
                         }
                     </div>
                 </div>
