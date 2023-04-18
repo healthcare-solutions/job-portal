@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserData } from "../../features/candidate/candidateSlice";
 import { logout } from "../../utils/logout";
+import candidatesMenuData from "../../data/candidatesMenuData";
 
 const DashboardHeader = () => {
   const [navbar, setNavbar] = useState(false);
@@ -28,6 +29,7 @@ const DashboardHeader = () => {
   }, []);
 
   const user = useSelector(state => state.candidate.user)
+  const menuOptions = user.role !== 'CANDIDATE' ?  employerMenuData : candidatesMenuData
 
   return (
     // <!-- Main Header-->
@@ -90,7 +92,7 @@ const DashboardHeader = () => {
               </a>
 
               <ul className="dropdown-menu">
-                {employerMenuData.map((item) => (
+                {menuOptions.map((item) => (
                   <li
                     className={`${
                       isActiveLink(item.routePath, router.asPath)
