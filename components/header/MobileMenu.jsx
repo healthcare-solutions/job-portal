@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
@@ -43,14 +44,29 @@ const MobileMenu = () => {
 
                             :
 
-                            <a
-                                href="#"
-                                className="mobile-nav-toggler"
-                                data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasMenu"
-                            >
-                                <span className="flaticon-menu-1"></span>
-                            </a>
+                            // <a
+                            //     href="#"
+                            //     className="mobile-nav-toggler"
+                            //     data-bs-toggle="offcanvas"
+                            //     data-bs-target="#offcanvasMenu"
+                            // >
+                            //     <span className="flaticon-menu-1"></span>
+                            // </a>
+                            <div>
+                                <Image
+                                    alt="avatar"
+                                    className="thumb"
+                                    src="/images/icons/user.svg"
+                                    width={15}
+                                    height={15}
+                                    style={{ marginTop: '-px' }}
+                                />
+                                <span
+                                    style={{ marginLeft: '15px' }}
+                                    className="name"
+                                    data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasMenu">Hello, { user.name }</span>
+                          </div>
                         }
                     </div>
                 </div>
