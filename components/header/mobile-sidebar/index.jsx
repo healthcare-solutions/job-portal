@@ -16,9 +16,17 @@ import {
   isActiveParentChaild,
 } from "../../../utils/linkActiveChecker";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import employerMenuData from "../../../data/employerMenuData";
+import candidatesMenuData from "../../../data/candidatesMenuData";
+import { logout } from "../../../utils/logout";
 
 const Index = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  const user = useSelector(state => state.candidate.user)
+  const menuOptions = user.role !== 'CANDIDATE' ?  employerMenuData : candidatesMenuData
 
   return (
     <div
@@ -32,33 +40,30 @@ const Index = () => {
 
       <ProSidebarProvider>
         {/* <Sidebar> */}
-        <Menu>
-          {mobileMenuData.map((item) => (
-            <SubMenu
-              className={
-                isActiveParentChaild(item.items, router.asPath)
-                  ? "menu-active"
-                  : ""
-              }
-              label={item.label}
-              key={item.id}
-            >
-              {item.items.map((menuItem, i) => (
-                <MenuItem
-                  className={
-                    isActiveLink(menuItem.routePath, router.asPath)
-                      ? "menu-active-link"
-                      : ""
+        {user ? 
+          <Menu>
+            {menuOptions.map((menuItem, i) => (
+              <MenuItem
+                className={
+                  isActiveLink(menuItem.routePath, router.asPath)
+                    ? "menu-active-link"
+                    : ""
+                }
+                key={i}
+                routerLink=
+                  {
+                    <Link href={menuItem.routePath}
+                      onClick={(e) => {
+                        if(menuItem.name == 'Logout'){
+                          logout(dispatch)
+                        }
+                      }}/>
                   }
-                  key={i}
-                  routerLink={<Link href={menuItem.routePath} />}
-                >
-                  {menuItem.name}
-                </MenuItem>
-              ))}
-            </SubMenu>
-          ))}
-        </Menu>
+              >
+                {menuItem.name}
+              </MenuItem>
+            ))}
+          </Menu> : ''}
         {/* </Sidebar> */}
       </ProSidebarProvider>
 

@@ -1,7 +1,12 @@
 import Link from "next/link";
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
 import MobileSidebar from "./mobile-sidebar";
 
 const MobileMenu = () => {
+    const user = useSelector((state) => state.candidate.user);
+    const showLoginButton = useMemo(() => !user?.id, [user]);
+
     return (
         // <!-- Main Header-->
         <header className="main-header main-header-mobile">
@@ -24,27 +29,29 @@ const MobileMenu = () => {
                     {/* End .nav-outer */}
 
                     <div className="outer-box">
-                        <div className="login-box">
+                        {showLoginButton ?
+                            <div className="login-box">
+                                <a
+                                    href="#"
+                                    className="call-modal"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#loginPopupModal"
+                                >
+                                    <span className="icon icon-user"></span>
+                                </a>
+                            </div>
+
+                            :
+
                             <a
                                 href="#"
-                                className="call-modal"
-                                data-bs-toggle="modal"
-                                data-bs-target="#loginPopupModal"
+                                className="mobile-nav-toggler"
+                                data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasMenu"
                             >
-                                <span className="icon icon-user"></span>
+                                <span className="flaticon-menu-1"></span>
                             </a>
-                        </div>
-                        {/* login popup end */}
-
-                        <a
-                            href="#"
-                            className="mobile-nav-toggler"
-                            data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvasMenu"
-                        >
-                            <span className="flaticon-menu-1"></span>
-                        </a>
-                        {/* right humberger menu */}
+                        }
                     </div>
                 </div>
             </div>
