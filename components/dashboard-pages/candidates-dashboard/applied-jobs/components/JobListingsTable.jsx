@@ -1,14 +1,40 @@
 import Link from "next/link.js";
 import jobs from "../../../../../data/job-featured.js";
+import { supabase } from "../../../../../config/supabaseClient";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const JobListingsTable = () => {
+
+  const [applications, setApplications] = useState([]);
+  const user = useSelector(state => state.candidate.user)
+
+  const dateFormat = (val) => {
+    const date = new Date(val)
+    return date.toLocaleDateString('en-IN', { month: 'long', day: 'numeric'}) + ', ' + date.getFullYear()
+  }
+
+  const fetchApplications = async () => {
+    let { data: applications, error } = await supabase
+      .from('applicants_view')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at',  { ascending: false });
+  
+      applications.forEach( i => i.created_at = dateFormat(i.created_at))
+      setApplications(applications)
+  }
+
+  useEffect(() => {
+    fetchApplications();
+  }, []);
+  
   return (
     <div className="tabs-box">
       <div className="widget-title">
         <h4>My Applied Jobs</h4>
 
-        <div className="chosen-outer">
-          {/* <!--Tabs Box--> */}
+        {/* <div className="chosen-outer">
           <select className="chosen-single form-select">
             <option>Last 6 Months</option>
             <option>Last 12 Months</option>
@@ -16,7 +42,7 @@ const JobListingsTable = () => {
             <option>Last 24 Months</option>
             <option>Last 5 year</option>
           </select>
-        </div>
+        </div> */}
       </div>
       {/* End filter top bar */}
 
@@ -30,43 +56,62 @@ const JobListingsTable = () => {
                   <th>Job Title</th>
                   <th>Date Applied</th>
                   <th>Status</th>
-                  <th>Action</th>
+                  {/* <th>Action</th> */}
                 </tr>
               </thead>
 
               <tbody>
-                {jobs.slice(0, 4).map((item) => (
-                  <tr key={item.id}>
+                {applications.slice(0, 4).map((item) => (
+                  <tr key={item.application_id}>
                     <td>
                       {/* <!-- Job Block --> */}
                       <div className="job-block">
                         <div className="inner-box">
-                          <div className="content">
-                            <span className="company-logo">
+                          <div>
+                            {/* <span className="company-logo">
                               <img src={item.logo} alt="logo" />
-                            </span>
+                            </span> */}
                             <h4>
-                              <Link href={`/job-single-v3/${item.id}`}>
-                                {item.jobTitle}
+                              <Link href={`/job/${item.job_id}`}>
+                                {item.job_title}
                               </Link>
                             </h4>
                             <ul className="job-info">
-                              <li>
-                                <span className="icon flaticon-briefcase"></span>
-                                Segment
-                              </li>
-                              <li>
-                                <span className="icon flaticon-map-locator"></span>
-                                London, UK
-                              </li>
+                              { item?.job_type ?
+                                    <li>
+                                      <span className="icon flaticon-clock-3"></span>
+                                      {item?.job_type}
+                                    </li>
+                                    : '' }
+                                { item?.job_address ?
+                                    <li>
+                                      <span className="icon flaticon-map-locator"></span>
+                                      {item?.job_address}
+                                    </li>
+                                    : '' }
+                                {/* location info */}
+                                { item?.salary ?
+                                    <li>
+                                      <span className="icon flaticon-money"></span>{" "}
+                                      ${item?.salary} {item?.salary_rate}
+                                    </li>
+                                    : '' }
+                                {/* salary info */}
                             </ul>
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td>Dec 5, 2020</td>
-                    <td className="status">Active</td>
-                    <td>
+                    <td>{ item.created_at }</td>
+                    { item.status == "Qualified" ?
+                        <td className="status">{ item.status }</td>
+                        : item.status == "Not Qualified" ?
+                        <td className="status" style={{ color: 'red' }}>{ item.status }</td>
+                        : item.status == null ? 
+                        <td className="pending">Pending</td>
+                        : <td className="pending">{ item.status }</td>
+                    }
+                    {/* <td>
                       <div className="option-box">
                         <ul className="option-list">
                           <li>
@@ -81,7 +126,7 @@ const JobListingsTable = () => {
                           </li>
                         </ul>
                       </div>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>

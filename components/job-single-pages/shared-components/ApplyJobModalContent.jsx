@@ -82,7 +82,7 @@ const ApplyJobModalContent = () => {
             const { data: applications, error: applicationsError } = await supabase
                 .from('applications')
                 .insert([
-                  { 
+                  {
                     user_id: userId,
                     email: user.email,
                     name: user.name,
