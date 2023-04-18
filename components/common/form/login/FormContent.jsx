@@ -8,8 +8,7 @@ import { useDispatch } from "react-redux";
 import { supabase } from "../../../../config/supabaseClient";
 import { setUserData } from "../../../../features/candidate/candidateSlice";
 
-const signInWithEmailAndPassword = async (email, password) => {
-  const dispatch = useDispatch()
+const signInWithEmailAndPassword = async (email, password, dispatch) => {
   try {
     const userCredential = await auth.signInWithEmailAndPassword(
       email,
@@ -93,6 +92,8 @@ const resetPassword = async (email) => {
 const FormContent = () => {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  
+  const dispatch = useDispatch()
   return (
     <div className="form-inner">
       <h3>Login to Immense Career</h3>
@@ -152,7 +153,7 @@ const FormContent = () => {
             name="log-in"
             onClick={(e) => {
               e.preventDefault();
-              signInWithEmailAndPassword(loginEmail, loginPassword);
+              signInWithEmailAndPassword(loginEmail, loginPassword, dispatch);
             }}
           >
             Log In
