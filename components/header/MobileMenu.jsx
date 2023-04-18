@@ -52,7 +52,9 @@ const MobileMenu = () => {
                             // >
                             //     <span className="flaticon-menu-1"></span>
                             // </a>
-                            <div>
+                            <div
+                                data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasMenu">
                                 <Image
                                     alt="avatar"
                                     className="thumb"
@@ -63,10 +65,9 @@ const MobileMenu = () => {
                                 />
                                 <span
                                     style={{ marginLeft: '8px' }}
-                                    className="name dropdown-toggle"
-                                    data-bs-toggle="offcanvas"
-                                    data-bs-target="#offcanvasMenu">Hello, { user.name }
-                                </span>
+                                    className="name dropdown-toggle">Hello, 
+                                </span><br />
+                                <span>{ user.name }</span>
                             </div>
                         }
                     </div>
