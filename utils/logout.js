@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { setUserData } from "../features/candidate/candidateSlice";
 const logout = (dispatch) => {
-    dispatch(setUserData({ name: "", id: "", email: "" }))
+    dispatch(setUserData({ name: "", id: "", email: "", role: "" }))
     localStorage.clear()
 
     // open toast

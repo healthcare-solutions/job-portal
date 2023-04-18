@@ -59,6 +59,7 @@ const FormContent = () => {
     // e.preventDefault();
     if (validateForm()) {
       try {
+        // TODO: move to supabase
         const res = await auth.createUserWithEmailAndPassword(email, password);
         const user = res.user;
         const db = getFirestore();

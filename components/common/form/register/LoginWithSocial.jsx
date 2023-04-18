@@ -20,20 +20,38 @@ const signInWithGoogle = async (dispatch) => {
   try {
     const res = await auth.signInWithPopup(provider);
     const user = res.user;
-    const userRef = collection(db, "users");
-    const result = await getDocs(query(userRef, where("uid", "==", user.uid)));
-    if (result.empty) {
-      await addDoc(collection(db, "users"), {
-        uid: user.uid,
-        name: user.displayName,
-        photo: user.photoURL,
-        email: user.email,
-        date: Date.now,
-        authProvider: "google",
-      });
-    }
+    // const userRef = collection(db, "users");
+    // const result = await getDocs(query(userRef, where("googleUid", "==", user.uid)));
+    // if (result.empty) {
+    //   await addDoc(collection(db, "users"), {
+    //     googleUid: user.uid,
+    //     name: user.displayName,
+    //     photo: user.photoURL,
+    //     email: user.email,
+    //     authProvider: "google",
+    //   });
+    // }
 
-    dispatch(setUserData( {name: user.displayName, id: user.uid, email: user.email}))
+    const fetchUser = await supabase.from('users').select().ilike('user_id', user.uid)
+    let userData = {}
+    if(fetchUser.length == 0) {
+      userData = { 
+        user_id: user.uid,
+        name: user.displayName,
+        photo_url: user.photoURL,
+        email: user.email,
+        auth_provider: "google",
+        phone_number: user.phoneNumber,
+        role: 'CANDIDATE'
+      }
+      const { data, error } = await supabase.from('users').insert([userData])
+    } else {
+      userData = fetchUser.data[0]
+    }
+    
+    
+    dispatch(setUserData( {name: userData.name, id: userData.user_id, email: userData.email, role: userData.role}))
+    document.getElementById("close-button").click()
 
     // open toast
     toast.success('Account Created Successfully', {
@@ -46,8 +64,6 @@ const signInWithGoogle = async (dispatch) => {
       progress: undefined,
       theme: "colored",
     });
-
-    document.getElementById("close-button").click()
   } catch (err) {
     if (err.message.includes("found in field date in document users/")) {
       // open toast

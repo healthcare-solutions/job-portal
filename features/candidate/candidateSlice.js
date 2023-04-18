@@ -93,7 +93,8 @@ const initialState = {
     ],
     user: {
         name: '',
-        id: ''
+        id: '',
+        role: ''
     },
     loggedIn: false
 };
@@ -167,7 +168,7 @@ export const candidateSlice = createSlice({
         },
         setUserData: (state, { payload }) => {
             state.user = payload
-            state.loggedIn = payload.id ? true : false    
+            state.loggedIn = payload.id ? true : false
             setEncryptedItem('user', JSON.stringify(state.user))
         },
     },
