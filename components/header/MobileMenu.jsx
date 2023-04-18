@@ -59,10 +59,10 @@ const MobileMenu = () => {
                                     src="/images/icons/user.svg"
                                     width={15}
                                     height={15}
-                                    style={{ marginTop: '-px' }}
+                                    style={{ marginTop: '-5px' }}
                                 />
                                 <span
-                                    style={{ marginLeft: '15px' }}
+                                    style={{ marginLeft: '8px' }}
                                     className="name"
                                     data-bs-toggle="offcanvas"
                                     data-bs-target="#offcanvasMenu">Hello, { user.name }</span>
