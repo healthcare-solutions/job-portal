@@ -10,6 +10,8 @@ import { toast, ToastContainer } from "react-toastify";
 
 const JobListingsTable = () => {
   const [jobs, setjobs] = useState([]);
+  const [searchField, setSearchField] = useState('');
+  //const [jobStatus, setJobStatus] = useState('');
   const user = useSelector(state => state.candidate.user)
   const router = useRouter();
 
@@ -30,10 +32,10 @@ const JobListingsTable = () => {
   }
 
   const publishJob = async (jobId, status) => {
-    if (!status) {
+    if (status !== 'Published') {
       const { data, error } = await supabase
           .from('jobs')
-          .update({ status: true })
+          .update({ status: 'Published' })
           .eq('job_id', jobId)
 
       // open toast
@@ -66,10 +68,10 @@ const JobListingsTable = () => {
   }
 
   const unpublishJob = async (jobId, status) => {
-    if (status) {
+    if (status !== 'Unpublished') {
       const { data, error } = await supabase
           .from('jobs')
-          .update({ status: false })
+          .update({ status: 'Unpublished' })
           .eq('job_id', jobId)
 
       // open toast
@@ -101,15 +103,35 @@ const JobListingsTable = () => {
     }
   }
 
+  // clear all filters
+  const clearAll = () => {
+    setSearchField('');
+    fetchPost()
+  };
+
+  async function findJob () {
+
+    let { data, error } = await supabase
+        .from('jobs')
+        .select()
+        .eq('user_id', user.id)
+        .order('created_at',  { ascending: false });
+
+        data.forEach( job => job.created_at = dateFormat(job.created_at))
+        setjobs(data) 
+
+        setjobs(data.filter((job) => job.job_title.toLowerCase().includes(searchField.toLowerCase())))
+    };
+
   const fetchPost = async () => {
-    let { data: jobs, error } = await supabase
+    let { data, error } = await supabase
       .from('jobs')
-      .select('*')
+      .select()
       .eq('user_id', user.id)
       .order('created_at',  { ascending: false });
 
-      jobs.forEach( job => job.created_at = dateFormat(job.created_at))
-      setjobs(jobs)
+      data.forEach( job => job.created_at = dateFormat(job.created_at))
+      setjobs(data)
   }
   
 
@@ -123,16 +145,52 @@ const JobListingsTable = () => {
         <h4>My Job Listings</h4>
 
         <div className="chosen-outer">
-          {/* <!--Tabs Box--> */}
-{/*
-          <select className="chosen-single form-select">
-            <option>Last 6 Months</option>
-            <option>Last 12 Months</option>
-            <option>Last 16 Months</option>
-            <option>Last 24 Months</option>
-            <option>Last 5 year</option>
-          </select>
- */}
+          {/* <select className="chosen-single form-select chosen-container"> */}
+            {/* <option>All Status</option> */}
+            {/* <option>Last 12 Months</option> */}
+            {/* <option>Last 16 Months</option> */}
+            {/* <option>Last 24 Months</option> */}
+            {/* <option>Last 5 year</option> */}
+          {/* </select> */}
+
+          {/* TODO: add search filters */}
+          <input
+              className="chosen-single form-input chosen-container mx-3"
+              type="text"
+              name="immense-career-job_title"
+              placeholder="Search by Job Title"
+              value={searchField}
+              onChange={(e) => {
+                setSearchField(e.target.value);
+              }}
+              style={{ minWidth: '450px'}}
+            />
+{/*           
+          <select
+            className="chosen-single form-select chosen-container mx-3"
+            onChange={(e) => {
+              setJobStatus(e.target.value)
+            }}
+          >
+            <option>Status</option>
+            <option>Published</option>
+            <option>Unpublished</option>
+          </select> */}
+
+          <button
+            onClick={findJob}
+            className="btn btn-primary text-nowrap m-1"
+            style= {{ minHeight: '43px' }}
+          >
+            Search
+          </button>
+          <button
+            onClick={clearAll}
+            className="btn btn-danger text-nowrap m-1"
+            style= {{ minHeight: '43px' }}
+          >
+            Clear
+          </button>
         </div>
       </div>
       {/* End filter top bar */}
@@ -207,9 +265,9 @@ const JobListingsTable = () => {
                   <td>
                   {item?.created_at}
                   </td>
-                  { item?.status ?
-                    <td className="status">Active</td>
-                    : <td className="status" style={{ color: 'red' }}>Inactive</td> }
+                  { item?.status == 'Published' ?
+                    <td className="status">{item.status}</td>
+                    : <td className="status" style={{ color: 'red' }}>{item.status}</td> }
                   <td>
                     <div className="option-box">
                       <ul className="option-list">
