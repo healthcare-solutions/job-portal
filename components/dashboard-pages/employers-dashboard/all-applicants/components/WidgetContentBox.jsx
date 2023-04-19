@@ -9,13 +9,32 @@ import Applicants from "./Applicants";
 
 const WidgetContentBox = () => {
     const [fetchedAllApplicants, setFetchedAllApplicantsData] = useState({});
-  
+    const [searchField, setSearchField] = useState('');
+
     
     const dateFormat = (val) => {
       const date = new Date(val)
       return date.toLocaleDateString('en-IN', { month: 'long', day: 'numeric'}) + ', ' + date.getFullYear()
     }
   
+    // clear all filters
+    const clearAll = () => {
+        setSearchField('');
+        fetchedAllApplicantsView()
+    };
+
+    async function findApplicant () {
+        let { data, error } = await supabase
+            .from('applicants_view')
+            .select("*")
+            .order('created_at',  { ascending: false });
+
+        if(data) {
+            data.forEach( applicant => applicant.created_at = dateFormat(applicant.created_at))
+            setFetchedAllApplicantsData(data.filter((applicant) => applicant.name.toLowerCase().includes(searchField.toLowerCase())))
+        }
+    };
+
     const fetchedAllApplicantsView = async () => {
       try{
         let { data: allApplicantsView, error } = await supabase
@@ -181,19 +200,56 @@ const WidgetContentBox = () => {
     return (
         <div className="tabs-box">
             <div className="widget-title">
+                <h4>All Applicants!</h4>
 
-            <div className="chosen-outer">
-                {/* <!--Tabs Box--> */}
-    {/*
-                <select className="chosen-single form-select">
-                <option>Last 6 Months</option>
-                <option>Last 12 Months</option>
-                <option>Last 16 Months</option>
-                <option>Last 24 Months</option>
-                <option>Last 5 year</option>
-                </select>
-        */}
-            </div>
+                <div className="chosen-outer">
+                {/* <select className="chosen-single form-select chosen-container"> */}
+                    {/* <option>All Status</option> */}
+                    {/* <option>Last 12 Months</option> */}
+                    {/* <option>Last 16 Months</option> */}
+                    {/* <option>Last 24 Months</option> */}
+                    {/* <option>Last 5 year</option> */}
+                {/* </select> */}
+
+                {/* TODO: add search filters */}
+                <input
+                    className="chosen-single form-input chosen-container mx-3"
+                    type="text"
+                    name="immense-career-applicant"
+                    placeholder="Search by Applicant name"
+                    value={searchField}
+                    onChange={(e) => {
+                        setSearchField(e.target.value);
+                    }}
+                    style={{ minWidth: '300px'}}
+                />
+        {/*           
+                <select
+                    className="chosen-single form-select chosen-container mx-3"
+                    onChange={(e) => {
+                    setJobStatus(e.target.value)
+                    }}
+                >
+                    <option>Status</option>
+                    <option>Published</option>
+                    <option>Unpublished</option>
+                </select> */}
+
+                <button
+                    onClick={findApplicant}
+                    className="btn btn-primary text-nowrap m-1"
+                    style= {{ minHeight: '43px' }}
+                >
+                    Search
+                </button>
+                <button
+                    onClick={clearAll}
+                    className="btn btn-danger text-nowrap m-1"
+                    style= {{ minHeight: '43px' }}
+                >
+                    Clear
+                </button>
+                </div>
             </div>
             {/* End filter top bar */}
 
