@@ -114,6 +114,7 @@ const submitJobPost = async (
 };
 
 const EditJobView = ({ fetchedJobData }) => {
+  console.log(fetchedJobData);
   const user = useSelector(state => state.candidate.user)
   const [editedJobData, setEditedJobData] = useState(JSON.parse(JSON.stringify(editedJobFields)));
   const { editedJobTitle, editedJobDesc, editedJobType, editedSalary, editedSalaryRate, editedCareer, editedExp, editedAddress, editedCompleteAddress } = useMemo(() => editedJobData, [editedJobData])
@@ -136,6 +137,10 @@ const EditJobView = ({ fetchedJobData }) => {
   // do something on address change
   const onChangeAddress = (autocomplete) => {
     const location = autocomplete.getPlace();
+    setEditedJobData((previousState) => ({ 
+      ...previousState,
+      editedAddress: searchInput.current.value
+  }))
   }
 
   // init autocomplete
@@ -155,6 +160,10 @@ const EditJobView = ({ fetchedJobData }) => {
   useEffect(() => {
     initMapScript().then(() => initAutocomplete())
   }, []);
+
+  useEffect(() => {
+    searchInput.current.value = fetchedJobData.job_address
+  }, [fetchedJobData.job_address]);
 
   return (
     <form className="default-form">
@@ -596,28 +605,14 @@ const EditJobView = ({ fetchedJobData }) => {
                 type="text"
                 name="immense-career-address"
                 ref={searchInput}
-                value={fetchedJobData.job_address}
-                onChange={(e) => {
-                setEditedJobData((previousState) => ({ 
-                    ...previousState,
-                    editedAddress: e.target.value
-                }))
-                }}
                 placeholder="City, State"
             />
             : <input
-                    type="text"
-                    name="immense-career-address"
-                    ref={searchInput}
-                    value={editedAddress}
-                    onChange={(e) => {
-                    setEditedJobData((previousState) => ({ 
-                        ...previousState,
-                        editedAddress: e.target.value
-                    }))
-                    }}
-                    placeholder="City, State"
-                />
+                type="text"
+                name="immense-career-address"
+                ref={searchInput}                    
+                placeholder="City, State"
+              />
           }
         </div>
         

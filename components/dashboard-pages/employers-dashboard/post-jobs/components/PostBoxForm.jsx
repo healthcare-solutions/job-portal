@@ -106,7 +106,6 @@ const submitJobPost = async (
                 salary_rate: salaryRate,
                 job_address: address,
                 job_comp_add: completeAddress,
-                status: true
               }
         ])
     
@@ -190,6 +189,10 @@ const PostBoxForm = () => {
   // do something on address change
   const onChangeAddress = (autocomplete) => {
     const location = autocomplete.getPlace();
+    setJobData((previousState) => ({ 
+      ...previousState,
+      address: searchInput.current.value
+    }))
   }
 
   // init autocomplete
@@ -540,14 +543,7 @@ const PostBoxForm = () => {
           <input
             type="text"
             name="immense-career-address"
-            ref={searchInput}
-            value={address}
-            onChange={(e) => {
-              setJobData((previousState) => ({ 
-                ...previousState,
-                address: e.target.value
-              }))
-            }}
+            ref={searchInput}            
             placeholder="City, State"
           />
         </div>
