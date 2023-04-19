@@ -7,12 +7,34 @@ import { useSelector } from "react-redux";
 const JobListingsTable = () => {
 
   const [applications, setApplications] = useState([]);
+  const [searchField, setSearchField] = useState('');
+
   const user = useSelector(state => state.candidate.user)
 
   const dateFormat = (val) => {
     const date = new Date(val)
     return date.toLocaleDateString('en-IN', { month: 'long', day: 'numeric'}) + ', ' + date.getFullYear()
   }
+
+  // clear all filters
+  const clearAll = () => {
+    setSearchField('');
+    fetchApplications()
+  };
+
+  async function findAppliedJob () {
+
+    let { data, error } = await supabase
+        .from('applicants_view')
+        .select()
+        .eq('user_id', user.id)
+        .order('created_at',  { ascending: false });
+
+        if (data) {
+          data.forEach( job => job.created_at = dateFormat(job.created_at))
+          setApplications(data.filter((job) => job.job_title.toLowerCase().includes(searchField.toLowerCase())))
+        }
+  };
 
   const fetchApplications = async () => {
     let { data: applications, error } = await supabase
@@ -21,8 +43,10 @@ const JobListingsTable = () => {
       .eq('user_id', user.id)
       .order('created_at',  { ascending: false });
   
-      applications.forEach( i => i.created_at = dateFormat(i.created_at))
-      setApplications(applications)
+      if (applications) {
+        applications.forEach( i => i.created_at = dateFormat(i.created_at))
+        setApplications(applications)
+      }
   }
 
   useEffect(() => {
@@ -34,17 +58,57 @@ const JobListingsTable = () => {
         <div className="widget-title">
           <h4>My Applied Jobs</h4>
 
-          {/* <div className="chosen-outer">
-            <select className="chosen-single form-select">
-              <option>Last 6 Months</option>
-              <option>Last 12 Months</option>
-              <option>Last 16 Months</option>
-              <option>Last 24 Months</option>
-              <option>Last 5 year</option>
-            </select>
-          </div> */}
+          {applications.length != 0 ?
+            <div className="chosen-outer">
+              {/* <select className="chosen-single form-select chosen-container"> */}
+                {/* <option>All Status</option> */}
+                {/* <option>Last 12 Months</option> */}
+                {/* <option>Last 16 Months</option> */}
+                {/* <option>Last 24 Months</option> */}
+                {/* <option>Last 5 year</option> */}
+              {/* </select> */}
+
+              {/* TODO: add search filters */}
+              <input
+                  className="chosen-single form-input chosen-container mx-3"
+                  type="text"
+                  name="immense-career-job_title"
+                  placeholder="Search by Job Title"
+                  value={searchField}
+                  onChange={(e) => {
+                    setSearchField(e.target.value);
+                  }}
+                  style={{ minWidth: '450px'}}
+                />
+    {/*           
+              <select
+                className="chosen-single form-select chosen-container mx-3"
+                onChange={(e) => {
+                  setJobStatus(e.target.value)
+                }}
+              >
+                <option>Status</option>
+                <option>Published</option>
+                <option>Unpublished</option>
+              </select> */}
+
+              <button
+                onClick={findAppliedJob}
+                className="btn btn-primary text-nowrap m-1"
+                style= {{ minHeight: '43px' }}
+              >
+                Search
+              </button>
+              <button
+                onClick={clearAll}
+                className="btn btn-danger text-nowrap m-1"
+                style= {{ minHeight: '43px' }}
+              >
+                Clear
+              </button>
+            </div>
+          : '' }
         </div>
-        {/* End filter top bar */}
 
         {/* Start table widget content */}
         {applications.length == 0 ? <p style={{ fontSize: '1rem', fontWeight: '500' }}><center>You have not applied to any jobs yet!</center></p> : 
