@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { getDecryptedItem } from "../utils/encryptedStorage";
 import { setUserData } from "../features/candidate/candidateSlice";
+import 'suneditor/dist/css/suneditor.min.css';
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");

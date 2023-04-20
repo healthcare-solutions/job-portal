@@ -6,7 +6,12 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { supabase } from "../../../../../config/supabaseClient";
 import Router, { useRouter } from "next/router";
+import dynamic from "next/dynamic";
+import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
 
+const SunEditor = dynamic(() => import("suneditor-react"), {
+  ssr: false,
+});
 
 const apiKey = process.env.NEXT_PUBLIC_JOB_PORTAL_GMAP_API_KEY;
 const mapApiJs = 'https://maps.googleapis.com/maps/api/js';
@@ -203,25 +208,58 @@ const EditJobView = ({ fetchedJobData }) => {
         {/* <!-- About Company --> */}
         <div className="form-group col-lg-12 col-md-12">
           <label>Job Description <span className="required">(required)</span></label>
+          
           { !editedJobDesc ?
-            <textarea
-                value={fetchedJobData.job_desc}
-                onChange={(e) => {
-                setEditedJobData((previousState) => ({ 
-                    ...previousState,
-                    editedJobDesc: e.target.value
-                }))
-                }}
-            ></textarea>
-            : <textarea
-                    value={editedJobDesc}
-                    onChange={(e) => {
-                    setEditedJobData((previousState) => ({ 
-                        ...previousState,
-                        editedJobDesc: e.target.value
-                    }))
-                    }}
-                ></textarea>
+            <SunEditor 
+            setContents={fetchedJobData.job_desc}
+            setOptions={{
+            buttonList: [
+              ["fontSize", "formatBlock"],
+              ["bold", "underline", "italic", "strike", "subscript", "superscript"],
+              ["align", "horizontalRule", "list", "table"],
+              ["fontColor", "hiliteColor"],
+              ["outdent", "indent"],
+              ["undo", "redo"],
+              ["removeFormat"],
+              ["outdent", "indent"],
+              ["link"],
+              ["preview", "print"],
+              ["fullScreen", "showBlocks", "codeView"],
+            ],
+          }}
+          setDefaultStyle="color:black;"
+          onChange={(e) => {
+            setEditedJobData((previousState) => ({ 
+              ...previousState,
+              editedJobDesc: e
+            }))
+          }}
+          />
+            : 
+            <SunEditor 
+            setOptions={{
+            buttonList: [
+              ["fontSize", "formatBlock"],
+              ["bold", "underline", "italic", "strike", "subscript", "superscript"],
+              ["align", "horizontalRule", "list", "table"],
+              ["fontColor", "hiliteColor"],
+              ["outdent", "indent"],
+              ["undo", "redo"],
+              ["removeFormat"],
+              ["outdent", "indent"],
+              ["link"],
+              ["preview", "print"],
+              ["fullScreen", "showBlocks", "codeView"],
+            ],
+          }}
+          setDefaultStyle="color:black;"
+          onChange={(e) => {
+            setEditedJobData((previousState) => ({ 
+              ...previousState,
+              editedJobDesc: e
+            }))
+          }}
+          />
           }   
         </div>
         {/* <!-- Input --> */}

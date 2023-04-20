@@ -1534,12 +1534,33 @@ Job Detail Section
 
 .job-detail p {
   position: relative;
-  font-size: 15px;
+  // font-size: 15px;
   line-height: 26px;
-  color: #696969;
+  color: inherit;
   margin-bottom: 26px;
 }
 
+.job-detail ul {
+  padding-left: 2rem;
+  margin-bottom: 1rem;
+}
+:is(.job-detail, .sun-editor-editable) ul li {
+  list-style: initial;
+}
+
+:is(.job-detail, .sun-editor-editable) ol li {
+  list-style: auto;
+}
+
+// .job-detail tr:nth-child(odd) td {
+//   padding: 0.2rem;
+//   border: 1px dashed white;
+// }
+.job-detail tr td {
+  padding: 0.5rem;
+  border: 0.25rem solid white;
+  background-color: #eeeeee;
+}
 .job-detail .image {
   position: relative;
   margin-bottom: 50px;

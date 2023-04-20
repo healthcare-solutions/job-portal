@@ -6,7 +6,12 @@ import { useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { supabase } from "../../../../../config/supabaseClient";
+import dynamic from "next/dynamic";
+import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
 
+const SunEditor = dynamic(() => import("suneditor-react"), {
+  ssr: false,
+});
 
 const apiKey = process.env.NEXT_PUBLIC_JOB_PORTAL_GMAP_API_KEY;
 const mapApiJs = 'https://maps.googleapis.com/maps/api/js';
@@ -68,7 +73,7 @@ const submitJobPost = async (
               address
             );
  */
-        const db = getFirestore();
+        // const db = getFirestore();
 
         // await addDoc(collection(db, "jobs"), {
         //   jobTitle,
@@ -227,7 +232,7 @@ const PostBoxForm = () => {
  */
 
   return (
-    <form className="default-form">
+    <form className="default-form">     
       <div className="row">
         {/* <!-- Input --> */}
         <div className="form-group col-lg-12 col-md-12">
@@ -249,16 +254,30 @@ const PostBoxForm = () => {
         {/* <!-- About Company --> */}
         <div className="form-group col-lg-12 col-md-12">
           <label>Job Description <span className="required">(required)</span></label>
-          <textarea
-            value={jobDesc}
-            onChange={(e) => {
-              setJobData((previousState) => ({ 
-                ...previousState,
-                jobDesc: e.target.value
-              }))
-            }}
-            placeholder="Spent several years working on sheep on Wall Street. Had moderate success investing in Yugo's on Wall Street. Managed a small team buying and selling Pogo sticks for farmers. Spent several years licensing licorice in West Palm Beach, FL. Developed several new methods for working it banjos in the aftermarket. Spent a weekend importing banjos in West Palm Beach, FL.In this position, the Software Engineer collaborates with Evention's Development team to continuously enhance our current software solutions as well as create new solutions to eliminate the back-office operations and management challenges present"
-          ></textarea>
+          <SunEditor 
+            setOptions={{
+            buttonList: [
+              ["fontSize", "formatBlock"],
+              ["bold", "underline", "italic", "strike", "subscript", "superscript"],
+              ["align", "horizontalRule", "list", "table"],
+              ["fontColor", "hiliteColor"],
+              ["outdent", "indent"],
+              ["undo", "redo"],
+              ["removeFormat"],
+              ["outdent", "indent"],
+              ["link"],
+              ["preview", "print"],
+              ["fullScreen", "showBlocks", "codeView"],
+            ],
+          }}
+          setDefaultStyle="color:black;"
+          onChange={(e) => {
+            setJobData((previousState) => ({ 
+              ...previousState,
+              jobDesc: e
+            }))
+          }}
+          />
         </div>
         {/* <!-- Input --> */}
 {/*
