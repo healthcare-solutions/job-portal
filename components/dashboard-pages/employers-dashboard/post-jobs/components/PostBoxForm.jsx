@@ -37,18 +37,18 @@ const addJobFields = {
   jobType: "",
   salary: "",
   salaryRate: "",
-  career: "",
+  education: "",
   exp: "",
   address: "",
   completeAddress: ""
 }
 
 const submitJobPost = async (
-  { jobTitle, jobDesc, jobType, salary, salaryRate, career, exp, completeAddress, address },
+  { jobTitle, jobDesc, jobType, salary, salaryRate, education, exp, completeAddress, address },
   setJobData,
   user
 ) => {
-    if (jobTitle && jobDesc && jobType && career && exp && address) {
+    if (jobTitle && jobDesc && jobType && address) {
         try {
             // const res = await auth.createUserWithEmailAndPassword(email, password);
             // const user = res.user;
@@ -62,7 +62,7 @@ const submitJobPost = async (
               jobType,
               salary,
               salaryRate,
-              career,
+              education,
               exp,
               //gender,
               //industy,
@@ -84,7 +84,7 @@ const submitJobPost = async (
         //   jobType,
         //   salary,
         //   salaryRate,
-        //   career,
+        //   education,
         //   exp,
         //   //gender,
         //   //industy,
@@ -106,7 +106,7 @@ const submitJobPost = async (
                 job_desc: jobDesc,
                 job_type: jobType,
                 experience: exp,
-                education: career,
+                education: education,
                 salary: salary,
                 salary_rate: salaryRate,
                 job_address: address,
@@ -166,7 +166,7 @@ const PostBoxForm = () => {
   // const [jobType, setJobType] = useState("");
   // const [salary, setSalary] = useState("");
   // const [salaryRate, setSalaryRate] = useState("");
-  // const [career, setCareer] = useState("");
+  // const [education, setEducation] = useState("");
   // const [exp, setExp] = useState("");
   //const [gender, setGender] = useState("");
   //const [industy, setIndustry] = useState("");
@@ -177,7 +177,7 @@ const PostBoxForm = () => {
   // const [address, setAddress] = useState("");
   const user = useSelector(state => state.candidate.user)
   const [jobData, setJobData] = useState(JSON.parse(JSON.stringify(addJobFields)));
-  const { jobTitle, jobDesc, jobType, salary, salaryRate, career, exp, address, completeAddress } = useMemo(() => jobData, [jobData])
+  const { jobTitle, jobDesc, jobType, salary, salaryRate, education, exp, address, completeAddress } = useMemo(() => jobData, [jobData])
 
   const searchInput = useRef(null);
 
@@ -353,11 +353,10 @@ const PostBoxForm = () => {
           </select>
         </div>
         <div className="form-group col-lg-6 col-md-12">
-          <label>Experience<span className="required"> (required)</span></label>
+          <label>Experience<span className="optional"> (optional)</span></label>
           <select
             className="chosen-single form-select"
             value={exp}
-            required
             onChange={(e) => {
               setJobData((previousState) => ({ 
                 ...previousState,
@@ -414,15 +413,14 @@ const PostBoxForm = () => {
           </select>
         </div>
         <div className="form-group col-lg-6 col-md-12">
-          <label>Education<span className="required"> (required)</span></label>
+          <label>Education<span className="optional"> (optional)</span></label>
           <select
             className="chosen-single form-select"
-            value={career}
-            required
+            value={education}
             onChange={(e) => {
               setJobData((previousState) => ({ 
                 ...previousState,
-                career: e.target.value
+                education: e.target.value
               }))
             }}
           >

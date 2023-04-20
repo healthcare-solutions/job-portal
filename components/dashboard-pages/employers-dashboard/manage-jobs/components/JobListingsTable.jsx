@@ -147,7 +147,9 @@ const JobListingsTable = () => {
       <div className="widget-title">
         <h4>My Job Listings</h4>
 
-        <div className="chosen-outer">
+        
+        {jobs.length != 0 ?
+          <div className="chosen-outer">
           {/* <select className="chosen-single form-select chosen-container"> */}
             {/* <option>All Status</option> */}
             {/* <option>Last 12 Months</option> */}
@@ -156,8 +158,8 @@ const JobListingsTable = () => {
             {/* <option>Last 5 year</option> */}
           {/* </select> */}
 
-          {/* TODO: add search filters */}
-          <input
+          {/* TODO: add search filters */} 
+            <input
               className="chosen-single form-input chosen-container mx-3"
               type="text"
               name="immense-career-job_title"
@@ -194,7 +196,7 @@ const JobListingsTable = () => {
           >
             Clear
           </button>
-        </div>
+        </div> : '' }
       </div>
       {/* End filter top bar */}
 

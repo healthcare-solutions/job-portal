@@ -202,54 +202,55 @@ const WidgetContentBox = () => {
             <div className="widget-title">
                 <h4>All Applicants!</h4>
 
-                <div className="chosen-outer">
-                {/* <select className="chosen-single form-select chosen-container"> */}
-                    {/* <option>All Status</option> */}
-                    {/* <option>Last 12 Months</option> */}
-                    {/* <option>Last 16 Months</option> */}
-                    {/* <option>Last 24 Months</option> */}
-                    {/* <option>Last 5 year</option> */}
-                {/* </select> */}
+                {fetchedAllApplicants.length != 0 ? 
+                    <div className="chosen-outer">
+                    {/* <select className="chosen-single form-select chosen-container"> */}
+                        {/* <option>All Status</option> */}
+                        {/* <option>Last 12 Months</option> */}
+                        {/* <option>Last 16 Months</option> */}
+                        {/* <option>Last 24 Months</option> */}
+                        {/* <option>Last 5 year</option> */}
+                    {/* </select> */}
 
-                {/* TODO: add search filters */}
-                <input
-                    className="chosen-single form-input chosen-container mx-3"
-                    type="text"
-                    name="immense-career-applicant"
-                    placeholder="Search by Applicant name"
-                    value={searchField}
-                    onChange={(e) => {
-                        setSearchField(e.target.value);
-                    }}
-                    style={{ minWidth: '300px'}}
-                />
-        {/*           
-                <select
-                    className="chosen-single form-select chosen-container mx-3"
-                    onChange={(e) => {
-                    setJobStatus(e.target.value)
-                    }}
-                >
-                    <option>Status</option>
-                    <option>Published</option>
-                    <option>Unpublished</option>
-                </select> */}
+                    {/* TODO: add search filters */}
+                    <input
+                        className="chosen-single form-input chosen-container mx-3"
+                        type="text"
+                        name="immense-career-applicant"
+                        placeholder="Search by Applicant name"
+                        value={searchField}
+                        onChange={(e) => {
+                            setSearchField(e.target.value);
+                        }}
+                        style={{ minWidth: '300px'}}
+                    />
+            {/*           
+                    <select
+                        className="chosen-single form-select chosen-container mx-3"
+                        onChange={(e) => {
+                        setJobStatus(e.target.value)
+                        }}
+                    >
+                        <option>Status</option>
+                        <option>Published</option>
+                        <option>Unpublished</option>
+                    </select> */}
 
-                <button
-                    onClick={findApplicant}
-                    className="btn btn-primary text-nowrap m-1"
-                    style= {{ minHeight: '43px' }}
-                >
-                    Search
-                </button>
-                <button
-                    onClick={clearAll}
-                    className="btn btn-danger text-nowrap m-1"
-                    style= {{ minHeight: '43px' }}
-                >
-                    Clear
-                </button>
-                </div>
+                    <button
+                        onClick={findApplicant}
+                        className="btn btn-primary text-nowrap m-1"
+                        style= {{ minHeight: '43px' }}
+                    >
+                        Search
+                    </button>
+                    <button
+                        onClick={clearAll}
+                        className="btn btn-danger text-nowrap m-1"
+                        style= {{ minHeight: '43px' }}
+                    >
+                        Clear
+                    </button>
+                    </div> : '' }
             </div>
             {/* End filter top bar */}
 
