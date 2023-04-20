@@ -31,6 +31,7 @@ const JobListingsTable = () => {
     return date.toLocaleDateString('en-IN', { month: 'long', day: 'numeric'}) + ', ' + date.getFullYear()
   }
 
+  // Publish job action
   const publishJob = async (jobId, status) => {
     if (status !== 'Published') {
       const { data, error } = await supabase
@@ -67,6 +68,7 @@ const JobListingsTable = () => {
     }
   }
 
+  // Unpublish job action
   const unpublishJob = async (jobId, status) => {
     if (status !== 'Unpublished') {
       const { data, error } = await supabase
@@ -109,23 +111,24 @@ const JobListingsTable = () => {
     fetchPost()
   };
 
+  // Search function
   async function findJob () {
 
     let { data, error } = await supabase
-        .from('jobs')
+        .from('manage_jobs_view')
         .select()
         .eq('user_id', user.id)
         .order('created_at',  { ascending: false });
-
         data.forEach( job => job.created_at = dateFormat(job.created_at))
         setjobs(data) 
-
+      console.log(data)
         setjobs(data.filter((job) => job.job_title.toLowerCase().includes(searchField.toLowerCase())))
     };
 
+  // Initial Function
   const fetchPost = async () => {
     let { data, error } = await supabase
-      .from('jobs')
+      .from('manage_jobs_view')
       .select()
       .eq('user_id', user.id)
       .order('created_at',  { ascending: false });
@@ -259,7 +262,7 @@ const JobListingsTable = () => {
                     <a onClick={()=>{
                       router.push(`/employers-dashboard/all-applicants-view/${item.job_id}`)
                     }}>
-                      3+ Applied
+                      {item.total_applicants > 0 ? `${item.total_applicants} applied` : 'No applications yet'}
                     </a>
                   </td>
                   <td>
