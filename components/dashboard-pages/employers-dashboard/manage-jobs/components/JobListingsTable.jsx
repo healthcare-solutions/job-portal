@@ -28,7 +28,7 @@ const JobListingsTable = () => {
 
   const dateFormat = (val) => {
     const date = new Date(val)
-    return date.toLocaleDateString('en-IN', { month: 'long', day: 'numeric'}) + ', ' + date.getFullYear()
+    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric'}) + ', ' + date.getFullYear()
   }
 
   // Publish job action
@@ -209,7 +209,7 @@ const JobListingsTable = () => {
               <tr>
                 <th>Job Title</th>
                 <th>Applications</th>
-                <th>Created On</th>
+                <th>Published On</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>

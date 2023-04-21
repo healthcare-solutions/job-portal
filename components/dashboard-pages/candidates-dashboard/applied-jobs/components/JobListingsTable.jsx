@@ -13,7 +13,7 @@ const JobListingsTable = () => {
 
   const dateFormat = (val) => {
     const date = new Date(val)
-    return date.toLocaleDateString('en-IN', { month: 'long', day: 'numeric'}) + ', ' + date.getFullYear()
+    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric'}) + ', ' + date.getFullYear()
   }
 
   // clear all filters
