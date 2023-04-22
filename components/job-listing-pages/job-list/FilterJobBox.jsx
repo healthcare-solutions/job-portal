@@ -52,6 +52,7 @@ const FilterJobBox = () => {
   };
 
   const searchJobs = async () => {
+    console.log("No search call");
     await supabase.from('jobs').select()
     .then((res) => {
       setJobs(res.data)
@@ -248,6 +249,86 @@ const FilterJobBox = () => {
     dispatch(addPerPage({ start: 0, end: 0 }));
   };
 
+  useEffect(() => {
+    supabase.from('jobs')
+    .select()
+    .eq('status', 'Published')
+    .order('created_at',  { ascending: sort == 'asc' })
+    .then((res) => {
+      setJobs(res.data)
+    })
+    .catch((e) => {
+      console.log(e)
+    })
+  }, [sort])
+
+  useEffect(() => {
+    if(jobTypeSelect){
+      supabase.from('jobs')
+      .select()
+      .eq("job_type", jobTypeSelect)
+      .eq('status', 'Published')
+      .order('created_at',  { ascending: false })
+      .then((res) => {
+        setJobs(res.data)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+    }
+  }, [jobTypeSelect])
+
+  useEffect(() => {
+    if(experienceSelect !== 'Experience Level'){
+      supabase.from('jobs')
+      .select()
+      .eq("experience", experienceSelect)
+      .eq('status', 'Published')
+      .order('created_at',  { ascending: false })
+      .then((res) => {
+        setJobs(res.data)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+    }
+  }, [experienceSelect])
+
+
+  useEffect(() => {
+    let searchDate = null
+    let d = new Date()
+    switch(datePosted){
+      case 'last-24-hour': 
+        d.setDate(d.getDate() - 1)
+        searchDate = d.toISOString()
+        break
+      case 'last-7-days': 
+        d.setDate(d.getDate() - 7)
+        searchDate = d.toISOString()
+        break 
+      case 'last-14-days': 
+        d.setDate(d.getDate() - 14)
+        searchDate = d.toISOString()
+        break
+      case 'last-30-days': 
+        d.setDate(d.getDate() - 30)
+        searchDate = d.toISOString()
+        break
+    }
+    supabase.from('jobs')
+    .select()
+    .gte("created_at", searchDate)
+    .eq('status', 'Published')
+    .order('created_at',  { ascending: false })
+    .then((res) => {
+      setJobs(res.data)
+    })
+    .catch((e) => {
+      console.log(e)
+    })
+  }, [datePosted])
+
   return (
     <>
       <div className="ls-switcher">
@@ -275,6 +356,13 @@ const FilterJobBox = () => {
             </button>
           ) : undefined}
 
+            {/* <button
+              onClick={clearAll}
+              className="btn btn-primary text-nowrap me-2"
+              style={{ minHeight: "45px", marginBottom: "15px" }}
+            >
+              Apply Filter
+            </button> */}
           <select
             value={sort}
             className="chosen-single form-select"

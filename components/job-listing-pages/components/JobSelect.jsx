@@ -70,7 +70,7 @@ export default function JobSelect() {
                     </div>
                     {/* End date posted filter */}
 
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <select
                             onChange={experienceHandler}
                             className="chosen-single form-select"
@@ -83,10 +83,10 @@ export default function JobSelect() {
                                 </option>
                             ))}
                         </select>
-                    </div>
+                    </div> */}
                     {/* End ecperience level filter */}
 
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <select
                             onChange={salaryHandler}
                             className="chosen-single form-select"
@@ -133,7 +133,7 @@ export default function JobSelect() {
                                 15000 - 20000
                             </option>
                         </select>
-                    </div>
+                    </div> */}
                     {/* End salary estimate filter */}
                 </div>
             </div>
