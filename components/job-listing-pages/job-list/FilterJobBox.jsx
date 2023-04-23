@@ -156,7 +156,7 @@ const FilterJobBox = () => {
     // ?.sort(sortFilter)
     // .slice(perPage.start, perPage.end !== 0 ? perPage.end : 16)
     ?.map((item) => (
-      <div className="job-block col-lg-6 col-md-12 col-sm-12" key={item.id}>
+      <div className="job-block col-lg-6 col-md-12 col-sm-12" key={item.job_id}>
         <div className="inner-box">
 {/*
           <div className="content">
@@ -249,86 +249,127 @@ const FilterJobBox = () => {
     dispatch(addPerPage({ start: 0, end: 0 }));
   };
 
+  // useEffect(() => {
+  //   supabase.from('jobs')
+  //   .select()
+  //   .eq('status', 'Published')
+  //   .order('created_at',  { ascending: sort == 'asc' })
+  //   .then((res) => {
+  //     setJobs(res.data)
+  //   })
+  //   .catch((e) => {
+  //     console.log(e)
+  //   })
+  // }, [sort])
+
+  // useEffect(() => {
+  //   if(jobTypeSelect){
+  //     supabase.from('jobs')
+  //     .select()
+  //     .eq("job_type", jobTypeSelect)
+  //     .eq('status', 'Published')
+  //     .order('created_at',  { ascending: false })
+  //     .then((res) => {
+  //       setJobs(res.data)
+  //     })
+  //     .catch((e) => {
+  //       console.log(e)
+  //     })
+  //   }
+  // }, [jobTypeSelect])
+
+  // useEffect(() => {
+  //   if(experienceSelect !== 'Experience Level'){
+  //     supabase.from('jobs')
+  //     .select()
+  //     .eq("experience", experienceSelect)
+  //     .eq('status', 'Published')
+  //     .order('created_at',  { ascending: false })
+  //     .then((res) => {
+  //       setJobs(res.data)
+  //     })
+  //     .catch((e) => {
+  //       console.log(e)
+  //     })
+  //   }
+  // }, [experienceSelect])
+
+
+  // useEffect(() => {
+  //   let searchDate = null
+  //   let d = new Date()
+  //   switch(datePosted){
+  //     case 'last-24-hour': 
+  //       d.setDate(d.getDate() - 1)
+  //       searchDate = d.toISOString()
+  //       break
+  //     case 'last-7-days': 
+  //       d.setDate(d.getDate() - 7)
+  //       searchDate = d.toISOString()
+  //       break 
+  //     case 'last-14-days': 
+  //       d.setDate(d.getDate() - 14)
+  //       searchDate = d.toISOString()
+  //       break
+  //     case 'last-30-days': 
+  //       d.setDate(d.getDate() - 30)
+  //       searchDate = d.toISOString()
+  //       break
+  //   }
+  //   supabase.from('jobs')
+  //   .select()
+  //   .gte("created_at", searchDate)
+  //   .eq('status', 'Published')
+  //   .order('created_at',  { ascending: false })
+  //   .then((res) => {
+  //     setJobs(res.data)
+  //   })
+  //   .catch((e) => {
+  //     console.log(e)
+  //   })
+  // }, [datePosted])
+
+  const fnCall = async () => {
+      let searchDate = null
+      let d = new Date()
+      switch(datePosted){
+        case 'last-24-hour': 
+          d.setDate(d.getDate() - 1)
+          searchDate = d.toISOString()
+          break
+        case 'last-7-days': 
+          d.setDate(d.getDate() - 7)
+          searchDate = d.toISOString()
+          break 
+        case 'last-14-days': 
+          d.setDate(d.getDate() - 14)
+          searchDate = d.toISOString()
+          break
+        case 'last-30-days': 
+          d.setDate(d.getDate() - 30)
+          searchDate = d.toISOString()
+          break
+      }
+      let query = supabase.from('jobs').select()
+      if(jobTypeSelect) query = query.eq("job_type", jobTypeSelect)
+      if(searchDate) query = query.gte("created_at", searchDate)
+      query = query.eq('status', 'Published')
+      query = query.order('created_at',  { ascending: sort == 'des' })
+
+      const {data, error} = await query
+      if(data) setJobs(data)
+    
+  }
   useEffect(() => {
-    supabase.from('jobs')
-    .select()
-    .eq('status', 'Published')
-    .order('created_at',  { ascending: sort == 'asc' })
-    .then((res) => {
-      setJobs(res.data)
-    })
-    .catch((e) => {
-      console.log(e)
-    })
-  }, [sort])
+    fnCall()
+  }, [jobTypeSelect, sort, datePosted])
 
-  useEffect(() => {
-    if(jobTypeSelect){
-      supabase.from('jobs')
-      .select()
-      .eq("job_type", jobTypeSelect)
-      .eq('status', 'Published')
-      .order('created_at',  { ascending: false })
-      .then((res) => {
-        setJobs(res.data)
-      })
-      .catch((e) => {
-        console.log(e)
-      })
-    }
-  }, [jobTypeSelect])
-
-  useEffect(() => {
-    if(experienceSelect !== 'Experience Level'){
-      supabase.from('jobs')
-      .select()
-      .eq("experience", experienceSelect)
-      .eq('status', 'Published')
-      .order('created_at',  { ascending: false })
-      .then((res) => {
-        setJobs(res.data)
-      })
-      .catch((e) => {
-        console.log(e)
-      })
-    }
-  }, [experienceSelect])
-
-
-  useEffect(() => {
-    let searchDate = null
-    let d = new Date()
-    switch(datePosted){
-      case 'last-24-hour': 
-        d.setDate(d.getDate() - 1)
-        searchDate = d.toISOString()
-        break
-      case 'last-7-days': 
-        d.setDate(d.getDate() - 7)
-        searchDate = d.toISOString()
-        break 
-      case 'last-14-days': 
-        d.setDate(d.getDate() - 14)
-        searchDate = d.toISOString()
-        break
-      case 'last-30-days': 
-        d.setDate(d.getDate() - 30)
-        searchDate = d.toISOString()
-        break
-    }
-    supabase.from('jobs')
-    .select()
-    .gte("created_at", searchDate)
-    .eq('status', 'Published')
-    .order('created_at',  { ascending: false })
-    .then((res) => {
-      setJobs(res.data)
-    })
-    .catch((e) => {
-      console.log(e)
-    })
-  }, [datePosted])
-
+  // 
+  const [currentPage, setCurrentPage] = useState(1)
+  const handlePageChange = (currentPage) => {
+    setCurrentPage(currentPage)
+    console.log(currentPage)
+  }
   return (
     <>
       <div className="ls-switcher">
@@ -421,7 +462,7 @@ const FilterJobBox = () => {
       <div className="row">{content}</div>
       {/* End .row with jobs */}
 
-      <Pagination />
+      <Pagination handlePageChange={handlePageChange} currentPage={currentPage}/>
       {/* <!-- End Pagination --> */}
     </>
   );
