@@ -1,7 +1,7 @@
 const Pagination = () => {
   return (
     <nav className="ls-pagination">
-      <ul>
+      {/* <ul>
         <li className="prev">
           <a href="#">
             <i className="fa fa-arrow-left"></i>
@@ -23,7 +23,7 @@ const Pagination = () => {
             <i className="fa fa-arrow-right"></i>
           </a>
         </li>
-      </ul>
+      </ul> */}
     </nav>
   );
 };

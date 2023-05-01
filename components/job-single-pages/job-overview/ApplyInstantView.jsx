@@ -20,7 +20,7 @@ const ApplyInstantView = ({ company }) => {
   const [guestSelectedFile, setGuestSelectedFile] = useState(null);
 
   const router = useRouter();
-  const JobId = router.query.id;
+  const jobId = router.query.id;
   function handleFileInputChange(event) {
     setGuestSelectedFile(event.target.files[0]);
   }
@@ -54,12 +54,13 @@ const ApplyInstantView = ({ company }) => {
     if (validateForm()) {
         if (guestSelectedFile) {
           let file;
+          let fileTimestamp = Date.now()
 
           // upload document to applications/cv folder
           const { data: guestFileUploadSuccess, error: guestFileUploadError } = await supabase
               .storage 
               .from('applications')
-              .upload('cv/' + guestSelectedFile.name, guestSelectedFile, file);
+              .upload('cv/' + fileTimestamp + '-' + guestSelectedFile.name, guestSelectedFile, file);
           if (guestFileUploadError) {
             if (guestFileUploadError.error == "Payload too large") {
               toast.error('Failed to upload attachment.  Attachment size exceeded maximum allowed size!', {
@@ -89,7 +90,7 @@ const ApplyInstantView = ({ company }) => {
             const { data: docURL, error: docURLError } = supabase
                 .storage
                 .from('applications')
-                .getPublicUrl('cv/' + guestSelectedFile.name)
+                .getPublicUrl('cv/' + fileTimestamp + '-' + guestSelectedFile.name)
             if (docURLError) {
               console.warn('Failed to get download URL for file')
             }

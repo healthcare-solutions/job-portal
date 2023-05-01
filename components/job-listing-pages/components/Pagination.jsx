@@ -2,7 +2,7 @@ const Pagination = ({handlePageChange, currentPage}) => {
 
   return (
     <nav className="ls-pagination">
-      <ul>
+      {/* <ul>
         <li className="prev" onClick={ () => {
           if(currentPage > 1) handlePageChange(currentPage - 1)
           else handlePageChange(currentPage)
@@ -27,7 +27,7 @@ const Pagination = ({handlePageChange, currentPage}) => {
             <i className="fa fa-arrow-right"></i>
           </a>
         </li>
-      </ul>
+      </ul> */}
     </nav>
   );
 };
