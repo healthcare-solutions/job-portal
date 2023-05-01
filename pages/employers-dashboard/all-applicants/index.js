@@ -11,19 +11,16 @@ const index = () => {
     const isEmployer = ['SUPER_ADMIN', 'ADMIN', 'MEMBER'].includes(user.role)
 
     useEffect(() => {
-        if (!isEmployer) {
-            Router.push("/")
-        }
+      if (!isEmployer) {
+        Router.push("/")
+      }
     }, []);
 
-    return ( <
-        >
-        <
-        Seo pageTitle = "All Applicants" / >
-        <
-        AllApplicants / >
-        <
-        />
+    return (
+      <> 
+        <Seo pageTitle="All Applicants" />
+        <AllApplicants />
+      </>
     );
 };
 

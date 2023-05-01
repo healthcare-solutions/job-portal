@@ -7,24 +7,21 @@ import PostJob from "../../../components/dashboard-pages/employers-dashboard/pos
 
 const index = () => {
 
-    const user = useSelector(state => state.candidate.user)
-    const isEmployer = ['SUPER_ADMIN', 'ADMIN', 'MEMBER'].includes(user.role)
+  const user = useSelector(state => state.candidate.user)
+  const isEmployer = ['SUPER_ADMIN', 'ADMIN', 'MEMBER'].includes(user.role)
 
-    useEffect(() => {
-        if (!isEmployer) {
-            Router.push("/")
-        }
-    }, []);
+  useEffect(() => {
+    if (!isEmployer) {
+      Router.push("/")
+    }
+  }, []);
 
-    return ( <
-        >
-        <
-        Seo pageTitle = "Post Jobs" / >
-        <
-        PostJob / >
-        <
-        />
-    );
+  return (
+    <>
+      <Seo pageTitle="Post Jobs" />
+      <PostJob />
+    </>
+  );
 };
 
 export default dynamic(() => Promise.resolve(index), { ssr: false });
