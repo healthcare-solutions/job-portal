@@ -28,6 +28,7 @@ const FilterJobBox = () => {
 
   const searchJobsWithTermAndAddress = async () => {
     await supabase.from('jobs').select()
+    .eq('status', 'Published')
     .ilike('job_title', '%'+searchTerm+'%')
     .ilike('job_address', '%'+searchAddress+'%')
     .then((res) => {
@@ -37,6 +38,7 @@ const FilterJobBox = () => {
 
   const searchJobsWithTerm = async () => {
     await supabase.from('jobs').select()
+    .eq('status', 'Published')
     .ilike('job_title', '%'+searchTerm+'%')
     .then((res) => {
       setJobs(res.data)
@@ -45,6 +47,7 @@ const FilterJobBox = () => {
 
   const searchJobsWithAddress = async () => {
     await supabase.from('jobs').select()
+    .eq('status', 'Published')
     .ilike('job_address', '%'+searchAddress+'%')
     .then((res) => {
       setJobs(res.data)
@@ -54,6 +57,7 @@ const FilterJobBox = () => {
   const searchJobs = async () => {
     console.log("No search call");
     await supabase.from('jobs').select()
+    .eq('status', 'Published')
     .then((res) => {
       setJobs(res.data)
     })
@@ -350,7 +354,7 @@ const FilterJobBox = () => {
           searchDate = d.toISOString()
           break
       }
-      let query = supabase.from('jobs').select()
+      let query = supabase.from('jobs').select().eq('status', 'Published')
       if(jobTypeSelect) query = query.eq("job_type", jobTypeSelect)
       if(searchDate) query = query.gte("created_at", searchDate)
       query = query.eq('status', 'Published')
