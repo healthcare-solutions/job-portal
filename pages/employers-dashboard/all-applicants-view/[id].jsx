@@ -12,7 +12,7 @@ import DashboardEmployerSidebar from "../../../components/header/DashboardEmploy
 import BreadCrumb from "../../../components/dashboard-pages/BreadCrumb";
 import MenuToggler from "../../../components/dashboard-pages/MenuToggler";
 import CopyrightFooter from "../../../components/dashboard-pages/CopyrightFooter";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import DefaulHeader2 from "../../../components/header/DefaulHeader2";
 import EditJobView from "../../../components/dashboard-pages/employers-dashboard/edit-job/components/EditJobView";
 import { supabase } from "../../../config/supabaseClient";
@@ -22,8 +22,16 @@ import ApplicantWidgetContentBox from "../../../components/dashboard-pages/emplo
 
 
 const AllApplicantsViewPerJob = () => {
+
   const user = useSelector(state => state.candidate.user)
   const showLoginButton = useMemo(() => !user?.id, [user])
+  const isEmployer = ['SUPER_ADMIN', 'ADMIN', 'MEMBER'].includes(user.role)
+
+  useEffect(() => {
+    if (!isEmployer) {
+      Router.push("/")
+    }
+  }, []);
 
   return (
     <div className="page-wrapper dashboard">

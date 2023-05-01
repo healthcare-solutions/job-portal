@@ -12,18 +12,26 @@ import DashboardEmployerSidebar from "../../../components/header/DashboardEmploy
 import BreadCrumb from "../../../components/dashboard-pages/BreadCrumb";
 import MenuToggler from "../../../components/dashboard-pages/MenuToggler";
 import CopyrightFooter from "../../../components/dashboard-pages/CopyrightFooter";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import DefaulHeader2 from "../../../components/header/DefaulHeader2";
 import EditJobView from "../../../components/dashboard-pages/employers-dashboard/edit-job/components/EditJobView";
 import { supabase } from "../../../config/supabaseClient";
 
 
 const EditJob = () => {
+
   const user = useSelector(state => state.candidate.user)
   const showLoginButton = useMemo(() => !user?.id, [user])
   const [fetchedJobData, setFetchedJobData] = useState({});
   const router = useRouter();
   const id = router.query.id;
+  const isEmployer = ['SUPER_ADMIN', 'ADMIN', 'MEMBER'].includes(user.role)
+
+  useEffect(() => {
+    if (!isEmployer) {
+      Router.push("/")
+    }
+  }, []);
 
   const fetchJob = async () => {
     try{
