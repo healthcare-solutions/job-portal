@@ -28,10 +28,10 @@ const CopyrightFooter = () => {
             </span> */}
             <span style={{color: '#f5f5f5'}}>Email us:</span><br/>
             <a
-              href="mailto:info@tracerhire.com"
+              href="mailto:support@tracerhire.com"
               className="email"
               style={{ color: '#f5f5f5', fontFamily: 'console' }}>
-              <i><b>info@tracerhire.com</b></i>
+              <i><b>support@tracerhire.com</b></i>
             </a>
           </div>
           {/* <div className="social-links">
