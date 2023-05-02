@@ -14,7 +14,12 @@ const JobFeatured10 = () => {
 
   useEffect(() => {
     if(recentJobs.length == 0){
-      supabase.from('jobs').select().limit(10).order('created_at', {ascending: false}).then((res) => {
+      supabase.from('jobs')
+        .select()
+        .eq('status', 'Published')
+        .limit(10)
+        .order('created_at', {ascending: false})
+      .then((res) => {
         if(res.status == 200) dispatch(setRecentJobs({jobs: res.data}))
       })     
     }
