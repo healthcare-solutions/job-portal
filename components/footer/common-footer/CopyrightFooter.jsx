@@ -5,10 +5,17 @@ const CopyrightFooter = () => {
     <div className="footer-bottom">
       <div className="auto-container">
         <div className="outer-box">
+        <div className="logo">
+            <a href="#">
+              <img src="/images/logo-white.svg" alt="brand"
+                  width={154}
+                  height={50} />
+            </a>
+          </div>
           <div className="copyright-text">
           <p style={{color: '#f5f5f5'}}>
-        © {new Date().getFullYear()} Immense Career. All Right Reserved.
-      </p>
+            © {new Date().getFullYear()} Tracer Hire. All Right Reserved.
+          </p>
           </div>
           <div className="contact-info">
             {/* <span className="phone-num">
@@ -21,10 +28,10 @@ const CopyrightFooter = () => {
             </span> */}
             <span style={{color: '#f5f5f5'}}>Email us:</span><br/>
             <a
-              href="mailto:badrishsoni116@gmail.com"
+              href="mailto:info@tracerhire.com"
               className="email"
               style={{ color: '#f5f5f5', fontFamily: 'console' }}>
-              <i>support@immensecareer.com</i>
+              <i><b>info@tracerhire.com</b></i>
             </a>
           </div>
           {/* <div className="social-links">
