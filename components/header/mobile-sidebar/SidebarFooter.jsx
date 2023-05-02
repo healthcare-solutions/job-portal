@@ -19,8 +19,8 @@ const SidebarFooter = () => {
             3051, Australia.
           </span> */}
           <span>Email us </span><br/>
-          <a href="mailto:badrishsoni116@gmail.com" className="email">
-            support@immensecareer.com
+          <a href="mailto:info@tracerhire.com" className="email">
+            <b><i>info@tracerhire.com</i></b>
           </a>
         </div>
         {/* End .contact-info */}
