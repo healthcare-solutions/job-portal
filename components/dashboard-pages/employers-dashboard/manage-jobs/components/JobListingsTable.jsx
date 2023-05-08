@@ -121,7 +121,7 @@ const JobListingsTable = () => {
         .order('created_at',  { ascending: false });
         data.forEach( job => job.created_at = dateFormat(job.created_at))
         setjobs(data) 
-      console.log(data)
+
         setjobs(data.filter((job) => job.job_title.toLowerCase().includes(searchField.toLowerCase())))
     };
 
