@@ -49,46 +49,43 @@ const submitJobPost = async (
   fetchedJobData
 ) => {
     if (clonedJobTitle || clonedJobDesc || clonedJobType || clonedSalary || clonedSalaryRate || clonedCareer || clonedExp || clonedAddress) {
-        try {
-
-            const { data, error } = await supabase
+      try {
+        const { data, error } = await supabase
             .from('jobs')
-            .update(
-                { job_title: clonedJobTitle ? clonedJobTitle : fetchedJobData.job_title,
-                 job_desc: clonedJobDesc ? clonedJobDesc : fetchedJobData.job_desc,
-                 job_type: clonedJobType ? clonedJobType : fetchedJobData.job_type,
-                 experience: clonedExp ? clonedExp : fetchedJobData.experience,
-                 education: clonedCareer ? clonedCareer : fetchedJobData.education,
-                 salary: clonedSalary ? clonedSalary : fetchedJobData.salary,
-                 salary_rate: clonedSalaryRate ? clonedSalaryRate : fetchedJobData.salary_rate,
-                 job_address: clonedAddress ? clonedAddress : fetchedJobData.job_address,
-                 job_comp_add: clonedCompleteAddress ? clonedCompleteAddress : fetchedJobData.job_comp_add,
-                 change_dttm: new Date(),
-                 update_ver_nbr: fetchedJobData.update_ver_nbr + 1
-                }
-                )
-            .eq('job_id', fetchedJobData.job_id)
-            // .select() -- this will return the updated record in object
+            .insert([
+              { 
+                user_id: user.id,
+                job_title: clonedJobTitle,
+                job_desc: clonedJobDesc,
+                job_type: clonedJobType,
+                experience: clonedExp,
+                education: clonedCareer,
+                salary: clonedSalary,
+                salary_rate: clonedSalaryRate,
+                job_address: clonedAddress,
+                job_comp_add: clonedCompleteAddress,
+              }
+        ])
 
-            // reset all the edit form fields
-            setClonedJobData(JSON.parse(JSON.stringify(clonedJobFields)))
+        // reset all the edit form fields
+        setClonedJobData(JSON.parse(JSON.stringify(clonedJobFields)))
 
-            // open toast
-            toast.success('Job Cloned and Posted successfully', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
+        // open toast
+        toast.success('Job Cloned and Posted successfully', {
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
 
-            // redirect to original page where user came from
-            setTimeout(() => {
-                Router.push("/employers-dashboard/manage-jobs")
-            }, 3000)
+        // redirect to original page where user came from
+        setTimeout(() => {
+            Router.push("/employers-dashboard/manage-jobs")
+        }, 3000)
       } catch (err) {
         // open toast
         toast.error('Error while saving your changes, Please try again later or contact tech support', {
