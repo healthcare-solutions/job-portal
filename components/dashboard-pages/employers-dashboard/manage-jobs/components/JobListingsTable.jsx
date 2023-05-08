@@ -277,6 +277,13 @@ const JobListingsTable = () => {
                     <div className="option-box">
                       <ul className="option-list">
                         <li onClick={()=>{
+                          router.push(`/employers-dashboard/clone-job/${item.job_id}`)
+                        }}>
+                          <button data-text="Clone Job">
+                            <span className="la la-copy"></span>
+                          </button>
+                        </li>
+                        <li onClick={()=>{
                           router.push(`/job/${item.job_id}`)
                         }}>
                           <button data-text="Preview Job">
