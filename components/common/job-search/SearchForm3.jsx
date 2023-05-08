@@ -46,7 +46,6 @@ const SearchForm3 = () => {
   // do something on address change
   const onChangeAddress = (autocomplete) => {
     const location = autocomplete.getPlace();
-    console.log(location);
   }
 
   // init autocomplete
