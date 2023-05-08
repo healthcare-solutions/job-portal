@@ -16,18 +16,6 @@ const SunEditor = dynamic(() => import("suneditor-react"), {
 const apiKey = process.env.NEXT_PUBLIC_JOB_PORTAL_GMAP_API_KEY;
 const mapApiJs = 'https://maps.googleapis.com/maps/api/js';
 
-const clonedJobFields = {
-    clonedJobTitle: "",
-    clonedJobDesc: "",
-    clonedJobType: "",
-    clonedSalary: "",
-    clonedSalaryRate: "",
-    clonedCareer: "",
-    clonedExp: "",
-    clonedAddress: "",
-    clonedCompleteAddress: ""
-}
-
 // load google map api js
 function loadAsyncScript(src) {
     return new Promise(resolve => {
@@ -43,32 +31,28 @@ function loadAsyncScript(src) {
 }
 
 const submitJobPost = async (
-  { clonedJobTitle, clonedJobDesc, clonedJobType, clonedSalary, clonedSalaryRate, clonedCareer, clonedExp, clonedAddress, clonedCompleteAddress },
+  fetchedJobData,
   setClonedJobData,
-  user,
-  fetchedJobData
+  user
 ) => {
-    if (clonedJobTitle || clonedJobDesc || clonedJobType || clonedSalary || clonedSalaryRate || clonedCareer || clonedExp || clonedAddress) {
+    if (fetchedJobData.job_title || fetchedJobData.job_desc || fetchedJobData.job_type || fetchedJobData.salary || fetchedJobData.salary_rate || fetchedJobData.education || fetchedJobData.experience || fetchedJobData.job_address) {
       try {
         const { data, error } = await supabase
             .from('jobs')
             .insert([
-              { 
+              {
                 user_id: user.id,
-                job_title: clonedJobTitle,
-                job_desc: clonedJobDesc,
-                job_type: clonedJobType,
-                experience: clonedExp,
-                education: clonedCareer,
-                salary: clonedSalary,
-                salary_rate: clonedSalaryRate,
-                job_address: clonedAddress,
-                job_comp_add: clonedCompleteAddress,
+                job_title: fetchedJobData.job_title,
+                job_desc: fetchedJobData.job_desc,
+                job_type: fetchedJobData.job_type,
+                experience: fetchedJobData.experience,
+                education: fetchedJobData.education,
+                salary: fetchedJobData.salary,
+                salary_rate: fetchedJobData.salary_rate,
+                job_address: fetchedJobData.job_address,
+                job_comp_add: fetchedJobData.job_comp_add,
               }
         ])
-
-        // reset all the edit form fields
-        setClonedJobData(JSON.parse(JSON.stringify(clonedJobFields)))
 
         // open toast
         toast.success('Job Cloned and Posted successfully', {
@@ -115,17 +99,50 @@ const submitJobPost = async (
     }
 };
 
-const CloneJobView = ({ fetchedJobData }) => {
+const CloneJobView = () => {
 
   const user = useSelector(state => state.candidate.user)
-  const [clonedJobData, setClonedJobData] = useState(JSON.parse(JSON.stringify(clonedJobFields)));
-  const { clonedJobTitle, clonedJobDesc, clonedJobType, clonedSalary, clonedSalaryRate, clonedCareer, clonedExp, clonedAddress, clonedCompleteAddress } = useMemo(() => clonedJobData, [clonedJobData])
 
   const router = useRouter();
-  const JobId = router.query.id;
+  const jobId = router.query.id;
 
-  const searchInput = useRef(null);
+  const searchInput = useRef();
 
+  const [fetchedJobData, setFetchedJobData] = useState({});
+  
+  const fetchJob = async () => {
+    try{
+      if (jobId) {
+        let { data: job, error } = await supabase
+            .from('jobs')
+            .select("*")
+  
+            // Filters
+            .eq('job_id', jobId)
+  
+        if (job) {
+          setFetchedJobData(job[0])
+        }
+      }
+    } catch(e) {
+      toast.error('System is unavailable.  Please try again later or contact tech support!', {
+        position: "bottom-right",
+        autoClose: false,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      console.warn(e)
+    }
+  };
+  
+  useEffect(() => {
+    fetchJob()
+  }, [jobId]);
+  
   // init google map script
   const initMapScript = () => {
     // if script already loaded
@@ -139,10 +156,10 @@ const CloneJobView = ({ fetchedJobData }) => {
   // do something on address change
   const onChangeAddress = (autocomplete) => {
     const location = autocomplete.getPlace();
-    setClonedJobData((previousState) => ({ 
+    setFetchedJobData((previousState) => ({ 
       ...previousState,
-      clonedAddress: searchInput.current.value
-  }))
+      job_address: searchInput.current.value
+    }))
   }
 
   // init autocomplete
@@ -173,41 +190,24 @@ const CloneJobView = ({ fetchedJobData }) => {
         {/* <!-- Input --> */}
         <div className="form-group col-lg-12 col-md-12">
           <label>Job Title <span className="required">(required)</span></label>
-          { !clonedJobTitle ? 
-            <input
-                type="text"
-                name="immense-career-jobTitle"
-                value={fetchedJobData.job_title}
-                required
-                onChange={(e) => {
-                setClonedJobData((previousState) => ({ 
-                    ...previousState,
-                    clonedJobTitle: e.target.value
-                }))
-                }}
-                placeholder="Job Title"
-            />
-            : <input
-                    type="text"
-                    name="immense-career-jobTitle"
-                    value={clonedJobTitle}
-                    required
-                    onChange={(e) => {
-                    setClonedJobData((previousState) => ({ 
-                        ...previousState,
-                        clonedJobTitle: e.target.value
-                    }))
-                    }}
-                    placeholder="Job Title"
-                />
-          }
+          <input
+            type="text"
+            name="immense-career-jobTitle"
+            value={fetchedJobData.job_title}
+            required
+            onChange={(e) => {
+            setFetchedJobData((previousState) => ({ 
+                ...previousState,
+                job_title: e.target.value
+            }))
+            }}
+            placeholder="Job Title"
+          />
         </div>
         {/* <!-- About Company --> */}
         <div className="form-group col-lg-12 col-md-12">
           <label>Job Description <span className="required">(required)</span></label>
-          
-          { !clonedJobDesc ?
-            <SunEditor 
+          <SunEditor 
             setContents={fetchedJobData.job_desc}
             setOptions={{
             buttonList: [
@@ -226,38 +226,12 @@ const CloneJobView = ({ fetchedJobData }) => {
           }}
           setDefaultStyle="color:black;"
           onChange={(e) => {
-            setClonedJobData((previousState) => ({ 
+            setFetchedJobData((previousState) => ({ 
               ...previousState,
-              clonedJobDesc: e
+              job_desc: e
             }))
           }}
           />
-            : 
-            <SunEditor 
-            setOptions={{
-            buttonList: [
-              ["fontSize", "formatBlock"],
-              ["bold", "underline", "italic", "strike", "subscript", "superscript"],
-              ["align", "horizontalRule", "list", "table"],
-              ["fontColor", "hiliteColor"],
-              ["outdent", "indent"],
-              ["undo", "redo"],
-              ["removeFormat"],
-              ["outdent", "indent"],
-              ["link"],
-              ["preview", "print"],
-              ["fullScreen", "showBlocks", "codeView"],
-            ],
-          }}
-          setDefaultStyle="color:black;"
-          onChange={(e) => {
-            setClonedJobData((previousState) => ({ 
-              ...previousState,
-              clonedJobDesc: e
-            }))
-          }}
-          />
-          }   
         </div>
         {/* <!-- Input --> */}
 {/*
@@ -314,15 +288,14 @@ const CloneJobView = ({ fetchedJobData }) => {
  */}
         <div className="form-group col-lg-6 col-md-12">
           <label>Job Type <span className="required"> (required)</span></label>
-          { !clonedJobType ? 
             <select
                 className="chosen-single form-select"
                 value={fetchedJobData.job_type}
                 required
                 onChange={(e) => {
-                setClonedJobData((previousState) => ({ 
+                setFetchedJobData((previousState) => ({ 
                     ...previousState,
-                    clonedJobType: e.target.value
+                    job_type: e.target.value
                 }))
                 }}
             >
@@ -332,36 +305,17 @@ const CloneJobView = ({ fetchedJobData }) => {
             <option>Both</option>
             <option>Per Diem</option>
           </select>
-          : <select
-                className="chosen-single form-select"
-                value={clonedJobType}
-                required
-                onChange={(e) => {
-                setClonedJobData((previousState) => ({ 
-                    ...previousState,
-                    clonedJobType: e.target.value
-                }))
-                }}
-            >
-            <option></option>
-            <option>Full Time</option>
-            <option>Part Time</option>
-            <option>Both</option>
-            <option>Per Diem</option>
-            </select>
-          }
         </div>
         <div className="form-group col-lg-6 col-md-12">
           <label>Experience<span className="required"> (required)</span></label>
-          { !clonedExp ? 
             <select
                 className="chosen-single form-select"
                 value={fetchedJobData.experience}
                 required
                 onChange={(e) => {
-                setClonedJobData((previousState) => ({ 
+                setFetchedJobData((previousState) => ({ 
                     ...previousState,
-                    clonedExp: e.target.value
+                    experience: e.target.value
                 }))
                 }}
             >
@@ -377,30 +331,6 @@ const CloneJobView = ({ fetchedJobData }) => {
                 <option>9 years</option>
                 <option>10+ years</option>
             </select>
-            : <select
-                    className="chosen-single form-select"
-                    value={clonedExp}
-                    required
-                    onChange={(e) => {
-                    setClonedJobData((previousState) => ({ 
-                        ...previousState,
-                        clonedExp: e.target.value
-                    }))
-                    }}
-                >
-                    <option></option>
-                    <option>1 year</option>
-                    <option>2 years</option>
-                    <option>3 years</option>
-                    <option>4 years</option>
-                    <option>5 years</option>
-                    <option>6 years</option>
-                    <option>7 years</option>
-                    <option>8 years</option>
-                    <option>9 years</option>
-                    <option>10+ years</option>
-                </select>
-          }
         </div>
         {/* <!-- Input --> */}
         <div className="form-group col-lg-6 col-md-12">
@@ -411,23 +341,22 @@ const CloneJobView = ({ fetchedJobData }) => {
             value={fetchedJobData.salary}
             placeholder="$100,000.00"
             onChange={(e) => {
-              setClonedJobData((previousState) => ({ 
+              setFetchedJobData((previousState) => ({ 
                 ...previousState,
-                clonedSalary: e.target.value
+                salary: e.target.value
               }))
             }}
           />
         </div>
         <div className="form-group col-lg-6 col-md-12">
           <label>Salary Rate <span className="optional">(optional)</span></label>
-          { !clonedSalaryRate ?
             <select
                 className="chosen-single form-select"
                 value={fetchedJobData.salary_rate}
                 onChange={(e) => {
-                setClonedJobData((previousState) => ({ 
+                setFetchedJobData((previousState) => ({ 
                     ...previousState,
-                    clonedSalaryRate: e.target.value
+                    salary_rate: e.target.value
                 }))
                 }}
             >
@@ -437,35 +366,17 @@ const CloneJobView = ({ fetchedJobData }) => {
                 <option>Per month</option>
                 <option>Per year</option>
             </select>
-            : <select
-                    className="chosen-single form-select"
-                    value={clonedSalaryRate}
-                    onChange={(e) => {
-                    setClonedJobData((previousState) => ({ 
-                        ...previousState,
-                        clonedSalaryRate: e.target.value
-                    }))
-                    }}
-                >
-                    <option></option>
-                    <option>Per hour</option>
-                    <option>Per diem</option>
-                    <option>Per month</option>
-                    <option>Per year</option>
-                </select>
-          }
         </div>
         <div className="form-group col-lg-6 col-md-12">
           <label>Education<span className="required"> (required)</span></label>
-          { !clonedCareer ?
             <select
                 className="chosen-single form-select"
                 value={fetchedJobData.education}
                 required
                 onChange={(e) => {
-                setClonedJobData((previousState) => ({ 
+                setFetchedJobData((previousState) => ({ 
                     ...previousState,
-                    clonedCareer: e.target.value
+                    education: e.target.value
                 }))
                 }}
             >
@@ -476,25 +387,6 @@ const CloneJobView = ({ fetchedJobData }) => {
                 <option>Bachelor's Degree</option>
                 <option>Master's Degree</option>
             </select>
-            : <select
-                    className="chosen-single form-select"
-                    value={clonedCareer}
-                    required
-                    onChange={(e) => {
-                    setClonedJobData((previousState) => ({ 
-                        ...previousState,
-                        clonedCareer: e.target.value
-                    }))
-                    }}
-                >
-                    <option></option>
-                    <option>Certificate</option>
-                    <option>High School</option>
-                    <option>Associate Degree</option>
-                    <option>Bachelor's Degree</option>
-                    <option>Master's Degree</option>
-                </select>
-          }
         </div>
 {/*
         <div className="form-group col-lg-6 col-md-12">
@@ -605,50 +497,28 @@ const CloneJobView = ({ fetchedJobData }) => {
 
         <div className="form-group col-lg-12 col-md-12">
           <label>Complete Address <span className="optional">(optional)</span></label>
-          { !clonedCompleteAddress ?
             <input
                 type="text"
                 name="immense-career-address"
                 value={fetchedJobData.job_comp_add}
                 onChange={(e) => {
-                setClonedJobData((previousState) => ({ 
+                setFetchedJobData((previousState) => ({ 
                     ...previousState,
-                    clonedCompleteAddress: e.target.value
+                    job_comp_add: e.target.value
                 }))
                 }}
                 placeholder="Address"
             />
-            : <input
-                    type="text"
-                    name="immense-career-address"
-                    value={clonedCompleteAddress}
-                    onChange={(e) => {
-                    setClonedJobData((previousState) => ({ 
-                        ...previousState,
-                        clonedCompleteAddress: e.target.value
-                    }))
-                    }}
-                    placeholder="Address"
-                />
-          }
         </div>
         {/* <!-- Input --> */}
         <div className="form-group col-lg-12 col-md-12">
           <label>City, State <span className="required">(required)</span></label>
-          { !clonedAddress ?
             <input
                 type="text"
                 name="immense-career-address"
                 ref={searchInput}
                 placeholder="City, State"
             />
-            : <input
-                type="text"
-                name="immense-career-address"
-                ref={searchInput}                    
-                placeholder="City, State"
-              />
-          }
         </div>
         
         {/* <!-- Input --> */}
@@ -687,7 +557,7 @@ const CloneJobView = ({ fetchedJobData }) => {
             className="theme-btn btn-style-one"
             onClick={(e) => {
               e.preventDefault();
-              submitJobPost(clonedJobData, setClonedJobData, user, fetchedJobData);
+              submitJobPost(fetchedJobData, setFetchedJobData, user);
             }}
           >
             Post

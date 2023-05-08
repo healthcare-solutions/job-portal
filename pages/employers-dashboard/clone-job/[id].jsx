@@ -1,9 +1,6 @@
 // import Map from "../../../../Map";
-import Select from "react-select";
-import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoginPopup from "../../../components/common/form/login/LoginPopup";
 import DashboardHeader from "../../../components/header/DashboardHeader";
@@ -14,7 +11,6 @@ import MenuToggler from "../../../components/dashboard-pages/MenuToggler";
 import CopyrightFooter from "../../../components/dashboard-pages/CopyrightFooter";
 import Router, { useRouter } from "next/router";
 import DefaulHeader2 from "../../../components/header/DefaulHeader2";
-import { supabase } from "../../../config/supabaseClient";
 import CloneJobView from "../../../components/dashboard-pages/employers-dashboard/clone-job/components/CloneJobView";
 
 
@@ -22,9 +18,6 @@ const CloneJob = () => {
 
   const user = useSelector(state => state.candidate.user)
   const showLoginButton = useMemo(() => !user?.id, [user])
-  const [fetchedJobData, setFetchedJobData] = useState({});
-  const router = useRouter();
-  const id = router.query.id;
   const isEmployer = ['SUPER_ADMIN', 'ADMIN', 'MEMBER'].includes(user.role)
 
   useEffect(() => {
@@ -32,39 +25,6 @@ const CloneJob = () => {
       Router.push("/")
     }
   }, []);
-
-  const fetchJob = async () => {
-    try{
-      if (id) {
-        let { data: job, error } = await supabase
-            .from('jobs')
-            .select("*")
-
-            // Filters
-            .eq('job_id', id)
-
-        if (job) {
-          setFetchedJobData(job[0])
-        }
-      }
-    } catch(e) {
-      toast.error('System is unavailable.  Please try again later or contact tech support!', {
-        position: "bottom-right",
-        autoClose: false,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      console.warn(e)
-    }
-  };
-
-  useEffect(() => {
-    fetchJob()
-  }, [id]);
 
   return (
     <div className="page-wrapper dashboard">
@@ -102,7 +62,7 @@ const CloneJob = () => {
                   </div>
 
                   <div className="widget-content">
-                    { id ? <CloneJobView fetchedJobData={fetchedJobData}/> : '' }
+                    <CloneJobView />
                   </div>
                 </div>
               </div>
