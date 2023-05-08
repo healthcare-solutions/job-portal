@@ -122,7 +122,7 @@ const CloneJobView = ({ fetchedJobData }) => {
   console.log(fetchedJobData);
   const user = useSelector(state => state.candidate.user)
   const [clonedJobData, setClonedJobData] = useState(JSON.parse(JSON.stringify(clonedJobFields)));
-  const { clonedJobTitle, clonedJobDesc, clonedJobType, clonedSalary, clonedSalaryRate, clonedCareer, clonedExp, clonedAddress, clonedCompleteAddress } = useMemo(() => editedJobData, [editedJobData])
+  const { clonedJobTitle, clonedJobDesc, clonedJobType, clonedSalary, clonedSalaryRate, clonedCareer, clonedExp, clonedAddress, clonedCompleteAddress } = useMemo(() => clonedJobData, [clonedJobData])
 
   const router = useRouter();
   const JobId = router.query.id;
